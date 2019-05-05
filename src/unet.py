@@ -16,7 +16,6 @@ def output_class(prediction):
 
 
 def class_to_color(classed_prediction, save_path, save_name):
-    # TODO: 增加batch_size不为1的情况
     reverse_COLOR_CLASS_DICT = dict(
         zip(COLOR_CLASS_DICT.values(), COLOR_CLASS_DICT.keys()))
     [batch_size, rows, cols, _] = classed_prediction.shape
@@ -28,23 +27,35 @@ def class_to_color(classed_prediction, save_path, save_name):
             for j in range(cols):
                 for k in range(N_CLASS):
                     if classed_prediction[h][i][j][k] == 1:
-                        color_value[i][j][0:IMG_CHANNEL] = reverse_COLOR_CLASS_DICT[k]
+                        color_value[i][j][0:1] = reverse_COLOR_CLASS_DICT[k]
                         break
-        if IMG_CHANNEL == 1:
-            color_value = np.reshape(color_value, [rows, cols])
+#TODO: dict的key长度为1
+        color_value = np.reshape(color_value, [rows, cols])
         real_out_predict_image = Image.fromarray(color_value.astype('uint8'))
         real_out_predict_image.save(
             path.join(save_path, save_name + '_'+str(h) + '.tif'))
 
 
+def pixel_wise_softmax(output_map):
+    with tf.name_scope('pixel_wise_softmax'):
+        max_axis = tf.reduce_max(output_map, axis=3, keepdims=True)
+        exponential_map = tf.exp(output_map - max_axis)
+        normalize = tf.reduce_sum(exponential_map, axis=3, keepdims=True)
+        return exponential_map / normalize
+
+
+def bin_cross_entropy(y_, y):
+    return -tf.reduce_mean(y_*tf.log(tf.clip_by_value(y, 1e-10, 1.0), name='bin_cross_entropy'))
+
+
 class UNet(object):
-    def __init__(self, cost_kwargs={}, **kwargs):
+    def __init__(self):
         self.x = tf.placeholder(
             tf.float32, shape=[None, None, None, IMG_CHANNEL], name='x')
         self.y = tf.placeholder(
             tf.float32, shape=[None, None, None, N_CLASS], name='y')
         self.output_map, self.variables = build_unet(self.x)
-        self.cost = self._get_cost(self.output_map, cost_kwargs)
+        self.cost = self._get_cost(self.output_map)
         self.gradients_node = tf.gradients(self.cost, self.variables)
         with tf.name_scope('results'):
             # 交叉熵
@@ -57,29 +68,16 @@ class UNet(object):
             self.accuracy = tf.reduce_mean(
                 tf.cast(self.correct_pred, tf.float32))
 
-    def _get_cost(self, output_map, cost_kwargs):
+    def _get_cost(self, output_map):
         with tf.name_scope('cost'):
             if HOW_TO_CAL_COST == 'cross_entropy':
-                flat_logits = tf.reshape(output_map, [-1, N_CLASS])
-                flat_labels = tf.reshape(self.y, [-1, N_CLASS])
-                class_weights = cost_kwargs.pop('class_weights', None)
-                if class_weights is not None:
-                    class_weights = tf.constant(
-                        np.array(class_weights, dtype=np.float32))
-                    weight_map = tf.multiply(flat_labels, class_weights)
-                    weight_map = tf.reduce_sum(weight_map, axis=1)
-                    loss_map = tf.nn.softmax_cross_entropy_with_logits_v2(
-                        logits=flat_logits, labels=flat_labels)
-                    weighted_loss = tf.multiply(loss_map, weight_map)
-                    loss = tf.reduce_mean(weighted_loss)
-                else:
-                    loss = tf.reduce_mean(
-                        tf.nn.softmax_cross_entropy_with_logits_v2(logits=flat_logits, labels=flat_labels))
+                loss = bin_cross_entropy(tf.reshape(self.y, [-1, N_CLASS]),
+                                         tf.reshape(pixel_wise_softmax(output_map), [-1, N_CLASS]))
             elif HOW_TO_CAL_COST == 'dice_coefficient':
                 pass
             else:
                 raise ValueError('未知损失函数计算方法%s' % HOW_TO_CAL_COST)
-            regularizer = cost_kwargs.pop('regularizer', None)
+            regularizer = None
             if regularizer is not None:
                 regularizers = sum(
                     [tf.nn.l2_loss(variable) for variable in self.variables])
