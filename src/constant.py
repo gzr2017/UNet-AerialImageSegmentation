@@ -18,16 +18,15 @@ COLOR_CLASS_DICT = {  # 注意！！！！！！！！！OpenCV是按照BGR顺�
 }
 # 训练参数
 BATCH_SIZE = 4
-EPOCHS = 10
-KEEP_PROB = 0.5  # dropout rate
-OPTIMIZER = 'adam'  # 选择
+EPOCHS = 20
+OPTIMIZER = 'momentum'  # 选择
 HOW_TO_CAL_COST = 'cross_entropy'  # 选择损失函数计算方法
 MOMENTUM = 0.2
-LEARNING_RATE = 1e-4
+LEARNING_RATE = 1e-6
 DECAY_RATE = 0.95
-DISPLAY_STEP = 20  # number of steps till outputting stats
+DISPLAY_STEP = 10  # number of steps till outputting stats
 NORM_GRADS = True
-DATASET_SLICE = 30  # 每个tfrecord中包含多少对数据
+DATASET_SLICE = 10  # 每个tfrecord中包含多少对数据
 # UNet网络参数
 LAYERS = 4
 FEATURES_ROOT = 64
