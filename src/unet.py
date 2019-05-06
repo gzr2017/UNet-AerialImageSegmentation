@@ -44,9 +44,23 @@ def pixel_wise_softmax(output_map):
         return exponential_map / normalize
 
 
-def bin_cross_entropy(y_, y):
-    return -tf.reduce_mean(
-        y_ * tf.log(tf.clip_by_value(y, 1e-10, 1.0), name='bin_cross_entropy'))
+def bin_cross_entropy(y_, y, pos_weight=True):
+    y_ = tf.reshape(y_, [-1, N_CLASS])
+    y = tf.reshape(pixel_wise_softmax(y), [-1, N_CLASS])
+    if not pos_weight:
+        return -tf.reduce_mean(y_ * tf.log(tf.clip_by_value(y, 1e-10, 1.0),
+                                           name='bin_cross_entropy'))
+    else:
+        count_neg = tf.reduce_sum(1. - y_)
+        count_pos = tf.reduce_sum(y_)
+        beta = count_neg / (count_neg + count_pos)
+        pos_weight = beta / (1 - beta)
+        cost = tf.nn.weighted_cross_entropy_with_logits(logits=y,
+                                                        targets=y_,
+                                                        pos_weight=pos_weight)
+        cost = tf.reduce_mean(cost * (1 - beta))
+        zero = tf.equal(count_pos, 0.0)
+        return tf.where(zero, 0.0, cost, name='bin_cross_entropy')
 
 
 class UNet(object):
@@ -58,7 +72,7 @@ class UNet(object):
                                 shape=[None, None, None, N_CLASS],
                                 name='y')
         self.output_map, self.variables = build_unet(self.x)
-        self.cost = self._get_cost(self.output_map)
+        self.cost = self._get_cost()
         self.gradients_node = tf.gradients(self.cost, self.variables)
         with tf.name_scope('results'):
             # 交叉熵
@@ -72,13 +86,11 @@ class UNet(object):
             self.accuracy = tf.reduce_mean(
                 tf.cast(self.correct_pred, tf.float32))
 
-    def _get_cost(self, output_map):
+    def _get_cost(self):
         with tf.name_scope('cost'):
             if HOW_TO_CAL_COST == 'bin_cross_entropy':
                 logging.warning('使用二分类cross_entropy只可用于计算二分类问题！！！！')
-                loss = bin_cross_entropy(
-                    tf.reshape(self.y, [-1, N_CLASS]),
-                    tf.reshape(pixel_wise_softmax(output_map), [-1, N_CLASS]))
+                loss = bin_cross_entropy(self.y, self.output_map, True)
             elif HOW_TO_CAL_COST == 'cross_entropy':
                 pass
                 #TODO: 补充多分类问题的cross_entropy函数

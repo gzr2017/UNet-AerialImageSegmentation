@@ -90,7 +90,6 @@ def build_unet(x, deconvoluting_trainable=False):
                     name='down_conv_{}_w1'.format(str(layer)))
             w2 = weight_variable(
                 [FILTER_SIZE, FILTER_SIZE, features, features],
-                stddev,
                 name='down_conv_{}_w2'.format(str(layer)))
             b1 = bias_variable([features],
                                name='down_conv_{}_b1'.format(str(layer)))
