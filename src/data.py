@@ -11,6 +11,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
 
 
 def file_name_generator(file_path=None, ex_name=None, file_name=None):
+    # TODO: 受限的循环生成器
     if file_path is not None:
         base_name = path.basename(file_path)
         try:
@@ -62,28 +63,31 @@ def color_to_class(img_path, save_path):
     logging.info('>>>开始将目录%s下的图片转换为数组<<<' % img_path)
     for aerial_image_label in aerial_image_labels:
         raw_aerial_image_label = np.array(Image.open(aerial_image_label))
-        raw_aerial_image_label = np.reshape(raw_aerial_image_label,
-                                            [raw_aerial_image_label.shape[0], raw_aerial_image_label.shape[1], -1])
+        raw_aerial_image_label = np.reshape(raw_aerial_image_label, [
+            raw_aerial_image_label.shape[0], raw_aerial_image_label.shape[1],
+            -1
+        ])
         [rows, cols, _] = raw_aerial_image_label.shape
         label_value = np.zeros((rows, cols, N_CLASS))
         for i in range(rows):
             for j in range(cols):
                 label_value[i, j, COLOR_CLASS_DICT[tuple(
                     raw_aerial_image_label[i, j])]] = 1
-        np.save(path.join(save_path, path.basename(
-            aerial_image_label).split('.')[-2]), label_value)
+        np.save(
+            path.join(save_path,
+                      path.basename(aerial_image_label).split('.')[-2]),
+            label_value)
 
 
 def create_dataset(image_data_source, label_data_source, tfrecord_save_path):
     raw_aerial_images = glob(path.join(image_data_source, '*.*'))
-    raw_aerial_image_labels = glob(
-        path.join(label_data_source, '*.*'))
+    raw_aerial_image_labels = glob(path.join(label_data_source, '*.*'))
     if len(raw_aerial_image_labels) != len(raw_aerial_images):
         raise ValueError('图片数量与标签数量不相等！！！！')
     if len(raw_aerial_images) % DATASET_SLICE:
         raise ValueError('分片数不能整除！！！！！！')
-    tfrecord_name_generator = file_name_generator(
-        ex_name='tfrecord', file_name='aerial_pair')
+    tfrecord_name_generator = file_name_generator(ex_name='tfrecord',
+                                                  file_name='aerial_pair')
     logging.info('>>>开始生成数据集，数据集保存至%s<<<' % tfrecord_save_path)
     for i in range(0, len(raw_aerial_images), DATASET_SLICE):
         aerial_images = raw_aerial_images[i:i + DATASET_SLICE]
@@ -110,11 +114,11 @@ def create_dataset(image_data_source, label_data_source, tfrecord_save_path):
 def parse_dataset(proto):
     dics = {
         'aerial_image_label':
-            tf.FixedLenFeature(
-                shape=[OUTPUT_IMG_SIZE, OUTPUT_IMG_SIZE, N_CLASS], dtype=tf.float32),
+        tf.FixedLenFeature(shape=[OUTPUT_IMG_SIZE, OUTPUT_IMG_SIZE, N_CLASS],
+                           dtype=tf.float32),
         'aerial_image':
-            tf.FixedLenFeature(
-                shape=[IMG_SIZE, IMG_SIZE, IMG_CHANNEL], dtype=tf.float32)
+        tf.FixedLenFeature(shape=[IMG_SIZE, IMG_SIZE, IMG_CHANNEL],
+                           dtype=tf.float32)
     }
     parsed_pair = tf.parse_single_example(proto, dics)
     return parsed_pair
@@ -153,19 +157,28 @@ class DatasetDir(object):
             if not path.exists(dir):
                 makedirs(dir)
 
-    def data_nagare(self, is_split=True, is_tran_class=True, is_create_dataset=True):
-        if is_split and len(glob(path.join(self.dir_dict['split_data'], '*.*'))) == 0:
+    def data_nagare(self,
+                    is_split=True,
+                    is_tran_class=True,
+                    is_create_dataset=True):
+        if is_split and len(glob(path.join(self.dir_dict['split_data'],
+                                           '*.*'))) == 0:
             split_img(self.dir_dict['original_data'],
                       self.dir_dict['split_data'])
-        if is_split and len(glob(path.join(self.dir_dict['split_label'], '*.*'))) == 0:
+        if is_split and len(
+                glob(path.join(self.dir_dict['split_label'], '*.*'))) == 0:
             split_img(self.dir_dict['original_label'],
                       self.dir_dict['split_label'], OUTPUT_IMG_SIZE)
-        if is_tran_class and len(glob(path.join(self.dir_dict['split_label_classed'], '*.*'))) == 0:
+        if is_tran_class and len(
+                glob(path.join(self.dir_dict['split_label_classed'],
+                               '*.*'))) == 0:
             color_to_class(self.dir_dict['split_label'],
                            self.dir_dict['split_label_classed'])
-        if is_create_dataset and len(glob(path.join(self.dir_dict['tfrecord'], '*.*'))) == 0:
-            create_dataset(
-                self.dir_dict['split_data'], self.dir_dict['split_label_classed'], self.dir_dict['tfrecord'])
+        if is_create_dataset and len(
+                glob(path.join(self.dir_dict['tfrecord'], '*.*'))) == 0:
+            create_dataset(self.dir_dict['split_data'],
+                           self.dir_dict['split_label_classed'],
+                           self.dir_dict['tfrecord'])
 
     def get_a_iterator(self):
         label_num = len(
@@ -187,5 +200,5 @@ class NetDir(object):
         for dir in self.dir_dict.values():
             if not path.exists(dir):
                 makedirs(dir)
-        self.net_name_generator = file_name_generator(
-            file_name=net_name, ex_name='ckpt')
+        self.net_name_generator = file_name_generator(file_name=net_name,
+                                                      ex_name='ckpt')
