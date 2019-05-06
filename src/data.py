@@ -36,7 +36,22 @@ def file_name_generator(file_path=None, ex_name=None, file_name=None):
         raise ValueError('你既没指定目录也没指定文件名:(')
 
 
+def batch_resize(img_path, resize, save_path=None):
+    image_paths = glob(path.join(img_path, '*.*'))
+    if len(image_paths) == 0:
+        raise ValueError('目录%s下未找到图片' % img_path)
+    for image_path in image_paths:
+        image = Image.open(image_path)
+        image = image.resize((resize, resize))
+        if save_path is not None:
+            file_name = path.basename(image_path)
+            image.save(path.join(save_path, file_name))
+        else:
+            image.save(image_path)
+
+
 def split_img(img_path, save_path, size=None):
+    # TODO: 增加对非2的次方倍的切割工具
     image_paths = glob(path.join(img_path, '*.*'))
     if len(image_paths) == 0:
         raise ValueError('目录%s下未找到图片' % img_path)

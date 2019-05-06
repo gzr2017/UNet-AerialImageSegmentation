@@ -34,7 +34,7 @@
 # POOL_SIZE = 2
 # PADDING_WAY = 'VALID'
 
-RESTORE = None  # 是否重新读取
+RESTORE = None  # 并没有名为 unet.ckpt 的实体文件。它是为检查点创建的文件名的前缀。用户仅与前缀（而非检查点实体文件）互动。
 SUMMARIES = True
 # 输入像的大小和通道数
 IMG_SIZE = 256  # 图像尺寸不能设置得太小了，要不然池化池化池化得没有了……
@@ -42,14 +42,14 @@ IMG_CHANNEL = 1
 OUTPUT_IMG_SIZE = 256  # 手工计算……我也想不到什么可以自动计算的方法惹
 N_CLASS = 2
 COLOR_CLASS_DICT = {  # 注意！！！！！！！！！OpenCV是按照BGR顺序存储颜色的！！！！！！！！！！虽然这里并没有使用OpenCV……如果用了OpenCV还是注意一个比较好
-    (0,): 1,  # 背景：即使是单通道图片，也要打逗号！！！！！！！！！！
-    (255,): 0  # 房屋
+    (0, ): 1,  # 背景：即使是单通道图片，也要打逗号！！！！！！！！！！
+    (255, ): 0  # 房屋
 }
 # 训练参数
 BATCH_SIZE = 4
 EPOCHS = 20
 OPTIMIZER = 'adam'  # 选择
-HOW_TO_CAL_COST = 'cross_entropy'  # 选择损失函数计算方法
+HOW_TO_CAL_COST = 'bin_cross_entropy'  # 选择损失函数计算方法
 MOMENTUM = 0.2
 LEARNING_RATE = 1e-5
 DECAY_RATE = 0.95
