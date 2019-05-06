@@ -1,0 +1,92 @@
+#!/bin/sh
+
+echored(){
+	echo "\033[31m$*\033[0m"
+	return 0
+}
+#全局变量：参数个数
+ArgArry=$*
+WhilePath_Path=$1
+WhileSignle=$1
+##检查命令执行环境，不断截取字符得到是否安装了 enca
+CheckENV(){
+	DPKG_Check=$(dpkg -l | grep enca | cut -d ' ' -f3 | grep enca |cut -d 'l' -f1| grep enca)
+	if [ -z $DPKG_Check ];then   
+	echo "You should install enca first,try [ sudo apt-get install enca ] " && exit 0
+	fi
+}
+#转换主函数
+StartConver() {
+		if  [ -z $Filename ]
+			then
+			    unset Filename
+	   		    echored  "请输入要转换的GBK编码TEX文档的完整路径"
+	   		    read Filename
+	    		#得到编码方式,结果是GB或UT
+	    fi
+	    	      if [ -f $Filename ];then
+	    	      		GetEncode0=$(enca $Filename |grep ';' |  cut -d ';' -f2 | cut -c2-3)
+				GetEncode1=$(enca $Filename | grep 7 |cut -c1)
+				echo "$GetEncode0$GetEncode1"
+	   		        else
+	    	           	unset GetEncode0
+				unset GetEncode1
+	    	           	GetEncode0='inviald'
+				GetEncode1='Inviald'
+	    	           	echored  "$Filename is not a file,please input a vaild filename"
+	   	      fi
+   			
+		   if [ $GetEncode0 = 'UT' ];then
+		echored "The file $Filename already be UTF-8 encode,No need to Convernt "&&		           echored "Will now continue instead of waitting for you" 
+		    elif [ $GetEncode0 = 'GB' ];then
+				   iconv -f gbk -t utf-8 $Filename > $Filename.tmp
+				   rm $Filename
+				   mv $Filename.tmp  $Filename
+				   sudo chmod +x $Filename
+					echo "File $Filename GBK to UTF-8 Done"
+			elif [ $GetEncode1=7 ];then
+				  echo "File $Filename is 7bit ASCII characters,no need to convernt " && echored "Please ignor the warming :ConverGBK2UTF8: 40: [: =: unexpected operator ConverGBK2UTF8: 42: [: =: unexpected operator"
+				     else
+				     	echored "Something is Wrong While Convernt $Filename ,Do Nothing.If Log is define ,please view it"
+		   fi
+}
+#多参数情况(正常),包括通配符
+WhileMutil(){
+ for i in  $ArgArry
+  do
+		#Filename
+		Filename=$i
+		StartConver
+done 
+}
+#只输入了路径
+WhilePath(){
+	     FileList=`ls $WhilePath_Path/*`
+	    for File in $FileList
+ 	    do
+		Filename=$File
+		StartConver
+	   done
+}
+#一个参数情况
+WhileSignle(){
+		Filename=$WhileSignle
+		StartConver
+}
+#函数主体
+CheckENV
+
+if [ $# -eq 1 ] && [ -d "$1" ] ;then
+	WhilePath
+    elif [ $# -eq 1 ] && [ -f "$1" ] ;then
+	WhileSignle
+	elif [ $# -gt 1 ] ;then
+		WhileMutil
+	  else 
+	     StartConver
+fi
+echored  "$0 Finish its jobs,Bye"
+    
+
+
+

@@ -1,0 +1,69 @@
+
+
+
+%推荐入门教程  http://math.ecnu.edu.cn/~jypan/Teaching/MathSoft/Latex/lect10n.pdf
+%http://math.ecnu.edu.cn/~latex/slides/beamer/beamer_guide_cn.pdf
+%详细 ：http://202.194.40.31:8080/gs/admin/upfile//LaTeX-Beamer.pdf
+%常见错误：http://www.cs.utexas.edu/~witchel/errorclasses.html
+%http://www.hartwork.org/beamer-theme-matrix/
+
+
+%Linux                                                                                           %去掉xeCJK选项看看侧边栏的目录还在不在
+%\documentclass[xeCJK,table,xetex,winfonts]{Config/CUGthesis-PresentationSlide}
+
+%Windows                                                                                            %去掉CJK选项看看侧边栏的目录还在不在
+\documentclass[CJK,pdftex,table]{Config/CUGthesis-PresentationSlide}  %Config/CUGthesis-PresentationSlide 中默认选项为[CJK,notheorems,mathserif,compress]
+                                                                                                                    % 字 体 大 小 : 8pt, 9pt,10pt,11pt,12pt,14pt,17pt,20pt , 缺 省 为 11pt
+                                                                                                                    % 文 本 竖 直 方 向 的 位 置 : t ( 顶端对 齐 ), 缺 省 为 c ( 垂 直 居 中 )
+                                                                                                                    % CJK→ 支持中日韩文字
+                                                                                                                    % compress→ 以紧凑方式显示导航栏内容
+                                                                                                                    %handout → 取 消 重 叠 和 动 画 效 果 , 便 于 打 印
+                                                                                                                    %leqno → 数 学 公 式 编 号 位 置 ( 左 边 )
+                                                                                                                    %fleqno → 数 学 公 式 对 齐 方 式 ( 左 对 齐 )
+                                                                                                                    %noamsthm → 取 消 自 动 加 载 amsthm 宏 包 , 缺 省 会 自 动 加 载 该 宏 包
+                                                                                                                    %notheorem → 关 闭 beamer 文 档 类 中 自 动定 义 的定 理类 环 境
+                                                                                                                    %aspectratio → 页 面 大 小 与 比 例 , 缺 省 为 128mm × 96mm, 取 值 可 以 是 1610 (160mm × 100mm), 169 (160mm × 90mm), 149 (140mm × 90mm), 54 (125mm × 100mm), 32 (135mm × 90mm), 43 (128mm × 96mm)
+% 幻灯片切换方式       \transblindshorizontal          水平出现效果
+                            %       \transblindsvertical               竖直出现效果
+                            %      \transboxin                              从中心到四角
+                            %      \transboxout                             从四角到中心
+                            %      \transdissolve                             溶解效果
+                            %      \transglitter                                   闪出
+                            %      \transsplithorizontalin                  水平撕开
+                            %      \transsplitverticalin                    竖直撕开
+                            %      \transsplithorizontalout             水平撕开(向外)
+                            %      \transsplitverticalout                   竖直撕开(向外)
+                            %      \transwipe                                   涂抹
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%设定默认图片目录
+\graphicspath{{PictureData/Picture/}}         %% 图片路径. 本文的图片都放在这个文件夹里了. 学校Logo不放在该文件夹下，在CUGlLogo文件夹下
+                                                                        %%使用图片时最好不要加扩展名，增加自由度，LaTeX 会自动按照.png->.pdf->.jpg->.mps->.jpeg->.jbig2->.jb2->.PNG->.PDF->.JPG->.JPEG->.JBIG2->.JB2 的优先级顺序来查找文件
+\begin{document}
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 此处不能用\include,\include 不能将设置在文件的信息传递出来%%%%%%%%%%%%%%%%%%%%%%%%
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\input 强制性更强，如不存在文件会提示错误，而\include 则不会%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%作者、导师详情
+\input{Sections/PresentationSlide_TheDetails}
+%%%%%%%%%%%%%%%%%幻灯片首页
+\MakeFrontCover
+
+%%%%%%%%%%%%%%%%%%%%得到页面的Layout
+%\input{Sections/PresentationSlide_DisplayTheFrameLayout.tex}
+
+%%%%%%%%%%%%%%%%%%%%正文开始
+                %%%%%目录索引%%%%%%
+\input{Sections/PresentationSlide_Section_0_Contents}
+%%=================================================================================================
+%%%%%%%%%%%%%%%%%%%%%%%%%%%主要节,不可用\chapter,只能使用\section及以下
+\input{Sections/PresentationSlide_Section_1_Background}
+\input{Sections/PresentationSlide_Section_2_Experimental}
+\input{Sections/PresentationSlide_Section_3_Summary}
+%\input{Sections/PresentationSlide_Section_4_Process}
+%%=================================================================================================
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 测试段%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%效果演示
+\input{Sections/PresentationSlide_Section___Transitions}    %动画效果示例 只有evince 和adobe的pdf阅读器才能展示动画效果
+\input{Sections/PresentationSlide_Section___TikZ_Example}  %纯命令行式的PGF/TikZ 矢量作图
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 测试段%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\end{document}

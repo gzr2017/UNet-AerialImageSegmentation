@@ -1,0 +1,1380 @@
+%%================================================================================================= 
+\section[防护策略的信任决策机制]{普适计算环境中防护策略的信任决策机制研究}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\subsection{背景介绍}
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{背景介绍}
+            \begin{enumerate}
+                \item 开放的普适计算应用环境，\alert{自私节点}的目的是最大化自己的利益；
+                \item 在一个对等环境中，节点实体可能既\alert{享用服务}，又为他人\alert{提供服务}
+                \item 信任信誉模型被用来评价服务的好坏，节点依据服务提高者\alert{信任值的高低决定}是否交互享用服务；
+                \item 自私节点可能会汇报\alert{虚假的信任推荐信息}以抬高自己的信誉、降低竞争对手的信誉。
+              \end{enumerate}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{背景介绍}
+            \begin{enumerate}
+                \item 开放的普适计算应用环境，\alert{自私节点}的目的是最大化自己的利益；
+                \item 在一个对等环境中，节点实体可能既\alert{享用服务}，又为他人\alert{提供服务}
+                \item 信任信誉模型被用来评价服务的好坏，节点依据服务提高者\alert{信任值的高低决定}是否交互享用服务；
+                \item 自私节点可能会汇报\alert{虚假的信任推荐信息}以抬高自己的信誉、降低竞争对手的信誉。
+              \end{enumerate}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{基于信任的访问}
+      \begin{figure}
+            \includegraphics<1>[width=0.9\textwidth,bb=0 0 749 346]{TD1.jpg}
+            \includegraphics<2>[width=0.9\textwidth,bb=0 0 749 346]{TD2.jpg}
+            \includegraphics<3>[width=0.9\textwidth,bb=0 0 749 346]{TD3.jpg}
+            \includegraphics<4>[width=0.9\textwidth,bb=0 0 749 346]{TD4.jpg}
+            \includegraphics<5>[width=0.9\textwidth,bb=0 0 749 346]{TD5.jpg}
+            \includegraphics<6>[width=0.9\textwidth,bb=0 0 749 346]{TD6.jpg}
+      \end{figure}
+      \begin{itemize}
+        \item REQ:推荐请求者；
+        \item R:推荐者；
+        \item SP:服务提供者；
+        \item 反馈:从推荐者获得的与服务提供者信任值相关的信息，如果\alert{交互}，则\alert{分享}这些信息
+      \end{itemize}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+\subsection{基于VCG机制的防护策略信任机制}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{基于风险的效用计算}
+\begin{itemize}
+ \item  由于交互时服务者会获得所有对它的评价，推荐者所出给的较低信任评价时，会使自己面对由于服务交互而产生的\alert{风险损失}，
+       \begin{equation*} \label{eq:rf}
+       c_i=f_i^c(t_i)=\mu_{i}t_i+\eta_i, \ \mu_i<0,c_i \geq 0
+       \end{equation*}
+       \pause
+ \item  每个推荐用户的推荐意愿可用推荐\alert{意见$v_i$}表示，其计算方式为：
+       \begin{equation} \label{eq:vi}
+       v_i=-c_i=-\mu_{i}t_i-\eta_i,\ \mu_i<0,v_i \leq 0.
+       \end{equation}
+              \pause
+ \item  推荐者的\alert{效用}可以表示为：
+       \begin{equation*} \label{eq:ui}
+       u_i=v_i(a)-p_i(v_1,\ldots,v_{n}),\  p_i(v_1,\ldots,v_{n}) \leq 0.
+       \end{equation*}
+\end{itemize}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{社会选择函数}
+\begin{itemize}
+ \item
+    请求者合计自己对服务者的信任值$t_{r}$与$n$个推荐值，得到一个\alert{总体信任值}$T$，当总体信任值大于信任等级$\lambda$ 时，请求者决定同服务提供者交互。
+     \begin{equation} \label{eq:overalltrust}
+     T=p(\sum_{i=1}^{n} k_{i}t_{i})+qt_{r}
+     \end{equation}
+            \pause
+ \item
+       整个信任决策过程可被看作一个\alert{社会选择过程}，即将所有推荐者表达个体推荐意见$v_i$映射成为社会结果（是否交互）的\alert{社会选择函数}表示为：
+      \begin{equation} \label{eq:scf}
+       a=f(v_1,\ldots,v_n) = \left\{ \begin{array}{ll}
+      I & T\geq\lambda \\
+      NI & T<\lambda \\
+      \end{array} \right.
+       \end{equation}
+\end{itemize}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{VCG机制}
+     在机制设计领域中，一个有名的激励相容机制是VCG机制，该机制的社会选择目标是\alert{最大化社会福利}， 即全体参与个体的价值估值之和$\sum_i v_i(a)$。
+\pause
+     \begin{definition}[VCG（Vickrey-Clarke-Groves）机制]
+     如果一个机制的社会选择函数和支付函数满足以下两个条件，就被称作VCG机制：
+     \begin{enumerate}
+       \item \alert{社会选择函数}最大化社会财富，即$a=f(v_1,\ldots,v_n)\in
+     argmax_{a \in A} \sum_i v_i(a)$。
+       \item 对所有社会成员偏好$v_i\in V_1,\ldots,v_n\in
+     V_n$，\alert{支付函数}满足以下形式：$p_i(v_1,\ldots,v_n)=h_i(v_{-i})-\sum_{j \neq i} v_j(a)$，其中 $h_i:V_{-i}\rightarrow \mathbb{R}$是与个体偏好$v_i$无关的函数。
+     \end{enumerate}
+     \end{definition}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{VCG信任机制}
+\begin{theorem}
+  社会选择函数$f(v_1,\ldots,v_n)$实现了社会财富的最大化，该机制是一种VCG 机制。
+\end{theorem}
+\pause
+\liuhao
+\textbf{证明:}将公式(\ref{eq:overalltrust})带入到社会选择函数$f$的条件中，得到：
+\begin{displaymath}
+p(\sum_{i=1}^{n} k t_{i})+qt_{r} \geq \lambda
+\end{displaymath}
+
+\begin{displaymath}
+\sum_{i=1}^{n} t_{i} \geq \frac{\lambda-qt_r}{k p}.
+\end{displaymath}
+\pause
+参照公式(\ref{eq:vi})，将条件变为：
+\begin{displaymath}
+(\sum_{i=1}^{n}-\mu t_{i}-\eta) \geq
+\frac{\mu qt_r-\lambda \mu }{k p} - n\eta.
+\end{displaymath}
+\pause
+令
+\begin{displaymath}
+\  C =
+\frac{\mu qt_r - \lambda \mu - np k \eta}{k p},
+\end{displaymath}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{VCG信任机制}
+\begin{theorem}
+  社会选择函数$f(v_1,\ldots,v_n)$实现了社会财富的最大化，该机制是一种VCG 机制。
+\end{theorem}
+\liuhao
+\textbf{证明续:}
+则
+\begin{equation}\label{eq:valuation}
+\sum_{i=1}^{n} v_i-C \geq 0.
+\end{equation}
+考虑社会财富在交互与不交互两种情况下分别等于$\sum_i v_i-C$和0。
+\pause
+\begin{itemize}
+  \item 当条件(\ref{eq:valuation})成立时，社会选择函数$f$选择交互的结果，达到更大的社会财富$\sum_i v_i-C$。
+  \item 当$\sum_i v_i-C<0$，社会选择函数$f$ 选择不交互的结果，得到了较大的社会财富0。
+\end{itemize}
+\pause
+因此，公式(\ref{eq:scf})中的社会选择函数实现了社会 财富的最大化。~~~~~~~~~~~~~~~~~~~~~~~~~~~~~$\Box$
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{支付函数}
+\liuhao
+\begin{itemize}
+  \item
+        由于估值及支付都是负值，Clarke枢轴规则不能直接应用于信任机制，根据其原理，\alert{支付函数}定义如下：
+      \begin{equation} \label{eq:payment}
+      p_i(v_1,\ldots,v_n)=max_b\sum_{j\neq i} v_j(b)-\sum_{j\neq i} v_j(a)+K,
+      j=1,\ldots,n+1.
+      \end{equation}
+      其中$K=C$保证支付是负值。
+\end{itemize}
+\pause
+\renewcommand{\baselinestretch}{0.5}
+\begin{table}
+\liuhao
+%\centering
+\label{table:outcome}
+\begin{tabularx}{\textwidth}{llll}
+\hline\noalign{\smallskip}
+支付类别 & 用户$i$的角色
+& 判定条件&
+社会选择结果\\
+\noalign{\smallskip}
+\hline\noalign{\smallskip}
+\uppercase\expandafter{\romannumeral1}
+& 非枢轴用户
+& $\sum_{j\neq i} v_j-C<0$ , $\sum_{i} v_i-C<0$
+& NI \\
+\noalign{\smallskip}
+\hline\noalign{\smallskip}
+\uppercase\expandafter{\romannumeral2}
+& 非枢轴用户
+& $\sum_{j\neq i} v_j-C \geq 0$ , $\sum_{i} v_i-C \geq 0$
+& I \\
+\noalign{\smallskip}
+\hline\noalign{\smallskip}
+\uppercase\expandafter{\romannumeral3}
+& 枢轴用户
+& $\sum_{j\neq i} v_j-C \geq 0$ , $\sum_{i} v_i-C<0$
+& NI \\
+\noalign{\smallskip}
+\hline\noalign{\smallskip}
+支付类别 &
+估值 $v_i(a)$  &
+支付 $p_i(v_1,\ldots,v_n)$ &
+效用 $u_i$\\
+\noalign{\smallskip}
+\hline\noalign{\smallskip}
+\uppercase\expandafter{\romannumeral1}
+& 0
+& $C$
+& $-C$\\
+\noalign{\smallskip}
+\hline\noalign{\smallskip}
+\uppercase\expandafter{\romannumeral2}
+& $v_i$
+& $C$
+& $v_i-C$\\
+\noalign{\smallskip}
+\hline\noalign{\smallskip}
+\uppercase\expandafter{\romannumeral3}
+& $0$
+& $\sum_{j\neq i} v_j,j=1\ldots,n.$
+& $-\sum_{j\neq i} v_j$\\
+\noalign{\smallskip}
+\hline
+\end{tabularx}
+\end{table}
+\renewcommand{\baselinestretch}{1}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{防护策略信任机制}
+\begin{theorem}
+  信任机制$(f,p_1,\ldots,p_n)$满足防护策略约束。
+\end{theorem}
+\textbf{证明:}
+\liuhao
+  \alert{激励相容约束}
+  \begin{itemize}
+    \item 对于信任值为$t_i$，推荐意愿为$v_i$的参与者$i$ ，须证明其声明真实推荐意见$v_i$时获得的效用大于声明虚假推荐意见$v_i'$ 时的效用。这种情况下社会结果为$a=f(v_i,v_{-i})$和$a'=f(v_i',v_{-i})$。
+\pause
+    \item   给予真实推荐时效用为$u_i=v_i(a)-p_i(v_i,v_{-i})=v_i(a)-max_b\sum_{j\neq
+i}v_j(b)+\sum_{j\neq i}v_j(a)-C = \sum_i v_i(a)-C-max_b\sum_{j\neq
+i}v_j(b)$。
+    \item 给予虚假推荐时效用为$u_i'=v_i(a')-p_i(v_i',v_{-i})=\sum_i v_i(a')-C-max_b\sum_{j\neq i}v_j(b)$。
+\pause
+    \item 由于$a=f(v_i,v_{-i})$最大化所有参与者的社会财富$\sum_i v_i(a)-C$ \\ 且$max_b\sum_{j\neq i}v_j(b)$与$v_i$独立无关，所以$u_i \geq u_i'$。
+  \end{itemize}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{防护策略信任机制}
+\begin{theorem}
+  信任机制$(f,p_1,\ldots,p_n)$满足防护策略约束。
+\end{theorem}
+\textbf{证明续:}
+\liuhao
+   \alert{个体理性约束}
+   \begin{itemize}
+     \item 考虑三种支付情形，注意到$C<0$和$v_i \leq 0$ ，则在第\uppercase\expandafter{\romannumeral1}和第\uppercase\expandafter{\romannumeral3}种 情形中效用是非负的。
+         \pause
+     \item 对第\uppercase\expandafter{\romannumeral2}种情形，$\sum_i v_i-C \geq 0$，则$\sum_i
+v_i-C -\sum_{j\neq i}v_j  \geq -\sum_{j\neq i}v_j$，注意到$v_j\leq 0$，则$v_i-C \geq 0$ 。
+\pause
+     \item 所以，该机制满足个体理性约束。 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ $\Box$
+   \end{itemize}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{支付特性研究}
+\begin{theorem}
+  当有不少于两个推荐者时，请求者支付的积分总和一定不会小于其估值。
+\end{theorem}
+\liuhao
+\textbf{证明:}
+请求者的估值是$-C$，而它付给所有推荐者的积分总和为$-\sum_ip_i$。
+\begin{itemize}
+\pause
+  \item
+          考虑情行\uppercase\expandafter{\romannumeral3}中两者间的大小：
+        \begin{displaymath}
+        \begin{array}{rcll}
+        -\sum_i p_i-(-C)& = & -\sum_i(\sum_{j \neq i}v_j)+C \\
+                       & = & -\sum_i (\sum_j v_j -v_i)+C \\
+                       & = & -\sum_i (\sum_j v_j)+\sum_i v_i + C\\
+                       & = & (1-n)(\sum_i v_i-C)+(2-n)C
+        \end{array}
+        \end{displaymath}
+        考虑到此种情形下$\sum_i v_i-C<0$，该值在不少于两个推荐者时大于0。
+\pause
+  \item
+  在情形\uppercase\expandafter{\romannumeral1} 和\uppercase\expandafter{\romannumeral2}时，当有不少于两个推荐者时，$-\sum_i p_i-(-C)=(1-n)C>0$ ，因此结论成立。 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~$\Box$
+\end{itemize}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{基于加权VCG机制的防护策略信任机制}
+由于推荐者和请求者对服务者的\alert{信任判断标准不同}，即使所有 推荐者都给出真实信息，信任预测结果对请求者而言还是不理想。这里采用\alert{连续多数加权算法}（continuous weighted majority algorithm, WMC）调整不同推荐信息的权值。
+%\liuhao
+\pause
+\begin{itemize}
+  \item 令$t_i^s$表示第$i$个用户在试验$s$中的预测，$\rho^s$表示试验$s$ 的标签。\alert{绝对权值}
+      $\overline{\omega}_{(i,k)},i=1,\ldots,n$，表示独立于主算法的推荐者$i$对服务者$k$ 预测的权值。
+      对于固定的主算法，令$\omega_i^s,i=1,\ldots,n$ 表示\alert{相对权值}或\alert{标准权值}，\alert{主算法}可表示成$\label{eq:ot}
+        T=p(\sum_{i=1}^{n} \omega_i^s t_{i}^s)+qt_{r}$。
+  \item
+        相对权值的计算为：
+      \begin{equation*}
+      \omega_i^s = \frac{\overline{\omega}_{(i,k)}}{\sum_{i=1}^n
+      \overline{\omega}_{(i,k)}}, i =1,\ldots,n.
+      \end{equation*}
+\end{itemize}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{基于加权VCG机制的防护策略信任机制}
+\begin{itemize}
+  \item
+           令$\overline{\omega}_{(i,k)}^{(s)},i=1,\ldots,n$表示试验$s$前的绝对权值，$\overline{\omega}_{(i,k)}^{(s+1)},i=1,\ldots,n$ 表示试验$s$后的绝对权值。如果请求者交互后得出的标签为$\rho^s$，则绝对权值以以下方式进行\alert{更新：}
+         \begin{equation*}
+         \overline{\omega}_{(i,k)}^{(s)} = \theta\overline{\omega}_{(i,k)}^{(s+1)}
+         \end{equation*}
+  \item
+         $\beta,0\leq\beta<1$是固定因子，$\theta$是任何满足以下条件的因子：
+       \begin{equation*}
+       \beta^{\vert t_{i}^s-\rho^{(s)} \vert} \leq \theta \leq 1-(1-\beta) \vert
+       t_{i}^s-\rho^{(s)} \vert.
+       \end{equation*}
+       这里选择下界作为更新因子$\theta$的值。
+\end{itemize}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\subsection{一般信任决策机制研究}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{一般信任决策机制研究}
+\begin{definition}[信任决策机制（Trusted based decision mechanism, TDM）]
+对于$n$个参与人，信任决策机制包含以下部分：
+\begin{enumerate}
+  \item 参与人的\alert{私有信任值空间}$T_1,\ldots,T_n$；
+  \item 参与人的\alert{意见空间}$X_1,\ldots,X_n$；
+  \item 参与人的\alert{判别策略函数}$s_i:T_i \rightarrow
+X_i$，该函数决定当信任值为$t_i$时所要报告的意见；
+  \item 决策集$A$包含所有可能的\alert{决策结果}；
+  \item 参与人的\alert{估值函数}$v_i:T_i \times A \rightarrow
+\mathbb{R}$；
+  \item 用于做出决策的\alert{决策结果函数}$a: X_1 \times \ldots \times X_n \rightarrow A$；
+  \item \alert{支付函数}$p_1,\ldots,p_n$，其中$p_i=X_1 \times \ldots \times X_n \rightarrow \mathbb{R}$。
+\end{enumerate}
+\end{definition}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{一般信任决策机制研究}
+\liuhao
+\begin{definition}[推荐游戏]
+对于给定的一个TDM，其对应的\alert{推荐游戏}由信任值空间$T_i$、意见空间$X_i$、判别策略$s_i$和效用函数 $u_i: T_i \times X_i \times \ldots \times X_n \rightarrow
+\mathbb{R} $共同组成，其中意见$x_i$可看作参与者$i$的私有信任值为$t_i$时采取的行动。如果对于所有的$t_i$、 $s'_i$和$x_{-i}$，$u_i(t_i,s_i(t_i),x_{-i}) \geq
+u_i(t_i,s'_i(t_i),x_{-i})$都成立，则判别策略$s_i$ 叫做\alert{占优策略}。如果每个参与者的判别策略都是占优策略，则策略组合$s=(s_1,\ldots,s_n)$ 被称作\alert{占优（策略）均衡}。
+\end{definition}
+\pause
+\begin{definition}[信任决策函数（Trust based decision function, TDF）]
+\alert{信任决策函数}$g:T_1 \times \ldots \times T_n
+\rightarrow A$合计个体的信任值并做出一个（交互）决策。TDF是\alert{信任合计函数}$h$与\alert{决策决定函数}$\psi$ 的复合函数，其中信任合计函数$h:T_1 \times \ldots \times T_n \rightarrow T$将个人信任值合计为总体信任值，决策决定函数$\psi: T \rightarrow A$依据总体信任值做出决定并给出社会结果。
+\end{definition}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{一般信任决策机制研究}
+\liuhao
+\begin{definition}[实施（implementing）]
+给定一个TDF函数$g$ ，如果在一个TDM对应的推荐游戏中，存在某个占优均衡$s=(s_1,\ldots,s_n)$，使得对于所有的信任值 $t_1,\ldots,t_n$，$g(t_1,\ldots,t_n)=a(s_1(t_1),\ldots,s_n(t_n))$，则称TDM实施了TDF，或TDF可由TDM实施。
+\end{definition}
+\pause
+信任决策\alert{机制设计的目的}就是构造一个TDM，使其以下列方式实施TDF：令$n$ 个参与人加入推荐游戏，报告各自的意见并接受支付。具有私有信任值的理性参与人选择一个 合适的判别策略以实现效用的最大化。如果所有参与人选择占优策略并导致占优均衡，基于报告的意见， 一个预定义的结果函数导出一个结果。那么，该结果一定同TDF以私有信任值为输入得出的结果完全一致。
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{一般信任决策机制研究}
+\liuhao
+\begin{definition}[社会选择函数]
+当判别策略$s_i$对每个参与人是公共知识时，对应的\alert{社会选择函数}定义为TDF与逆函数$s_i^{-1}$ 的符合函数，即$f=g\circ s_i^{-1}: V_1
+\times \ldots \times V_n \rightarrow A$，$f(v_1,\ldots,v_n)=(g \circ
+s_i^{-1})(v_1,\ldots,v_n)=g(s_1^{-1}(v_1),\ldots,g(s_n^{-1}(v_n))$。
+\end{definition}
+\pause
+考察哪些TDF可被TDM以占优均衡的方式实施， 这样的TDF被称作是可实施的。社会选择函数的可实现性取决于函数的输入域，即\alert{偏好$V_i$ 的取值域}。
+\pause
+\begin{definition}[单参域（single parameter domain）]
+令集合$I \subset A$表示共知的交互集合，该集合中的结果元素表示同服务提供者进行交互。\alert{单参域}$V_i$由集合$I$ 与取值范围$[s^0,s^1]$定义。$V_i$是满足如下条件的$v_i$的集合：对所有$a\in I, v_i(a)=s,s^0 \leq s \leq s^1$，对所有的$a \not \in I, v_i(a)=0$，即$V_i=\{v_1 \vert v_i(a)=s \wedge a \in I
+\vee v_i(a)=0 \wedge a \not\in I\}$。
+\end{definition}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{一般信任决策机制研究}
+\liuhao
+\begin{itemize}
+  \item \alert{单参域}的可实施特性包括对社会选择函数与支付函数的要求：信任机制$(f,p_1,\ldots,p_n)$ 满足激励相容约束的充要条件为：
+      \begin{enumerate}\liuhao
+        \item 对每个$v_i$社会选择函数$f$满足单调性要求；
+        \item 如果结果$a \in I$ ，每个枢轴用户须给予关键值数量的支付。
+      \end{enumerate}
+\pause
+  \item \alert{非限制领域}上的可实施特性由Robert规则给出，对于非限制域与单参域间 的受限域的特性，依据偏好取值域的不同，特性也随之不同。
+\pause
+  \item 如果以特定的信任模型为目标，希望信任模型的推荐者都真实报告其私有信息，首先依据目标信 任模型中的信任合计函数与决策决定函数\alert{构造TDF}，其次检验TDF对应的社会选择函数是否\alert{满足可实施特性}， 如果满足，则可以构造一个满足\alert{激励相容约束的信任机制}，将其与目标信任模型结合以实现真实信任推荐 的目的。
+\end{itemize}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\subsection{模拟验证}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{实验设置}
+\begin{itemize}
+  \item 较以往无法确定特定时刻系统状态、\alert{有效但未必最优的}启发式解决方法而言，基于机制设计的VCG信任机制 可以保证对自私用户，系统\alert{始终处于最优状态}，即任意时刻系统内所有诚实用户实现占优均衡，且社会财富 始终最大化，\alert{理论上说明了机制的最优性}。
+\end{itemize}
+\pause
+\begin{itemize}
+ \item  应用\alert{JIST/SWANS}对普适计算无线自组织网络进行模拟；
+ \item  在400米 $\times$ 400米的区域内放置\alert{40个}节点，21号节点和30号节点为服务提供者，19号节点为请求者，1号到10号节点都是推荐者且\alert{只有1 号为欺骗节点}；
+ \item  移动性以最低速2m/s最高速10m/s的\alert{随机路径点模型}表示，模拟中各种参数的取值分别为$\mu=-1$，$\eta=-1$，$\lambda=0.6$，$p=q=t_r=0.5$和$n=10$。
+\end{itemize}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{实验结果}
+\renewcommand{\baselinestretch}{0.5}
+\begin{table}[h]
+\liuhao
+\centering
+\begin{tabular}{lllllll}
+\hline
+\noalign{\smallskip}
+类型 & \uppercase\expandafter{\romannumeral1}
+& \uppercase\expandafter{\romannumeral2}&
+\uppercase\expandafter{\romannumeral4} &
+\uppercase\expandafter{\romannumeral6} &
+\uppercase\expandafter{\romannumeral8} &
+\uppercase\expandafter{\romannumeral10} \\
+\noalign{\smallskip}
+\hline\noalign{\smallskip}
+偏差 & 0 & +0.1 & +0.3 & +0.5 & +0.7 & +0.9 \\
+\noalign{\smallskip}
+\hline\noalign{\smallskip}
+类型 &
+& \uppercase\expandafter{\romannumeral3}&
+\uppercase\expandafter{\romannumeral5} &
+\uppercase\expandafter{\romannumeral7} &
+\uppercase\expandafter{\romannumeral9} &
+\uppercase\expandafter{\romannumeral11} \\
+\noalign{\smallskip}
+\hline\noalign{\smallskip}
+偏差 &  & -0.1 & -0.3 & -0.5 & -0.7 & -0.9 \\
+\noalign{\smallskip}
+\hline
+\end{tabular}
+\end{table}
+
+\pause
+\begin{figure}
+  \centering
+  \includegraphics[width=0.7\textwidth,bb=0 0 150.2 93.8]{3_2_8.jpg}
+  \caption{欺骗节点采取积极偏差策略受损示例}\label{fig:3_1}
+\end{figure}
+\renewcommand{\baselinestretch}{1}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{实验结果}
+\begin{figure}
+  \centering
+  \includegraphics[width=0.7\textwidth,bb=0 0 150.28 93.8]{2_3_negative.jpg}
+  \caption{欺骗节点采取消极偏差策略受损示例}\label{fig:3_2}
+\end{figure}
+  \pause
+  \liuhao
+\begin{itemize}
+  \item 这两组实验表明无论 欺骗节点采用\alert{积极}还是\alert{消极}的偏差策略，效用都可能由于虚假推荐而减少。由于支付情况的判定还\alert{依赖}于其他推荐用户的意见，对于节点用户，\alert{最好的选择就是进行真实推荐}。
+\end{itemize}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{实验结果}
+\begin{figure}
+  \centering
+  \includegraphics[width=0.85\textwidth,bb=0 0 150.2 93.8]{multiTimes.jpg}
+  \caption{多次获得总效用的平均值}\label{fig:3_3}
+\end{figure}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{实验结果}
+\begin{columns}[t]
+    \begin{column}{.5\textwidth}
+        \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth,bb=0 0 530.4  331.2]{EclamidaGood.jpg}
+        \end{figure}
+    \end{column}
+    \begin{column}{.5\textwidth}
+          \begin{figure}
+            \centering
+            \includegraphics[width=\textwidth,bb=0 0 150.2 93.8]{EcpGood.jpg}
+          \end{figure}
+    \end{column}
+\end{columns}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.65\textwidth,bb=0 0 442 276]{relation_8.jpg}
+\end{figure}
+
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%==================================================================================================
+\section[团体防护策略的信任机制]{普适计算环境中团体防护策略的信任机制研究}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\subsection{背景简介}
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{背景简介}
+            \begin{enumerate}
+               \item 实际情况中，只要条件许可，多个自私实体可能\alert{联合进行策略性欺骗}；
+               \item 对单个实体策略欺骗有效的基于\alert{VCG}的信任决策机制\alert{无法处理}联合 欺骗的情况，需要进行团体防护策略信任机制的研究；
+               \item 处理联合策略欺骗需要基于\alert{合作博弈论}的机制设计予以解决。\pause
+               \item 应用\alert{基于风险的效用}思想：
+                    \begin{equation*} \label{eq:rf1}
+                    ct_i=f_i^{ct}(t_i)=\mu t_i+\eta, \ \mu<0,ct_i \geq 0
+                    \end{equation*}
+                    \begin{equation*}\label{eq:ui1}
+                    u_i=p_i(ct)-ct_i,\  p_i(ct) \geq 0.
+                    \end{equation*}
+             \end{enumerate}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\subsection{基于特征函数的团体赔偿总额的研究}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{基于特征函数的团体赔偿总额的研究}
+\begin{definition}
+令$G=\{N,c\}$ 表示合作式\alert{赔偿支付博弈 (compensation payment game, CPG)}
+其中$N=\{1,\ldots,n\}$ 表示推荐博弈者$1,\ldots,n$，特征函数$c$是定义在幂集$P(N)$上的实值函数。
+\end{definition}
+\begin{itemize}
+\pause
+  \item $c(S)$表示该团体在没有其他任何博弈者帮助情况下能够获得的\alert{团体赔偿}，即额外收益。
+信任机制约定，在获得推荐者的推荐值后，请求者将支付给团体$S$数值为$c(S)$的\alert{团体赔偿总额}。
+\pause
+  \item 我们给出两种形式的团体赔偿总额函数：
+  \begin{enumerate}
+    \item
+       \begin{equation}\label{eq:cs_s}
+       c(S)=k\sum_{i \in S}\vert S \vert = k \vert S \vert ^2
+       \end{equation}
+    \item
+         \begin{equation}\label{eq:cs_t}
+         c(S)=k\sum_{i \in S}ct_i \vert S \vert
+         \end{equation}
+  \end{enumerate}
+\end{itemize}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{基于特征函数的团体赔偿总额的研究}
+\begin{definition}
+    如果对所有$S,T \subseteq N$ 特征函数$c$满足下列公式的条件，则称作$c$ 是\alert{超模函数}(supermodular function)。
+     \begin{equation*}\label{eq:supermodular}
+     c(S)+c(T) \leq c(S \cup T) + c(S \cap T).
+     \end{equation*}
+\end{definition}
+\pause
+\begin{proposition}
+$c(S)=k \vert S \vert ^2$定义的赔偿支付博弈的特征函数$c$是超模函数。
+\end{proposition}
+\liuhao
+\pause
+\textbf{证明:}由于不等式两边都存在$k$，且$k > 0$，故考察消去$k$的情况。
+令$a=\vert S \vert, b=\vert T \vert, x= \vert S \cup T \vert, y=\vert S \cap T \vert$,故所证即为$a^2 + b^2 \leq x^2 + y^2, a,b,x,y \geq 0$。
+
+注意到$a+b=x+y,a \leq x, b \leq x$，则
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{基于特征函数的团体赔偿总额的研究}
+\begin{proposition}
+$c(S)=k \vert S \vert ^2$定义的赔偿支付博弈的特征函数$c$是超模函数。
+\end{proposition}
+\liuhao
+\textbf{证明续:}
+\begin{displaymath}
+\begin{array}{rcll}
+x^2 + y^2 & = & x^2 + (a+b-x)^2  \\
+          & = & x^2 + (a+b)^2 + x^2 -2(a+b)x \\
+          & = & 2x^2 + a^2 + b^2 + 2ab -2ax -2bx \\
+x^2 + y^2 - a^2 - b^2 & = & 2x^2 + 2ab -2ax -2bx \\
+                      & = & 2x(x-a) + 2b(a-x) \\
+                      & = & 2(x-a)(x-b) \\
+                      & \geq & 0 \\
+\end{array}
+\end{displaymath}
+故得证。$~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~\Box$
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{基于特征函数的团体赔偿总额的研究}
+\begin{proposition}
+$c(S)=k\sum_{i \in S}ct_i \vert S \vert$定义的赔偿支付博弈的特征函数$c$是超模函数。
+\end{proposition}
+\liuhao
+%\renewcommand{\baselinestretch}{0.5}
+\pause
+\textbf{证明:}
+由于不等式两边都存在$k$，且$k > 0$，故不考虑该系数。计$S \cap T = U, S=U \cup S', T=U \cup T'$，则
+\begin{displaymath}
+\begin{array}{rcll}
+\because c(S) & = & \sum_{i \in S} ct_i(\vert S \vert ) \\
+     & = & \sum_{i \in S} ct_i(\vert U \vert + \vert S' \vert) \\
+     & = & \sum_{i \in U} ct_i\vert U \vert +
+           \sum_{i \in S'} ct_i\vert U \vert+ \\
+     &   & \sum_{i \in U} ct_i\vert S' \vert +
+           \sum_{i \in S'} ct_i\vert S' \vert  \\
+c(T) & = & \sum_{i \in U} ct_i\vert U \vert +
+           \sum_{i \in T'} ct_i\vert U \vert + \\
+     &   & \sum_{i \in U} ct_i\vert T' \vert +
+           \sum_{i \in T'} ct_i\vert T' \vert   \\
+c(S \cup T) & = & \sum_{i \in (S \cup T)} ct_i\vert S \cup T \vert \\
+            & = & \sum_{i \in (U \cup S' \cup T')}
+                  ct_i(\vert U \vert +\vert S' \vert+ \vert T' \vert)   \\
+\end{array}
+\end{displaymath}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{基于特征函数的团体赔偿总额的研究}
+%\begin{proposition}
+%$c(S)=k\sum_{i \in S}ct_i \vert S \vert$定义的赔偿支付博弈的特征函数$c$是超模函数。
+%\end{proposition}
+\liuhao
+%\renewcommand{\baselinestretch}{0.5}
+\textbf{证明续:}
+\begin{displaymath}
+\begin{array}{rcll}
+     & = & \sum_{i \in U} ct_i\vert U \vert +
+           \sum_{i \in U} ct_i\vert S'\vert + \\
+     &   & \sum_{i \in U} ct_i\vert T'\vert +
+           \sum_{i \in S'} ct_i\vert U\vert +  \\
+     &   & \sum_{i \in S'} ct_i\vert S'\vert +
+           \sum_{i \in S'} ct_i\vert T'\vert + \\
+     &   & \sum_{i \in T'} ct_i\vert U \vert +
+           \sum_{i \in T'} ct_i\vert S'\vert +  \\
+     &   & \sum_{i \in T'} ct_i\vert T'\vert    \\
+c(S \cap T) & = & \sum_{i \in (S \cap T)} ct_i\vert S \cap T \vert \\
+            & = & \sum_{i \in U} ct_i\vert U \vert \\
+\therefore c(S)+c(T) & \leq &  c(S \cup T) + c(S \cap T) ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\Box
+\end{array}
+\end{displaymath}
+\pause
+\begin{definition}
+    特征函数是超模函数的合作博弈被称作\alert{超模博弈}(supermodular game) 或\alert{凸集博弈}(convex game)，超模博弈的核心非空。
+\end{definition}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\subsection{团体防护策略机制研究}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{团体防护策略机制研究}
+\begin{definition}
+对于特定的团体$S \in N$，\alert{赔偿支付方案函数$\xi$} (compensation payment scheme, CPS)确定分配给推荐博弈者$i$的赔偿支付，即$\xi: N \times 2^N \rightarrow \mathbb{R}^+ \cup \{0\}$，
+记作$\xi(i,S)$或$\xi_i(S)$，
+若$i \notin S$，则$\xi(i,S)=0$。
+\end{definition}
+\pause
+\begin{definition}
+    如果$\xi$对博弈者的支付随着团体基数的增大而增大，即
+对于$\forall S,T \in P(N),i \in
+S$ 并且 $S \subseteq T$, $\xi(i,S) \leq \xi(i,T)$，则称赔偿支付方案满足
+\alert{交叉单调性}(cross-monotonic)或\alert{人口单调性}
+(population monotonic)。
+\end{definition}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{团体防护策略机制研究}
+\liuhao
+\begin{definition}
+    \alert{选择博弈}用于挑选那些具有最小损失的博弈者：
+    \begin{enumerate}
+      \item 首先，初始化团体$Q=N$，基于一个赔偿支付方案，请求者向所有推荐博弈者询问
+是否接受定价为$\xi(i,Q)$的赔偿支付。
+\pause
+      \item 依据自己私有的损失值$ct_i$和判别策略$s_i$，
+ 推荐博弈者$i$发回一个$x_i=s_i(ct_i)$表明其是否接受，如果$ct_i \leq \xi(i,Q)$，则$x_i=1$表明接受，反之为0表明不接受。
+\pause
+      \item  请求者随后将团体调整为所有同意接受的博弈者，即
+ $Q=\{i \vert ct_i \leq \xi(i,Q) \}$，之后，再一次进行定价接受询问。
+\pause
+      \item 询问-调整
+过程在团体$Q$不发生改变时终止。
+    \end{enumerate}
+\end{definition}
+\pause
+\begin{theorem}
+    根据文献[1]，如果赔偿支付方案$\xi$满足\alert{交叉单调性}，则选择博弈仅存在\alert{唯一的
+强均衡}$(s_1,s_2,\ldots,s_n)$以及唯一的结果团体$Q$。
+\end{theorem}
+\qihao
+[1]R.J.Aumann.Acceptable points in general cooperative n-person games,23:1,1999
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{团体防护策略机制研究}
+\liuhao
+\begin{definition}
+对应一个赔偿支付方案$\xi$，一个\alert{间接显示机制}
+$\bar{M_{\xi}}$包括：
+\begin{enumerate}
+  \item 博弈者的私有偏好，即\alert{损失值空间}$CT_1,\ldots,CT_n$，
+  \item 博弈者的\alert{推荐信号空间}$X_1,\ldots,X_n \in \{0,1\}$，
+  \item 博弈者的\alert{判别策略函数}$s_i:CT_i \rightarrow
+X_i$，该函数确定损失值为$ct_i$时发送的信号，
+  \item \alert{结果团体}$Q \in P(N)$包括所有被选中支付赔偿的博弈者，
+  \item \alert{结果函数}$g: X \rightarrow P(N)$将所有收到的信号映射为一个结果团体，其中$X = \prod_{i \in n} X_i$,
+  \item \alert{支付函数}$p_1,\ldots,p_n$确定在某推荐信号下的个体赔偿值，$p_i:X \rightarrow \mathbb{R}$.
+\end{enumerate}
+\end{definition}
+
+\pause
+\begin{itemize}
+  \item \alert{社会选择函数}选出损失值最少的推荐者，即$f(ct)=argmin_{Q \in P(N)} ct_i q_i$，
+  \item 间接机制的结果函数$g$以唯一强均衡的方式\alert{实施}了社会选择函数$f(ct)$，即：
+\begin{equation*}
+ g(x) = f(ct)
+\end{equation*}
+\end{itemize}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{团体防护策略机制研究}
+\liuhao
+%\begin{definition}
+%    机制设计的\alert{显示原理}，如果存在一个间接机制以单一均 衡的方式实现了社会选择函数$f$，则存在一个直接机制实施$f$，且该机制满足策略防护特性，即 \alert{存在}一个不通过观察信号而直接询问其内部私有信息的\alert{直接机制}，该机制中博弈者只有真实反馈私有 信息时才能实现自己收益的最大化。
+%\end{definition}
+%\pause
+\begin{definition}
+对于一个赔偿支付方案$\xi$，直接显示机制$M_{\xi}$，称作\alert{赔偿声明机制}(claiming compensation mechanism, CCM)包括两部分：
+\begin{enumerate}
+  \item 结果函数$h: CT \rightarrow P(N)$ 将获得的私有损失值$ct$映射为一个结果团体$Q$，其中$CT = \prod_{i \in n} CT_i$，
+  \item 支付函数向量$p(ct) \in \mathbb{R}^n$确定支付的赔偿金额，其中$p_i(ct)=0$ 对所有$i \notin Q$.
+\end{enumerate}
+\end{definition}
+\pause
+\begin{itemize}
+  \item 对间接显示机制$\bar{M_{\xi}}$，对应的直接显示机制$M_{\xi}$的\alert{结果函数}的具体形式为：
+\begin{equation*}
+ h(ct_1,\ldots,ct_n) = g(s_1(ct_1),\ldots,s_n(ct_n))
+\end{equation*}
+  \item 直接显示机制的结果函数$h$以 同样唯一强均衡的方式\alert{实施}了$f$，即：
+\begin{equation*}
+ h(ct) = f(ct)
+\end{equation*}
+\end{itemize}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{团体防护策略机制研究}
+\begin{definition}
+    对一个谎报团体$T
+\in N$，请求者获得两个汇报的损失值向量$ct,ct'$，对于所有$j \notin T$,
+$ct_j = ct_j'$，$ct=(ct_T,ct_{-T}),ct'=(ct'_T,ct_{-T})$，$ct_{-T}$是团体$T$之外其他团体的损失值回报向量。
+ \alert{团体防护策略}指如果
+\begin{equation*}
+p_i(ct_T,ct_{-T}) - ct_iq_i \leq p_i(ct'_T,ct_{-T}) - ct_iq'_i
+\end{equation*}
+对于团体$T$中的所有$i$都成立，那么对于所有$i \in T$，该式的等式也一定成立。也就是说，
+如果欺骗团体当中没有成员由于谎报损失值受损，那么也没有任何人通过欺骗受益。
+\end{definition}
+\pause
+\begin{itemize}
+  \item 赔偿 声明机制需要满足的团体防护策略条件为:
+\begin{equation*}
+\xi_i(Q) - ct_iq_i \leq \xi_i(Q') - ct_iq'_i
+\end{equation*}
+\end{itemize}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{团体防护策略机制研究}
+\liuhao
+ \begin{theorem}
+ 如果一个赔偿支付方案$\xi$是交叉
+ 单调的，则直接显示机制$M_{\xi}$是团体防护策略机制。
+ \end{theorem}
+
+\textbf{证明:}
+令$ct$为真实汇报的损失值，团体$T$中的成员进行虚假回报，$ct'$为虚假回报的损失值，两种情况 下的结果集合分别为$Q$和$Q'$（对应的二元包含向量为$q,q'$）。我们需要证明不存在对任意$i \in T$，$\xi_i(Q')-ct_iq_i' \geq \xi_i(Q)-ct_iq_i$都成立，且至少有一个不等号成立。
+
+应用反证法进行证明，假设存在符合条件的集合$T$，令$Q''=Q \cup Q'$，首先，验证下式成立：
+\begin{equation}\label{neqQ''Q'}
+    \forall i \in T: \xi_i(Q'')-ct_iq''_i \geq \xi_i(Q')-ct_iq'_i
+\end{equation}
+\pause
+考虑$i$在结果集合存在的三种可能情况：
+
+(i)$i \notin Q''$，不等式左右都为0，成立。
+
+(ii)$i \in Q'$，则$q''_i = q'_i =1$，由交叉单调性得$\xi_i(Q'') \geq \xi_i(Q')$，故不等式成立。
+
+(iii)$i \in Q'' - Q'$，则$q''_i=q_i=1, q'_i=0$，由欺骗集合特性可得$\xi_i(Q')-ct_iq'_i \geq \xi_i(Q) - ct_iq_i$，则$\xi_i(Q) - ct_iq_i = 0$。 由交叉单调性得$\xi_i(Q'') \geq \xi_i(Q)$，则
+$\xi_i(Q'')-ct_iq''_i \geq \xi_i(Q)-ct_iq_i=0$，故不等式成立。故(\ref{neqQ''Q'}) 成立，且至少有一个不等号成立。
+
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{团体防护策略机制研究}
+\liuhao
+
+\textbf{证明续:}
+考虑(\ref{neqQ''Q'})与欺骗集合特性可得
+\begin{equation}\label{neqQ''Q}
+    \forall i \in T: \xi_i(Q'')-ct_iq''_i \geq \xi_i(Q)-ct_iq_i
+\end{equation}
+
+下面，验证对于$\forall i \notin T$，式(\ref{neqQ''Q})中的不等式也成立，考虑$i$在结果集合存在的三种可能情况：
+
+(i)$i \notin Q''$，不等式左右都为0，成立。
+
+(ii)$i \in Q$，则$q''_i = q_i =1$，由交叉单调性得$\xi_i(Q'') \geq \xi_i(Q)$，故不等式成立。
+
+(iii)$i \in Q'' - Q$，则$q''_i=q_i'=1, q_i=0$，考虑在选择博弈中，在汇报向量$ct'$时，$i$在结果集合中，由于选择博弈的结果必定是一个Nash 均衡，
+则意味着被选择的策略是在汇报向量$ct'$时的Nash均衡策略，如果其他博弈者不改变它们的策略，$i$单方改变其策略， 即不被选择，其效用值不会增加，而不被选择情况下效用值为0，由Nash均衡定义得，$\xi_i(Q')-ct_iq'_i \geq 0$。由交叉单调性得$\xi_i(Q'') \geq \xi_i(Q')$，故$\xi_i(Q'')-ct_iq''_i \geq 0$，不等式成立。故$\forall i \notin T$，式(\ref{neqQ''Q})中的不等式也成立。
+\pause
+\begin{itemize}
+  \item 综上，在欺考虑欺骗集合特性的情况下，$\forall i \in N$，式(\ref{neqQ''Q})中的不等式成立，且至少有一个不等号成立。因此，集合$Q''-Q$非空，否则$\forall i \in N$，式(\ref{neqQ''Q})都是等号成立。
+\end{itemize}
+
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{团体防护策略机制研究}
+\liuhao
+\textbf{证明续:}
+\begin{itemize}
+  \item 令$Q^0=N,Q^{t+1}=\{i \vert ct_i \leq \xi_i(Q^t)\}$为调整过程中的结果集合序列，显然，$t$越大，集合$Q^t$越小，则必定存在一个最大整数$t$，使
+$Q'' \subseteq Q^{t},Q'' \nsubseteq Q^{t+1}, Q^{t+1} \subseteq Q^t$成立。选择非空集合$Q'' \cap (Q^t - Q^{t+1})$中的元素$i$，则由$i \notin Q^{t+1}$及交叉单调性得$ct_i > \xi_i(Q^t) \geq \xi_i(Q''),q'' = 1$，则
+\begin{equation}\label{neqQ''0}
+     \xi_i(Q'')-ct_iq''_i < 0
+\end{equation}
+  \item
+  结合式(\ref{neqQ''Q})与式(\ref{neqQ''0})可得，在$Q''$集合可以作为结果集合存在的情况下，必有式(\ref{neqQ0})成立：
+\begin{equation}\label{neqQ0}
+     \xi_i(Q)-ct_iq_i < 0
+\end{equation}
+\pause
+  \item
+  但是，这是显然不可能的，因为在真实汇报$ct$时，结果$q$是Nash 均衡，此时由于真实汇报，$i$无论在$q=0$还是
+在$q=1$的情况下都不可能出现效用值为负的情况，即$\xi_i(Q)-ct_iq_i \geq 0$。
+故不存在符合条件的集合$T$，即机制$M_{\xi}$是团体防护策略的。~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~$\Box$
+\end{itemize}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\subsection{赔偿支付方案函数的研究}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{赔偿支付方案函数的研究}
+\liuhao
+\begin{itemize}
+  \item 我们选择Shapley值作为具体的赔偿支付方案$\xi$，大体上说，Shapley 值是一个考虑各种到来次序情况下边际效益的期望值。
+\end{itemize}
+
+\begin{definition}[定义式]
+    对于博弈$(N,c)$，所有可能的排列有$\vert N \vert !$种，\alert{Shapley值}是其平均值，即
+\begin{equation*}\label{shapleyPi}
+Sh_c(N,i)=\frac{1}{\vert N \vert !}\sum_{\Pi(N)}(c(N^{\pi}(i) \cup \{ i \})-c(N^{\pi}(i)))
+\end{equation*}
+其中$\Pi(N)$是所有可能$\pi$的集合。
+\end{definition}
+
+\begin{itemize}
+  \item 考虑有些情况的边际效益都相同，故博弈的Shapley值变为
+\end{itemize}
+
+\begin{definition}[计算式]
+   \begin{equation*}\label{shapleyS}
+   Sh_c(N,i)=\frac{1}{\vert N \vert !} \sum_{U \subseteq N \backslash \{i\}}    { \vert U \vert !  (\vert N \vert - \vert U \vert - 1)! (c(U \cup \{i\})-c(U))}
+   \end{equation*}
+\end{definition}
+
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{赔偿支付方案函数的研究}
+\begin{itemize}
+  \item 相对于定义式，计算式将计算复杂度由$O(n!)$降为了$O(2^n)$。
+\end{itemize}
+\pause
+\begin{definition}
+    考察$i$对集合$S$贡献的\alert{扩展Shapley值}定义为$i$在子博弈$(S,c^S)$ 中的Shapley值，即
+\begin{equation*}
+Sh_c(S,i)=Sh_{c^S}(S,i)=\frac{1}{\vert S \vert !}\sum_{\pi \in \Pi(S)}x_{iS}^{\pi}.
+\end{equation*}
+\end{definition}
+
+\pause
+
+\begin{theorem}
+    扩展Shapley值满足交叉单调性， $\forall S,T, S\subseteq T \subseteq N, Sh_c(S,i) \leq Sh_c(T,i).$
+\end{theorem}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\subsection{赔偿声明机制的特性研究}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{赔偿声明机制的特性研究}
+\liuhao
+\begin{itemize}
+  \item 获得各种可能大小的结果集合$Q$与对应$k$取值区间关系的算法。
+\end{itemize}
+
+\begin{figure}[ht]
+%\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\addtolength{\parindent}{4mm}
+\tt
+\noindent
+输入：汇报的损失值向量$ct$ \\
+输出：可能的结果集合$Q$与对应的$k$取值区间 \\
+算法：\\
+\indent     按升序排序$ct$获得新向量$ct''$  \\
+\indent     FOR $i= 1$ 到 $\vert N \vert$ \\
+\indent \indent  $ct_i'' = ct_i'' / i$   \\
+\indent 输出可行的$Q=N$, 对应$k$取值区间为$U_i = [ct_{\vert N \vert}'',1]$ \\
+\indent      FOR $i=  \vert N \vert-1$  到 1\\
+\indent \indent IF($ct_i'' < ct_{i+1}''$) $\{$ \\
+\indent \indent \indent $U_i = [ct_i'',ct_{i+1}'')$ \\
+\indent \indent \indent WHILE(存在未比较的已输出的可行$Q_k$及$U_k$) $\{$  \\
+\indent \indent \indent//检验是否与已有可行区间相重叠\\
+\indent \indent \indent\indent $S_i = U_i \cap U_k$ \\
+\indent \indent \indent\indent IF($S_i == U_i$) 被以往的$k$区间完全包含，当前$Q_i$不可能被获得 \\
+\end{minipage}
+}
+ \label{fig:QK}
+ \end{figure}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{赔偿声明机制的特性研究}
+\liuhao
+
+\begin{figure}[ht]
+%\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\addtolength{\parindent}{4mm}
+\tt
+\noindent
+\indent \indent \indent\indent IF($S_i == \emptyset$)  \\
+\indent \indent \indent\indent \indent 输出可行的$Q=\{$汇报前$i$个损失值的博弈者$\}$,对应$k$取值区间为$U_i$ \\
+\indent \indent \indent\indent IF($S_i \neq \emptyset$) $\{$ \\
+\indent \indent \indent\indent \indent $U_i = U_i - U_k$ \\
+\indent \indent \indent\indent \indent 输出可行的$Q=\{$汇报前$i$个损失值的博弈者$\}$,对应$k$取值区间为$U_i$ \\
+\indent \indent $\}\}\}$\\
+\indent 输出可行的$Q=\emptyset$, 对应$k$取值区间为$U_i = (0,$前一个可行$U_i$区间的下限$]$ \\
+\end{minipage}
+}
+ \caption{获得可能结果集合$Q$与对应的$k$取值区间的算法}
+ \label{fig:QK}
+ \end{figure}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{赔偿声明机制的特性研究}
+\liuhao
+\begin{itemize}
+  \item     对于赔偿声明机制，其支出总是均衡的。
+\pause
+  \item
+  经济效用特性是指赔偿声明机制所产生的社会财富总和，
+\begin{eqnarray}
+    &   & c(Q) - \sum_{i \in N}ct_iq_i  \nonumber\\
+    & = & k\vert Q \vert ^2 - \sum_{i \in Q}ct_i  \nonumber\\
+    & = & \sum_{i \in Q}(\vert Q \vert k - ct_i) \nonumber
+\end{eqnarray}
+\pause
+  \item
+  一般的，我们按照如下方式选取$k$：
+\begin{equation*}\label{WONDERFULK}
+    k = \bar{U_i} - \epsilon, i=argmax \vert Q_i \vert, Q_i \neq N.
+\end{equation*}
+即比第一个（最大的）不平凡结果时取值区间上限
+稍小点的值（因为无法取到上限，我们取$\epsilon=0.000001$）。
+\end{itemize}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\subsection{模拟验证结果}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{实验设置}
+\begin{itemize}
+  \item 较以往无法确定特定时刻系统状态、\alert{有效但未必最优的}启发式解决方法而言，赔偿声明机制 可以保证对自私用户，系统\alert{始终处于最优状态}，即任意时刻系统内所有诚实用户实现占优均衡，
+      \alert{理论上说明了机制的最优性}。
+\end{itemize}
+\pause
+\begin{itemize}
+ \item  应用\alert{JIST/SWANS}对普适计算无线自组织网络进行模拟；
+ \item  在100米 $\times$ 100米的区域内放置\alert{12个}节点，11号节点为服务提供者，10号节点为请求者，0号到9号节点都是推荐者，
+     推荐者真正汇报的是它们的损失值，一共\alert{汇报两次}，一次是真实汇报，一次是虚假汇报。
+ \item  移动性以最低速2m/s最高速10m/s的\alert{随机路径点模型}表示，模拟中各种参数的取值分别为$\mu=-1$，$\eta=-1$，$\lambda=0.6$，$p=q=t_r=0.5$和$n=10$。
+\end{itemize}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{非团体防护策略机制}
+\qihao
+\renewcommand{\baselinestretch}{0.5}
+\begin{figure}[ht]
+%\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\addtolength{\parindent}{4mm}
+\tt
+\noindent
+*****系数(k):0.65 \\
+*****汇报者人数:3 \\
+*****赔偿总额定义形式:2 \\
+-----------------------真实汇报选择过程----------------------- \\
+0::汇报损失值:0.3,获得的补偿(Shapley值):0.585 \\
+1::汇报损失值:0.1,获得的补偿(Shapley值):0.39 \\
+2::汇报损失值:0.5,获得的补偿(Shapley值):0.78 \\
+一轮调整结束!剩下的博弈者数量为:3 \\
+结果集合的大小为 :3 \\
+-----------------------虚假汇报选择过程----------------------- \\
+0::汇报损失值:0.9,获得的补偿(Shapley值):1.495 \\
+1::汇报损失值:0.1,获得的补偿(Shapley值):0.715 \\
+2::汇报损失值:0.9,获得的补偿(Shapley值):1.495 \\
+一轮调整结束!剩下的博弈者数量为:3 \\
+结果集合的大小为 :3 \\
+-------------------------汇报结果总结------------------------- \\
+\begin{center}
+\begin{tabular}{|l|l|l|l|}
+\hline
+汇报者编号  & \bf{0} & 1 & \bf{2} \\
+\hline
+真实汇报损失值  & \bf{0.3} & 0.1 & \bf{0.5} \\
+\hline
+虚假汇报损失值  & \bf{0.9} & 0.1 & \bf{0.9} \\
+\hline
+真实汇报时的赔偿  & 0.585 & 0.39 & 0.78 \\
+\hline
+虚假汇报时的赔偿  & 1.495 & 0.715 & 1.495 \\
+\hline
+真实汇报时的效用  & \emph{0.285} & 0.29 & \emph{0.28} \\
+\hline
+虚假汇报时的效用  & \emph{1.195} & 0.615 & \emph{0.995} \\
+\hline
+\end{tabular}
+\end{center}
+**********谎报者0,2,获得更多的效用！！！********** \\
+********************机制不是团体防护策略(NOT GSP)******************** \\
+\end{minipage}
+}
+ \end{figure}
+\renewcommand{\baselinestretch}{1}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{非团体防护策略机制}
+\qihao
+\renewcommand{\baselinestretch}{0.5}
+\begin{figure}[h]
+%\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\addtolength{\parindent}{4mm}
+\tt
+\noindent
+*****系数(k):0.41 \\
+*****汇报者人数:3 \\
+*****赔偿总额定义形式:2 \\
+-----------------------真实汇报选择过程----------------------- \\
+一轮调整结束!剩下的博弈者数量为:2 \\
+一轮调整结束!剩下的博弈者数量为:1 \\
+一轮调整结束!剩下的博弈者数量为:0 \\
+结果集合的大小为 :0 \\
+-----------------------虚假汇报选择过程----------------------- \\
+一轮调整结束!剩下的博弈者数量为:3 \\
+结果集合的大小为 :3 \\
+-------------------------汇报结果总结------------------------- \\
+\begin{center}
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+汇报者编号  & \bf{0} & 1 & \bf{2} \\
+\hline
+真实汇报损失值  & \bf{0.3} & 0.1 & \bf{0.5} \\
+\hline
+虚假汇报损失值  & \bf{0.9} & 0.1 & \bf{0.7} \\
+\hline
+真实汇报时的赔偿  & 0.0 & 0.0 & 0.0 \\
+\hline
+虚假汇报时的赔偿  & 0.902 & 0.41 & 0.779 \\
+\hline
+真实汇报时的效用  & \emph{0.0} & 0.0 & \emph{0.0} \\
+\hline
+虚假汇报时的效用  & \emph{0.602} & 0.31 & \emph{0.279} \\
+\hline
+\end{tabular}
+\end{center}
+**********谎报者0,2,获得更多的效用！！！********** \\
+********************机制不是团体防护策略(NOT GSP)******************** \\
+\end{minipage}
+}
+ \end{figure}
+\renewcommand{\baselinestretch}{1}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{非团体防护策略机制}
+\liuhao
+\begin{itemize}
+  \item 造成机制不具有团体防护特性的原因是由于谎报者
+报告的损失值\alert{高于}真实的损失值。
+  \item 采用第二种形式的赔偿函数$c(S)=k\sum_{i \in S}ct_i \vert S \vert$与汇报的损失值相关，赔偿支付函数与
+损失函数相关，从而导致获得了更多的赔偿。
+\pause
+  \item
+  \begin{equation*}
+\begin{array}{rcl}
+    &   & \xi_i(Q) =  Sh_{c}(i,Q)   \\
+    & = & \sum_{T \subseteq (Q-\{i\})}\frac{\vert T \vert! (\vert Q \vert- \vert T \vert -1)!}{\vert Q \vert !}(\sum_{k \in (T \cup \{i\})}ct_k (\vert T \vert+1)\\
+    &   &  -\sum_{k \in T }ct_k (\vert T \vert))
+    \\
+    &   & \sum_{k \in (T \cup \{i\})}ct_k (\vert T \vert+1)-\sum_{k \in T }ct_k (\vert T \vert) \\
+    & = & \vert T \vert \sum_{k \in T }ct_k(\vert T \vert +1)+ct_i(\vert T \vert +1)-\sum_{k \in T }ct_k\vert T \vert \\
+    & = & ct_i(\vert T \vert +1)+\sum_{k \in T }ct_k \\
+\end{array}
+\end{equation*}
+
+  \item 只要保证$\sum_{k \in T }ct_k$的值\alert{不减小}（可以让同伙也报高值），且欺骗者\alert{在结果集合中}，当$ct_i' \geq ct_i$ 时，$\xi_i(Q) \geq \xi_i(Q'),u_i' \geq u_i$。
+\end{itemize}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{非团体防护策略机制}
+\qihao
+\renewcommand{\baselinestretch}{0.5}
+\begin{figure}[!h]
+%\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\addtolength{\parindent}{4mm}
+\tt
+\noindent
+*****系数(k):0.8 \\
+*****汇报者人数:2 \\
+*****赔偿总额定义形式:2 \\
+-----------------------真实汇报选择过程----------------------- \\
+0::汇报损失值:0.3,获得的补偿(Shapley值):0.4 \\
+1::汇报损失值:0.1,获得的补偿(Shapley值):0.24 \\
+一轮调整结束!剩下的博弈者数量为:2 \\
+结果集合的大小为 :2 \\
+-----------------------虚假汇报选择过程----------------------- \\
+0::汇报损失值:0.9,获得的补偿(Shapley值):1.12 \\
+1::汇报损失值:0.1,获得的补偿(Shapley值):0.48 \\
+一轮调整结束!剩下的博弈者数量为:2 \\
+结果集合的大小为 :2 \\
+-------------------------汇报结果总结------------------------- \\
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+汇报者编号  & \bf{0} & 1 \\
+\hline
+真实汇报损失值  & \bf{0.3} & 0.1 \\
+\hline
+虚假汇报损失值  & \bf{0.9} & 0.1 \\
+\hline
+真实汇报时的赔偿  & 0.4 & 0.24 \\
+\hline
+虚假汇报时的赔偿  & 1.12 & 0.48 \\
+\hline
+真实汇报时的效用  & \emph{0.1} & 0.14 \\
+\hline
+虚假汇报时的效用  & \emph{0.82} & 0.38 \\
+\hline
+\end{tabular}
+\end{center}
+**********谎报者0,获得更多的效用！！！********** \\
+********************机制不是策略防护******************** \\
+\end{minipage}
+}
+ \end{figure}
+\renewcommand{\baselinestretch}{1}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{团体防护策略验证}
+\liuhao
+\begin{itemize}
+  \item 考虑到$u_i'=\vert Q' \vert k - ct_iq_i'$，，如果谎报者受损可能是由于$q_i'$与$q_i$相比发生了改变，从而获得较少的效用，
+或者虽然$q_i'=q_i$，但是由于$\vert Q' \vert k$减少而遭受了效用损失。
+\end{itemize}
+\pause
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.85\textwidth,bb=0 0 746 462]{BSConditions.jpg}
+\end{figure}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{团体防护策略验证}
+\qihao
+\renewcommand{\baselinestretch}{0.5}
+\begin{figure}[!h]
+%\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\addtolength{\parindent}{4mm}
+\tt
+\noindent
+*****系数(k):0.086; \\
+-----------------------真实汇报选择过程----------------------- \\
+*****真实汇报结果集合含有7个元素:\textbf{0},\textbf{1},\textbf{2},\textbf{4},\textbf{5},\textbf{6},\textbf{9} \\
+-----------------------虚假汇报选择过程----------------------- \\
+*****虚假汇报结果集合含有8个元素:\textbf{0},\textbf{1},\textbf{3},\textbf{5},\textbf{6},\textbf{7},\textbf{8},\textbf{9} \\
+-------------------------汇报结果总结------------------------- \\
+\begin{center}
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+汇报者编号  & \bf{0} & \bf{1} & \bf{2} & \bf{3} & \bf{4} \\
+\hline
+真实汇报损失值  & \bf{0.3} & \bf{0.1} & \bf{0.5} & \bf{0.7} & \bf{0.6} \\
+\hline
+虚假汇报损失值  & \bf{0.5} & \bf{0.2} & \bf{0.8} & \bf{0.3} & \bf{0.9} \\
+\hline
+真实汇报时的赔偿  & 0.602 & 0.602 & 0.602 & 0.0 & 0.602 \\
+\hline
+虚假汇报时的赔偿  & 0.688 & 0.688 & 0.0 & 0.688 & 0.0 \\
+\hline
+真实汇报时的效用  & \emph{0.302} & \emph{0.502} & \bf{0.102} & \bf{0.0} & \bf{0.0020} \\
+\hline
+虚假汇报时的效用  & \emph{0.388} & \emph{0.588} & \bf{0.0} & \bf{-0.012} & \bf{0.0} \\
+\hline
+两种汇报效用差值  & \emph{-0.086} & \emph{-0.086} & \bf{0.102} & \bf{0.012} & \bf{0.0020} \\
+\hline
+汇报者编号  & \bf{5} & \bf{6} & \bf{7} & \bf{8} & \bf{9} \\
+\hline
+真实汇报损失值  & \bf{0.4} & \bf{0.45} & \bf{0.8} & \bf{0.9} & \bf{0.3} \\
+\hline
+虚假汇报损失值  & \bf{0.45} & \bf{0.4} & \bf{0.1} & \bf{0.6} & \bf{0.1} \\
+\hline
+真实汇报时的赔偿  & 0.602 & 0.602 & 0.0 & 0.0 & 0.602 \\
+\hline
+虚假汇报时的赔偿  & 0.688 & 0.688 & 0.688 & 0.688 & 0.688 \\
+\hline
+真实汇报时的效用  & \emph{0.202} & \emph{0.152} & \bf{0.0} & \bf{0.0} & \emph{0.302} \\\hline
+虚假汇报时的效用  & \emph{0.288} & \emph{0.238} & \bf{-0.112} & \bf{-0.212} & \emph{0.388} \\
+\hline
+两种汇报效用差值  & \emph{-0.086} & \emph{-0.086} & \bf{0.112} & \bf{0.212} & \emph{-0.086} \\
+\hline
+\end{tabular}
+\end{center}
+*********谎报者共10人，其中谎报者0,1,5,6,9获得更多的效用！！！********* \\
+*********谎报者共10人，其中谎报者2,3,4,7,8遭受效用损失！！！********* \\
+********************机制是团体防护策略(GSP)******************** \\
+\end{minipage}
+}
+ \caption{\liuhao 团体防护策略示例:SI高报受损,SI低报受损,BG高报受益,BG低报受益}
+ \end{figure}
+\renewcommand{\baselinestretch}{1}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{团体防护策略验证}
+\qihao
+\renewcommand{\baselinestretch}{0.5}
+\begin{figure}[!ht]
+%\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\addtolength{\parindent}{4mm}
+\tt
+\noindent
+*****系数(k):0.197999;汇报者人数:5;赔偿总额定义形式:1 \\
+-----------------------真实汇报选择过程----------------------- \\
+大小:5,\{1,0,2,4,3,\};k:[0.13999999999999999,1.0) \\
+大小:1,\{1,\};k:[0.1,0.13999999999999999) \\
+大小:0,\{\};k:[0.0,0.1) \\
+*****真实汇报结果集合含有5个元素:\textbf{0},\textbf{1},\textbf{2},\textbf{3},\textbf{4} \\
+-----------------------虚假汇报选择过程----------------------- \\
+大小:5,\{1,2,0,4,3,\};k:[0.198,1.0) \\
+大小:3,\{1,2,0,\};k:[0.16666666666666666,0.198) \\
+大小:0,\{\};k:[0.0,0.16666666666666666) \\
+*****虚假汇报结果集合含有3个元素:\textbf{0},\textbf{1},\textbf{2} \\
+-------------------------汇报结果总结------------------------- \\
+\begin{center}
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+汇报者编号  & \bf{0} & \bf{1} & \bf{2} & \bf{3} & \bf{4} \\
+\hline
+真实汇报损失值  & \bf{0.3} & \bf{0.1} & \bf{0.5} & \bf{0.7} & \bf{0.6} \\
+\hline
+虚假汇报损失值  & \bf{0.5} & \bf{0.2} & \bf{0.45} & \bf{0.99} & \bf{0.99} \\
+\hline
+真实汇报时的赔偿  & 0.989995 & 0.989995 & 0.989995 & 0.989995 & 0.989995 \\
+\hline
+虚假汇报时的赔偿  & 0.593997 & 0.593997 & 0.593997 & 0.0 & 0.0 \\
+\hline
+真实汇报时的效用  & \bf{0.689995} & \bf{0.889995} & \bf{0.489995} & \bf{0.289995} & \bf{0.389995} \\
+\hline
+虚假汇报时的效用  & \bf{0.293997} & \bf{0.493997} & \bf{0.093997} & \bf{0.0} & \bf{0.0} \\
+\hline
+两种汇报效用差值  & \bf{0.395998} & \bf{0.395998} & \bf{0.395998} & \bf{0.289995} & \bf{0.389995} \\
+\hline
+\end{tabular}
+\end{center}
+**********谎报者共5人，其中谎报者0,1,2,3,4遭受效用损失！！！********** \\
+********************机制是团体防护策略(GSP)******************** \\
+\end{minipage}
+}
+ \caption{团体防护策略示例:SG高报受损,SG低报受损,SI高报受损}
+ \end{figure}
+ \renewcommand{\baselinestretch}{1}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%---------------------------------------------------------------------------------------------------
+\begin{frame}\frametitle{团体防护策略验证}
+\qihao
+\renewcommand{\baselinestretch}{0.5}
+\begin{figure}[!ht]
+%\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\addtolength{\parindent}{4mm}
+\tt
+\noindent
+*****系数(k):0.179999;汇报者人数:5;赔偿总额定义形式:1 \\
+-----------------------真实汇报选择过程----------------------- \\
+大小:5,\{1,0,2,3,4,\};k:[0.18,1.0) \\
+大小:0,\{\};k:[0.0,0.18) \\
+*****真实汇报结果集合含有0个元素: \\
+-----------------------虚假汇报选择过程----------------------- \\
+大小:5,\{1,2,0,4,3,\};k:[0.18,1.0) \\
+大小:4,\{1,2,0,4,\};k:[0.175,0.18) \\
+大小:3,\{1,2,0,\};k:[0.16666666666666666,0.175) \\
+大小:0,\{\};k:[0.0,0.16666666666666666) \\
+*****虚假汇报结果集合含有4个元素:\textbf{0},\textbf{1},\textbf{2},\textbf{4}, \\
+-------------------------汇报结果总结------------------------- \\
+\begin{center}
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+汇报者编号  & \bf{0} & \bf{1} & \bf{2} & \bf{3} & \bf{4} \\
+\hline
+真实汇报损失值  & \bf{0.4} & \bf{0.2} & \bf{0.7} & \bf{0.8} & \bf{0.9} \\
+\hline
+虚假汇报损失值  & \bf{0.5} & \bf{0.3} & \bf{0.45} & \bf{0.9} & \bf{0.7} \\
+\hline
+真实汇报时的赔偿  & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+\hline
+虚假汇报时的赔偿  & 0.719996 & 0.719996 & 0.719996 & 0.0 & 0.719996 \\
+\hline
+真实汇报时的效用  & \emph{0.0} & \emph{0.0} & \emph{0.0} & 0.0 & \bf{0.0} \\
+\hline
+虚假汇报时的效用  & \emph{0.319996} & \emph{0.519996} & \emph{0.019996} & 0.0 & \bf{-0.180004} \\
+\hline
+两种汇报效用差值  & \emph{-0.319996} & \emph{-0.519996} & \emph{-0.019996} & 0.0 & \bf{0.180004} \\
+\hline
+\end{tabular}
+\end{center}
+**********谎报者共5人，其中谎报者0,1,2,获得更多的效用！！！********** \\
+**********谎报者共5人，其中谎报者4,遭受效用损失！！！********** \\
+********************机制是团体防护策略(GSP)******************** \\
+\end{minipage}
+}
+ \caption{团体防护策略示例:BI高报受益,BI低报受益,SI低报受损}
+\renewcommand{\baselinestretch}{0.5}
+ \end{figure}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%===================================================================================================

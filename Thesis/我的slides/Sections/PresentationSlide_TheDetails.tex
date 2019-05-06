@@ -1,0 +1,16 @@
+ %%=================================================================================================
+    \title[\textcolor{white}{\heiti 光切法显微镜探究荷叶效应}]{\heiti 光切法显微镜 探究\\ 荷叶效应}  % \title[学术报告题目缩写]{学术报告题目} ，建议将第二个分为两行，刚好合适于首页的Logo放置
+  %  \author[\textcolor{white}{\songti 杨远聪}]{\songti 作~~~~者~~\textcolor{olive}{杨远聪}~~~~~~\\ 指导老师~~\textcolor{olive}{韩艳玲~~教授 }} %每两个~表示一个字符宽度空格
+  \author[\textcolor{white}{\songti 杨远聪}]{  %采用tabular表格，更好的对齐方式,每两个~ 表示一个字符宽度空格
+  \begin{tabular}{r@{~~~}l}                             %以空格作为分隔
+    \songti 作\ifpdf~~~~~~~\else \ifxetex~~~~~~\fi \fi 者&\songti 杨远聪\\                            %使用\textcolor{}{} 更改字体颜色, “作者”中间加入空格对齐，pdflatex和xelatex的空格不一样，因此加入条件判断
+     \songti 指导老师         &\songti 韩艳玲~~教授 \\
+    \end{tabular}
+  }
+
+    \institute{\wuhao \lishu 数学与物理学院 \\ 中国地质大学(武汉) }
+    %\date{~\the\year~年~\the\month~月~\the\day~日}		%日期显示形如 2013年5月31日  定义在CUGthesis-PresentationSlide.cls 第272行 ，下同,
+                                                                                        %但是使用定义的命令会丢失年月日，因此直接定义在这儿
+    \date{\CJKdigits{\the\year}年\CJKnumber{\the\month}月} %\CJKnumber{\the\day}日}		%日期显示形如二○一三年五月三十一日
+
+    %%=================================================================================================

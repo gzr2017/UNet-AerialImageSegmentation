@@ -1,0 +1,545 @@
+%%=================================================================================================
+%%PGF/TikZ 例子  %%%
+\section{PGF/TikZ 矢量图实例}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 例一
+% The 3D code is based on The drawing is based on Tomas M. Trzeciak's
+% `Stereographic and cylindrical map projections example`:
+% http://www.texample.net/tikz/examples/map-projections/
+\newcommand\pgfmathsinandcos[3]{%                                                           %特别要注意，新定义带参数的命令一定要在frame外定义
+  \pgfmathsetmacro#1{sin(#3)}%
+  \pgfmathsetmacro#2{cos(#3)}%
+}
+\newcommand\LongitudePlane[3][current plane]{%
+  \pgfmathsinandcos\sinEl\cosEl{#2} % elevation
+  \pgfmathsinandcos\sint\cost{#3} % azimuth
+  \tikzset{#1/.estyle={cm={\cost,\sint*\sinEl,0,\cosEl,(0,0)}}}
+}
+\newcommand\LatitudePlane[3][current plane]{%
+  \pgfmathsinandcos\sinEl\cosEl{#2} % elevation
+  \pgfmathsinandcos\sint\cost{#3} % latitude
+  \pgfmathsetmacro\yshift{\cosEl*\sint}
+  \tikzset{#1/.estyle={cm={\cost,0,0,\cost*\sinEl,(0,\yshift)}}} %
+}
+\newcommand\DrawLongitudeCircle[2][1]{
+  \LongitudePlane{\angEl}{#2}
+  \tikzset{current plane/.prefix style={scale=#1}}
+   % angle of "visibility"
+  \pgfmathsetmacro\angVis{atan(sin(#2)*cos(\angEl)/sin(\angEl))} %
+  \draw[current plane,thin,black] (\angVis:1) arc (\angVis:\angVis+180:1);
+  \draw[current plane,thin,dashed] (\angVis-180:1) arc (\angVis-180:\angVis:1);
+}%this is fake: for drawing the grid
+\newcommand\DrawLongitudeCirclered[2][1]{
+  \LongitudePlane{\angEl}{#2}
+  \tikzset{current plane/.prefix style={scale=#1}}
+   % angle of "visibility"
+  \pgfmathsetmacro\angVis{atan(sin(#2)*cos(\angEl)/sin(\angEl))} %
+  \draw[current plane,red,thick] (150:1) arc (150:180:1);
+  %\draw[current plane,dashed] (-50:1) arc (-50:-35:1);
+}%for drawing the grid
+\newcommand\DLongredd[2][1]{
+  \LongitudePlane{\angEl}{#2}
+  \tikzset{current plane/.prefix style={scale=#1}}
+   % angle of "visibility"
+  \pgfmathsetmacro\angVis{atan(sin(#2)*cos(\angEl)/sin(\angEl))} %
+  \draw[current plane,black,dashed, ultra thick] (150:1) arc (150:180:1);
+}
+\newcommand\DLatred[2][1]{
+  \LatitudePlane{\angEl}{#2}
+  \tikzset{current plane/.prefix style={scale=#1}}
+  \pgfmathsetmacro\sinVis{sin(#2)/cos(#2)*sin(\angEl)/cos(\angEl)}
+  % angle of "visibility"
+  \pgfmathsetmacro\angVis{asin(min(1,max(\sinVis,-1)))}
+  \draw[current plane,dashed,black,ultra thick] (-50:1) arc (-50:-35:1);
+
+}
+\newcommand\fillred[2][1]{
+  \LongitudePlane{\angEl}{#2}
+  \tikzset{current plane/.prefix style={scale=#1}}
+   % angle of "visibility"
+  \pgfmathsetmacro\angVis{atan(sin(#2)*cos(\angEl)/sin(\angEl))} %
+  \draw[current plane,red,thin] (\angVis:1) arc (\angVis:\angVis+180:1);
+
+}
+
+\newcommand\DrawLatitudeCircle[2][1]{
+  \LatitudePlane{\angEl}{#2}
+  \tikzset{current plane/.prefix style={scale=#1}}
+  \pgfmathsetmacro\sinVis{sin(#2)/cos(#2)*sin(\angEl)/cos(\angEl)}
+  % angle of "visibility"
+  \pgfmathsetmacro\angVis{asin(min(1,max(\sinVis,-1)))}
+  \draw[current plane,thin,black] (\angVis:1) arc (\angVis:-\angVis-180:1);
+  \draw[current plane,thin,dashed] (180-\angVis:1) arc (180-\angVis:\angVis:1);
+}%Defining functions to draw limited latitude circles (for the red mesh)
+\newcommand\DrawLatitudeCirclered[2][1]{
+  \LatitudePlane{\angEl}{#2}
+  \tikzset{current plane/.prefix style={scale=#1}}
+  \pgfmathsetmacro\sinVis{sin(#2)/cos(#2)*sin(\angEl)/cos(\angEl)}
+  % angle of "visibility"
+  \pgfmathsetmacro\angVis{asin(min(1,max(\sinVis,-1)))}
+  %\draw[current plane,red,thick] (-\angVis-50:1) arc (-\angVis-50:-\angVis-20:1);
+\draw[current plane,red,thick] (-50:1) arc (-50:-35:1);
+
+}
+
+\tikzset{%
+  >=latex,
+  inner sep=0pt,%
+  outer sep=2pt,%
+  mark coordinate/.style={inner sep=0pt,outer sep=0pt,minimum size=3pt,
+    fill=black,circle}%
+}
+%%%%%%%%%%%%%%%%%%%%例一  frame开始
+\begin{frame}		
+\transdissolve                             %溶解效果
+\frametitle{PGF/TikZ (1)---\href{http://www.texample.net/tikz/examples/spherical-and-cartesian-grids/}{Spherical and cartesian grids}}
+\begin{center}
+  \begin{figure}
+\begin{tikzpicture}[scale=0.73,every node/.style={minimum size=1cm}]
+	%% some definitions
+	
+	\def\R{4} % sphere radius
+	
+	\def\angEl{25} % elevation angle
+	\def\angAz{-100} % azimuth angle
+	\def\angPhiOne{-50} % longitude of point P
+	\def\angPhiTwo{-35} % longitude of point Q
+	\def\angBeta{30} % latitude of point P and Q
+	
+	%% working planes
+	
+	\pgfmathsetmacro\H{\R*cos(\angEl)} % distance to north pole
+	\LongitudePlane[xzplane]{\angEl}{\angAz}
+	\LongitudePlane[pzplane]{\angEl}{\angPhiOne}
+	\LongitudePlane[qzplane]{\angEl}{\angPhiTwo}
+	\LatitudePlane[equator]{\angEl}{0}
+	\fill[ball color=white!10] (0,0) circle (\R); % 3D lighting effect
+	\coordinate (O) at (0,0);
+	\coordinate[mark coordinate] (N) at (0,\H);
+	\coordinate[mark coordinate] (S) at (0,-\H);
+	\path[xzplane] (\R,0) coordinate (XE);
+	
+    %defining points outsided the area bounded by the sphere
+	\path[qzplane] (\angBeta:\R+5.2376) coordinate (XEd);
+	\path[pzplane] (\angBeta:\R) coordinate (P);%fino alla sfera
+	\path[pzplane] (\angBeta:\R+5.2376) coordinate (Pd);%sfora di una quantit脿 pari a 10 dopo la sfera
+	\path[pzplane] (\angBeta:\R+5.2376) coordinate (Td);%sfora di una quantit脿 pari a 10 dopo la sfera
+	\path[pzplane] (\R,0) coordinate (PE);
+    \path[pzplane] (\R+4,0) coordinate (PEd);
+	\path[qzplane] (\angBeta:\R) coordinate (Q);
+	\path[qzplane] (\angBeta:\R) coordinate (Qd);%sfora di una quantit脿 pari a 10 dopo la sfera
+	
+	\path[qzplane] (\R,0) coordinate (QE);
+    \path[qzplane] (\R+4,0) coordinate (QEd);%sfora di una quantit脿 10 dalla sfera sul piano equat.
+
+
+    \DrawLongitudeCircle[\R]{\angPhiOne} % pzplane
+    \DrawLongitudeCircle[\R]{\angPhiTwo} % qzplane
+    \DrawLatitudeCircle[\R]{\angBeta}
+    \DrawLatitudeCircle[\R]{0} % equator
+	%labelling north and south
+	\node[above=8pt] at (N) {$\mathbf{N}$};
+	\node[below=8pt] at (S) {$\mathbf{S}$};
+	
+	\draw[-,dashed, thick] (N) -- (S);
+	\draw[->] (O) -- (P);
+	\draw[dashed] (XE) -- (O) -- (PE);
+	\draw[dashed] (O) -- (QE);
+	%connecting Points outside the sphere
+	\draw[-,dashed,black,very thick] (O) -- (Pd);
+	\draw[-,dashed,black,very thick] (O) -- (PEd);
+    \draw[-,dashed,black,very thick] (O) -- (QEd);
+    \draw[-,dashed,black,very thick] (O) -- (XEd);
+    \draw[dashed] (XE) -- (O) -- (PE);
+    %draw black thick flat grid
+    \draw[-,ultra thick,black] (Pd) -- (PEd) node[below, left] {$P_1$};%verticale sinistro
+    \draw[-,ultra thick,black] (PEd) -- (QEd)node[below, right] {$P_3$};%orizzontale inferiore
+    \draw[-,ultra thick,black] (Pd)-- (XEd)node[above, right] {$P_2$};%orizzontale superiore	
+    \draw[-,ultra thick,black] (XEd) -- (QEd);	
+    		
+	\draw[pzplane,->,thin] (0:0.5*\R) to[bend right=15]
+	    node[midway,right] {$\lambda$} (\angBeta:0.5*\R);
+	\path[pzplane] (0.5*\angBeta:\R) node[right] {$$};
+	\path[qzplane] (0.5*\angBeta:\R) node[right] {$$};
+	\draw[equator,->,thin] (\angAz:0.5*\R) to[bend right=30]
+	    node[pos=0.4,above] {$\phi_1$} (\angPhiOne:0.5*\R);
+	\draw[equator,->,thin] (\angAz:0.6*\R) to[bend right=35]
+	    node[midway,below] {$\phi_2$} (\angPhiTwo:0.6*\R);
+			\path[xzplane] (0:\R) node[below] {$$};
+	\path[xzplane] (\angBeta:\R) node[below left] {$$};
+    \foreach \t in {0,2,...,30} { \DrawLatitudeCirclered[\R]{\t} }
+	\foreach \t in {130,133,...,145} { \DrawLongitudeCirclered[\R]{\t} }
+	
+	%drawing grids on the spere invoking DLongredd and DrawLongitudeCirclered
+	
+	\foreach \t in {130,145,...,145} { \DLongredd[\R+3]{\t} }
+	\foreach \t in {130,133,...,145} { \DrawLongitudeCirclered[\R+3]{\t} }
+
+	\foreach \t in {0,30,...,30} { \DLatred[\R+3]{\t} }
+    \foreach \t in {0,2,...,30} { \DrawLatitudeCirclered[\R+3]{\t} }
+	
+    %labelling
+    \draw[-latex,thick](4,-5.5)node[left]{$\mathsf{Grid(s)}$}
+    	         to[out=0,in=270] (5.8,-2.3);
+    \draw[thick](3.6,-6)node[left]{$[\mathsf{Rectilinear}]$};    	
+\end{tikzpicture}
+  \end{figure}
+\end{center}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 例一 结束
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 例二
+%%%%%%%%%%%%%%%%%%%%例二  frame开始
+\begin{frame}	
+\transwipe                                   %涂抹
+\frametitle{PGF/TikZ (2)---\href{http://www.texample.net/tikz/examples/dandelin-spheres/}{Plane Sections of the Cylinder - Dandelin Spheres}}
+\begin{figure}
+  \begin{center}
+\tikzset{
+	MyPersp/.style={x={(-0.8cm,-0.4cm)},y={(0.8cm,-0.4cm)}, z={(0cm,1cm)}},
+%  MyPersp/.style={scale=1.5,x={(0cm,0cm)},y={(1cm,0cm)},
+%    z={(0cm,1cm)}}, % uncomment the two lines to get a lateral view
+	MyPoints/.style={fill=white,draw=black,thick}
+		}
+
+\begin{tikzpicture}[MyPersp,font=\large]
+	% the base circle is the unit circle in plane Oxy
+	\def\h{2.5}% Heigth of the ellipse center (on the axis of the cylinder)
+	\def\a{35}% angle of the section plane with the horizontal
+	\def\aa{35}% angle that defines position of generatrix PA--PB
+	\pgfmathparse{\h/tan(\a)}
+  \let\b\pgfmathresult
+	\pgfmathparse{sqrt(1/cos(\a)/cos(\a)-1)}
+  \let\c\pgfmathresult %Center Focus distance of the section ellipse.
+	\pgfmathparse{\c/sin(\a)}
+  \let\p\pgfmathresult % Position of Dandelin spheres centers
+                       % on the Oz axis (\h +/- \p)
+	\coordinate (A) at (2,\b,0);
+	\coordinate (B) at (-2,\b,0);
+	\coordinate (C) at (-2,-1.5,{(1.5+\b)*tan(\a)});
+	\coordinate (D) at (2,-1.5,{(1.5+\b)*tan(\a)});
+	\coordinate (E) at (2,-1.5,0);
+	\coordinate (F) at (-2,-1.5,0);
+	\coordinate (CLS) at (0,0,{\h-\p});
+	\coordinate (CUS) at (0,0,{\h+\p});
+	\coordinate (FA) at (0,{\c*cos(\a)},{-\c*sin(\a)+\h});% Focii
+	\coordinate (FB) at (0,{-\c*cos(\a)},{\c*sin(\a)+\h});
+	\coordinate (SA) at (0,1,{-tan(\a)+\h}); % Vertices of the
+                                           % great axes of the ellipse
+	\coordinate (SB) at (0,-1,{tan(\a)+\h});
+	\coordinate (PA) at ({sin(\aa},{cos(\aa)},{\h+\p});
+	\coordinate (PB) at ({sin(\aa},{cos(\aa)},{\h-\p});
+	\coordinate (P) at ({sin(\aa)},{cos(\aa)},{-tan(\a)*cos(\aa)+\h});
+     % Point on the ellipse on generatrix PA--PB
+
+	\draw (A)--(B)--(C)--(D)--cycle;
+	\draw (D)--(E)--(F)--(C);
+	\draw (A)--(E) (B)--(F);
+	\draw[blue,very thick] (SA)--(SB);
+
+%	\coordinate (O) at (0,0,0);
+%	\draw[->] (O)--(2.5,0,0)node[below left]{x};
+%	\draw[->] (O)--(0,3,0)node[right]{y};
+%	\draw[->] (O)--(0,0,6)node[left]{z};
+
+	\foreach \t in {20,40,...,360}% generatrices
+		\draw[magenta,dashed] ({cos(\t)},{sin(\t)},0)
+      --({cos(\t)},{sin(\t)},{2.0*\h});
+	\draw[magenta,very thick] (1,0,0) % lower circle
+		\foreach \t in {5,10,...,360}
+			{--({cos(\t)},{sin(\t)},0)}--cycle;
+	\draw[magenta,very thick] (1,0,{2*\h}) % upper circle
+		\foreach \t in {10,20,...,360}
+			{--({cos(\t)},{sin(\t)},{2*\h})}--cycle;
+	\fill[blue!15,draw=blue,very thick,opacity=0.5]
+     (0,1,{\h-tan(\a)}) % elliptical section
+		\foreach \t in {5,10,...,360}
+			{--({sin(\t)},{cos(\t)},{-tan(\a)*cos(\t)+\h})}--cycle;
+
+	\foreach \i in {-1,1}{%Spheres!
+		\foreach \t in {0,15,...,165}% meridians
+			{\draw[gray] ({cos(\t)},{sin(\t)},\h+\i*\p)
+				\foreach \rho in {5,10,...,360}
+					{--({cos(\t)*cos(\rho)},{sin(\t)*cos(\rho)},
+          {sin(\rho)+\h+\i*\p})}--cycle;
+			}
+		\foreach \t in {-75,-60,...,75}% parallels
+			{\draw[gray] ({cos(\t)},0,{sin(\t)+\h+\i*\p})
+				\foreach \rho in {5,10,...,360}
+					{--({cos(\t)*cos(\rho)},{cos(\t)*sin(\rho)},
+          {sin(\t)+\h+\i*\p})}--cycle;
+			}
+					\draw[orange,very thick] (1,0,{\h+\i*\p})% Equators
+		\foreach \t in {5,10,...,360}
+			{--({cos(\t)},{sin(\t)},{\h+\i*\p})}--cycle;
+		}
+	\draw[red,very thick] (PA)--(PB);
+	\draw[red,very thick] (FA)--(P)--(FB);
+%	\fill[MyPoints] (CLS) circle (1pt);% center of lower sphere
+%	\fill[MyPoints] (CUS) circle (1pt);% center of upper sphere
+	\fill[MyPoints] (FA) circle (1pt)node[right]{$F_1$};
+	\fill[MyPoints] (FB) circle (1pt)node[left]{$F_2$};
+	\fill[MyPoints] (SA) circle (1pt);
+	\fill[MyPoints] (SB) circle (1pt);
+	\fill[MyPoints] (P) circle (1pt)node[below left]{$P$};
+	\fill[MyPoints] (PA) circle (1pt)node[below right]{$P_1$};
+	\fill[MyPoints] (PB) circle (1pt)node[above right]{$P_2$};
+\end{tikzpicture}
+\end{center}
+\end{figure}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 例二结束
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 例三
+
+\begin{comment}
+:Title: Seismic focal mechanism in 3D view.
+:Tags: 3D; Earth Sciences ; Geophysics; Seismology
+:Author: Cyril Langlois
+:Source: http://math.et.info.free.fr/TikZ/index.html
+
+Adaptation for LaTeX of a figure proposed in P. Shearer's book 'Introduction to Seismology'.
+
+It shows the focal sphere with the fault plane and auxiliary plane (which can
+not be discriminate), limiting compression and dilatation quadrants, the first
+movement of the rock through the sphere, and the Pression and Tension axis.
+
+The figure is based on the sphere drawing's code proposed by J. Dumas in is
+book `Tikz pour l'impatient <http://math.et.info.free.fr/TikZ/>`_, available online.
+
+\end{comment}
+
+%%%%%%%%%%%
+%% helper macros
+%: Styles for XYZ-Coordinate Systems
+%: isometric  South West : X , South East : Y , North : Z
+\tikzset{isometricXYZ/.style={x={(-0.866cm,-0.5cm)}, y={(0.866cm,-0.5cm)}, z={(0cm,1cm)}}}
+%
+%%: isometric South West : Z , South East : X , North : Y
+\tikzset{isometricZXY/.style={x={(0.866cm,-0.5cm)}, y={(0cm,1cm)}, z={(-0.866cm,-0.5cm)}}}
+%
+%%: isometric South West : Y , South East : Z , North : X
+\tikzset{isometricYZX/.style={x={(0cm,1cm)}, y={(-0.866cm,-0.5cm)}, z={(0.866cm,-0.5cm)}}}
+
+ \newcommand{\quadrant}[2]{
+        \foreach \t in {#1}
+          \foreach \f in {175,165,...,5}
+            \draw[fill=#2]
+                  ({sin(\f - \HH)*cos(\t - \HH)}, {sin(\f - \HH)*sin(\t - \HH)}, {cos(\f - \HH)})
+               -- ({sin(\f - \HH)*cos(\t + \HH)}, {sin(\f - \HH)*sin(\t + \HH)}, {cos(\f - \HH)})
+               -- ({sin(\f + \HH)*cos(\t + \HH)}, {sin(\f + \HH)*sin(\t + \HH)}, {cos(\f + \HH)})
+               -- ({sin(\f + \HH)*cos(\t - \HH)}, {sin(\f + \HH)*sin(\t - \HH)}, {cos(\f + \HH)})
+               -- cycle;
+    }
+%%%%%%%%%%%%%%%%%%%%%例三 frame开始
+%
+\begin{frame}	
+\transdissolve                             %溶解效果
+\frametitle{PGF/TikZ (3)---\href{http://www.texample.net/tikz/examples/seismic-focal-mechanism-in-3d-view/}{Seismic focal mechanism in 3D view}}
+\begin{tikzpicture} [scale=2.1, isometricZXY, line join=round,
+        opacity=0.75, text opacity=1.0,%
+        >=latex,
+        inner sep=0pt,%
+        outer sep=2pt]
+        \def\HH{5}
+    %Quadrants
+   \quadrant{220,230,...,300}{black}
+    \quadrant{-60,-50,...,20}{white}
+    \quadrant{30,40,...,120}{black}
+    \quadrant{130,140,...,210}{none}
+
+    %Movement arrows
+    \foreach \t in {225,235,...,295}
+        \foreach \f in {50,40,...,0}
+            \draw [red, opacity=1.0, ->, thick]
+                ({sin(\f - \HH)*cos(\t - \HH)}, {sin(\f - \HH)*sin(\t - \HH)}, {cos(\f - \HH)})
+                -- ({(1 + 0.2*cos(90 - \f))*sin(\f - \HH)*cos(\t - \HH)},
+                    {(1 + 0.2*cos(90 - \f))*sin(\f - \HH)*sin(\t - \HH)},
+                    {(1 + 0.2*cos(90 - \f))*cos(\f - \HH)});
+
+    \foreach \t in {125,135,...,205}
+        \foreach \f in {110,100,...,0}
+            \draw [black, ->, thick]
+                ({(1 + 0.2*cos(90 - \f))*sin(\f - \HH)*cos(\t - \HH)},
+                 {(1 + 0.2*cos(90 - \f))*sin(\f - \HH)*sin(\t - \HH)},
+                 {(1 + 0.2*cos(90 - \f))*cos(\f - \HH)})
+                -- ({sin(\f - \HH)*cos(\t - \HH)},{sin(\f - \HH)*sin(\t - \HH)},{cos(\f - \HH)});
+    \foreach \t in {35,45,...,115}
+        \foreach \f in {130,120,...,0}
+            \draw [red, opacity=1.0 ,->, thick]
+                ({sin(\f - \HH)*cos(\t - \HH)}, {sin(\f - \HH)*sin(\t - \HH)}, {cos(\f - \HH)})
+                -- ({(1 + 0.2*cos(90 - \f))*sin(\f - \HH)*cos(\t - \HH)},
+                    {(1 + 0.2*cos(90 - \f))*sin(\f - \HH)*sin(\t - \HH)},
+                    {(1 + 0.2*cos(90 - \f))*cos(\f - \HH)});
+
+    \foreach \t in {-55,-45,...,25}
+        \foreach \f in {130,120,...,0}
+            \draw [black, ->, thick]
+                ({(1 + 0.2*cos(90 - \f))*sin(\f - \HH)*cos(\t - \HH)},
+                 {(1 + 0.2*cos(90 - \f))*sin(\f - \HH)*sin(\t - \HH)},
+                 {(1 + 0.2*cos(90 - \f))*cos(\f - \HH)})
+              -- ({sin(\f - \HH)*cos(\t - \HH)},{sin(\f - \HH)*sin(\t - \HH)},{cos(\f - \HH)});
+
+    %Annotations
+    \path ({1.5*sin(100)*cos(75)}, {1.5*sin(100)*sin(75)}, {1.5*cos(100)}) node [right] {Compression};
+    \path ({1.5*sin(70)*cos(-15)}, {1.5*sin(70)*sin(-15)}, {1.5*cos(70)})  node [right] {Dilatation};
+    \path ({1.25*sin(50)*cos(165)},{1.25*sin(50)*sin(165)},{1.25*cos(50)}) node [left]  {Dilatation};
+    \path ({1.25*sin(30)*cos(255)},{1.25*sin(30)*sin(255)},{1.25*cos(30)}) node [left]  {Compression};
+
+    %P and T axis
+    \begin{scope}[ultra thick]
+        \draw[->] ({1.75*sin(90)*cos(75)}, {1.75*sin(90)*sin(75)}, {1.75*cos(90)})
+            -- ({2*sin(90)*cos(75)},{2*sin(90)*sin(75)},{2*cos(90)}) node [above] {T-axis};
+        \draw[->] ({1.75*sin(90)*cos(255)},{1.75*sin(90)*sin(255)},{1.75*cos(90)})
+            -- ({2*sin(90)*cos(255)},{2*sin(90)*sin(255)},{2*cos(90)}) node [below] {T-axis};
+        \draw[<-] ({1.5*sin(90)*cos(-15)}, {1.5*sin(90)*sin(-15)}, {1.5*cos(90)})
+            -- ({1.75*sin(90)*cos(-15)},{1.75*sin(90)*sin(-15)},{1.75*cos(90)}) node [right] {P-axis};
+        \draw[<-] ({1.5*sin(90)*cos(165)}, {1.5*sin(90)*sin(165)}, {1.5*cos(90)})
+            -- ({1.75*sin(90)*cos(165)},{1.75*sin(90)*sin(165)},{1.75*cos(90)}) node [left] {P-axis};
+    \end{scope}
+
+    % Label
+    \node [anchor=north, yshift=-2mm] at (current bounding box.south)
+        {Seismic focal mechanism and Pression-Tension axis.};
+\end{tikzpicture}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 例三结束
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 例四
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{comment}
+:Title: Membrane-like surface
+:Tags: 3D;Random;Chemistry;Biology;Physics
+:Author: Yotam Avital
+:Slug: membrane-surface
+A code to generate a membrane-like surface with some curvature
+and randomness to the  ``molecules'' constituting the surface.
+\end{comment}
+%%%%%%%%%%%%%%%%%%%%例四 frame开始
+\begin{frame}		
+\transblindshorizontal          %水平出现效果
+\frametitle{PGF/TikZ (4)---\href{http://www.texample.net/tikz/examples/membrane-surface/}{Membrane-like surface}}
+\begin{figure}
+  \begin{center}
+  \begin{tikzpicture}[scale=0.8]
+  \def\nuPi{3.1459265}
+  \foreach \i in {11,10,...,0}{% This one doesn't matter
+    \foreach \j in {5,4,...,0}{% This will crate a membrane
+                               % with the front lipids visible
+      % top layer
+      \pgfmathsetmacro{\dx}{rand*0.1}% A random variance in the x coordinate
+      \pgfmathsetmacro{\dy}{rand*0.1}% A random variance in the y coordinate,
+                                     % gives a hight fill to the lipid
+      \pgfmathsetmacro{\rot}{rand*0.1}% A random variance in the
+                                      % molecule orientation
+      \shade[ball color=red] ({\i+\dx+\rot},{0.5*\j+\dy+0.4*sin(\i*\nuPi*10)}) circle(0.45);
+      \shade[ball color=gray] (\i+\dx,{0.5*\j+\dy+0.4*sin(\i*\nuPi*10)-0.9}) circle(0.45);
+      \shade[ball color=gray] (\i+\dx-\rot,{0.5*\j+\dy+0.4*sin(\i*\nuPi*10)-1.8}) circle(0.45);
+      % bottom layer
+      \pgfmathsetmacro{\dx}{rand*0.1}
+      \pgfmathsetmacro{\dy}{rand*0.1}
+      \pgfmathsetmacro{\rot}{rand*0.1}
+      \shade[ball color=gray] (\i+\dx+\rot,{0.5*\j+\dy+0.4*sin(\i*\nuPi*10)-2.8}) circle(0.45);
+      \shade[ball color=gray] (\i+\dx,{0.5*\j+\dy+0.4*sin(\i*\nuPi*10)-3.7}) circle(0.45);
+      \shade[ball color=red] (\i+\dx-\rot,{0.5*\j+\dy+0.4*sin(\i*\nuPi*10)-4.6}) circle(0.45);
+    }
+  }
+\end{tikzpicture}
+    \end{center}
+\end{figure}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 例四结束
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 例五
+\definecolor{copper}{cmyk}{0,0.9,0.9,0.2}
+\colorlet{lightgray}{black!25}
+\colorlet{darkgray}{black!75}
+%%%%%%%%%%%%%%%%%%%%例五frame开始
+\begin{frame}		
+\transblindshorizontal          %水平出现效果
+\frametitle{PGF/TikZ (5)---\href{http://www.texample.net/tikz/examples/daniells-pile/}{Daniell's pile}}
+\begin{figure}
+  \begin{center}
+\Large {Daniell's Pile}\\
+\begin{tikzpicture}
+    % Draw back of vessel 1
+    \draw (0,0) to [controls=+(90:0.5) and +(90:0.5)] (2,0);
+    \draw[fill=blue!60, fill opacity=0.5] (0,-0.5) to
+        [controls=+(90:0.5) and +(90:0.5)] (2,-0.5);
+
+    % Draw back of vessel 2
+    \draw (3.5,0) to [controls=+(90:0.5) and +(90:0.5)] (5.5,0);
+    \draw[fill=lightgray, fill opacity=0.5] (3.5,-0.5) to [controls=+(90:0.5)
+        and +(90:0.5)] (5.5,-0.5);
+
+    % Draw copper electrode
+    \draw[fill=copper] (0.5,2) rectangle (1.5,-1);
+    \draw (0,2.3) node {Cu};
+    \draw (1,-1.75) node {\small{CuSO$_{4}$}};
+
+    % Draw salt bridge
+
+    \draw[join=round, line width = 10pt] (1.75,-1.75) -- (1.75,0.5) --
+        (3.75, 0.5) -- (3.75,-1.75);
+    \draw[join=round, line width = 5pt, color = gray!25] (1.75,-1.75) --
+        (1.75,0.5) -- (3.75, 0.5) -- (3.75,-1.75);
+    \draw (2.75,0.5) node {\tiny{KNO$_{3}$}};
+
+    %Draw front of vessel 1
+
+    \draw (0,0) .. controls +(-90:0.5) and +(-90:0.5) .. (2,0);
+    \draw (0,0) .. controls +(-90:0.5) and +(-90:0.5) .. (2,0)
+        -- (2,-0.5) .. controls +(-90:0.5) and +(-90:0.5) .. (0,-0.5) -- (0,0);
+
+    %Second part
+
+    \draw[fill=blue!60, fill opacity=0.5] (0,-0.5) .. controls +(-90:0.5)
+    and +(-90:0.5) .. (2,-0.5);
+    \draw[fill=blue!60, fill opacity=0.5] (0,-0.5) .. controls +(-90:0.5)
+    and +(-90:0.5) .. (2,-0.5)
+        -- (2,-2) .. controls +(-90:0.5) and +(-90:0.5) .. (0,-2) -- (0,-0.5);
+
+    % draw voltmeter
+
+    \draw[join = round, thick] (1,2) -- (1,2.5) -- (4.5,2.5) -- (4.5,2);
+    \draw (2.75,2.5) node [circle, draw, fill=red!30] {V};
+
+    %Draw back of vessel 2
+
+    %Draw electrode
+
+    \draw[fill=darkgray] (4,2) rectangle (5,-1);
+    \draw (5.5,2.3) node {Zn};
+    \draw (4.5,-1.75) node {\small{ZnSO$_{4}$}};
+
+    % Draw front of vessel 2
+    % part 1
+    \draw (3.5,0) .. controls +(-90:0.5) and +(-90:0.5) .. (5.5,0);
+    \draw (3.5,0) .. controls +(-90:0.5) and +(-90:0.5) .. (5.5,0)
+        -- (5.5,-0.5) .. controls +(-90:0.5) and +(-90:0.5)
+        .. (3.5,-0.5) -- (3.5,0);
+    % part 2
+    \draw[fill=lightgray, fill opacity=0.5] (3.5,-0.5) .. controls +(-90:0.5)
+    and +(-90:0.5) .. (5.5,-0.5);
+    \draw[fill=lightgray, fill opacity=0.5] (3.5,-0.5) .. controls +(-90:0.5)
+        and +(-90:0.5) .. (5.5,-0.5) --
+        (5.5,-2) .. controls +(-90:0.5) and +(-90:0.5)
+        .. (3.5,-2) -- (3.5,-0.5);
+
+\end{tikzpicture}
+    \end{center}
+\end{figure}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 例五结束
+\begin{frame}
+  \frametitle{PGF/TikZ  More}
+  \centering
+  \Huge 更多内容请访问\\ 
+  \large 
+ \def\arraystretch{1.5} %表格行距1.5
+  \begin{tabular} {l}
+      ~~\\
+  \href{http://sourceforge.net/projects/pgf/}{PGF/TikZ 项目}\\
+  \href{http://www.gnuplot.info/}{GNU Plot}\\
+  \href{http://math.ecnu.edu.cn/~latex/docs/packages/pgfmanual_ch.pdf}{PGF/TikZ中文说明(2007)}\\
+  \href{http://www.texample.net/tikz/examples/all/}{PGF/TikZ  实例}\\
+  \href{http://en.wikipedia.org/wiki/PGF/TikZ}{WiKi}\\
+    \end{tabular}
+\end{frame}
+%%---------------------------------------------------------------------------------------------------
+%%===================================================================================================

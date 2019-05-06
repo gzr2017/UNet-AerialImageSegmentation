@@ -1,0 +1,344 @@
+%%%=================================================================================================
+\section{实验观测}
+\subsection{器材选择}
+\begin{frame}
+  \frametitle{器材选择}
+  \only<1>{
+    \begin{alertblock}{\centering{困难}}
+     \sihao \centering{没有扫描电子显微镜！}
+   \end{alertblock}}
+\begin{enumerate}
+\item[]                                 %此处需要一个item 不然会出错
+\only<2-3>{
+\item[\ding{227}]  2011年毕业论文《光切法显微镜应用开发》，使用光切法显微镜观察了荷叶表面
+\only<3>{\item[]
+          \begin{figure}
+            \centering
+              \includegraphics[width=0.5\textwidth]{10-PhotoOfExperimentalPlants-LotusLeaves}
+              \\{\liuhao 光切法显微镜下的荷叶表面}
+           \end{figure}}}
+\only<4>{
+  \item[] \sihao 光切法显微镜，分辨率不高，却有一个优点------无损观测
+  }
+\end{enumerate}
+\end{frame}
+
+\subsection{光切法显微镜}
+\begin{frame}
+  \frametitle{原理介绍}
+\only<1>{
+\begin{figure}
+  \centering
+  \includegraphics[width=0.9\textwidth]{000-Principle}
+  \\  {\liuhao 光切法原理图}
+\end{figure}  }
+\only<2>{
+\begin{figure}
+  \centering
+  \includegraphics[width=0.7\textwidth]{000-Principle}
+  \\  {\liuhao 光切法原理图}
+\end{figure}
+\begin{equation*}
+\begin{split}
+    h=\frac{N}{V}\cos{45^\circ} = \frac{N}{\sqrt{2}V}
+\\
+\mbox{\liuhao V为物镜放大倍数~~~~~~~~~~~~~~~~~~~}
+\end{split}
+\end{equation*}
+}
+\end{frame}
+\subsection{准备工作}
+\begin{frame}
+  \frametitle{物镜放大倍数$V$确定---二次定标}
+%%%%%%%%%%%%%%%%%%%%%%%%%图像
+\only<1>{
+\begin{figure}
+\centering
+\subfigure[\liuhao $7\times$ N.A.0.12]{
+\includegraphics[width=0.618\textwidth]{08-PhotoOfObjectiveeAmplification-a}
+}
+\\
+\subfigure[\liuhao $14\times$ N.A.0.20]{
+\includegraphics[width=0.618\textwidth]{08-PhotoOfObjectiveeAmplification-b}
+}
+\\
+\subfigure[\liuhao $30\times$ N.A.0.40]{
+\includegraphics[width=0.618\textwidth]{08-PhotoOfObjectiveeAmplification-c}
+}
+\\
+{\liuhao 标准刻度尺在各物镜组下的观测图像}
+\end{figure}
+}
+\only<2>{
+\begin{figure}
+\subfigure[\liuhao $60\times$ N.A.0.55]{
+\includegraphics[width=0.618\textwidth]{08-PhotoOfObjectiveeAmplification-d}
+}\\
+{\liuhao 标准刻度尺在各物镜组下的观测图像(续)}
+\end{figure}}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%表格
+\begin{frame}
+  \frametitle{定标结果}
+  \only<1>{
+  \begin{center}
+  \qihao
+物镜放大倍数$V$的测定数据\\
+\begin{tabular}{Ic|c|c|c|c|c|cI}
+  \shline
+ \diagbox{物镜}{数据}{项目}&\multirow{2}{6em}{{标尺格数($n$)\\ $Z=0.01mm$}}&\multicolumn{4}{c|}{鼓轮读数($mm$)}& 物镜放大倍数($V$) \\ \cline{1-1} \cline{3-6}
+  &&初位置($N_s$)&末位置($N_e$)&差值($N_l$)&平均值($\bar{N}$)& \\ \cline{2-7}
+
+\multirow{5}{*}{$7\times$ N.A.0.12}&\multirow{5}{*}{20}& 0.421 &1.231  &0.810&\multirow{5}{*}{0.8098}&\multirow{5}{*}{
+\begin{minipage}{0.09\textwidth}
+\begin{equation*}
+\begin{aligned}
+V&=\frac{0.8098}{20 \times 0.01}\\
+ &=4.049
+\end{aligned}
+\end{equation*}
+\end{minipage}
+} \\ \cline{3-5}
+  &&0.811&1.617&0.806&& \\ \cline{3-5}
+  &&1.617&2.441&0.824&&\\ \cline{3-5}
+  &&2.441&3.243&0.802&& \\ \cline{3-5}
+  &&3.243&4.040&0.807&& \\ \shline
+\multirow{5}{*}{$14\times$ N.A.0.20}&\multirow{5}{*}{20}& 0.429 &2.065  &1.636&\multirow{5}{*}{1.6414}&\multirow{5}{*}{
+\begin{minipage}{0.17\textwidth}
+\begin{equation*}
+\begin{aligned}
+V&=\frac{1.6414}{20 \times 0.01}\\
+&=8.207
+\end{aligned}
+\end{equation*}
+\end{minipage}
+} \\ \cline{3-5}
+  &&0.713&2.346&1.633&& \\ \cline{3-5}
+  &&0.531&2.817&1.656&&\\ \cline{3-5}
+  &&0.781&2.431&1.650&& \\ \cline{3-5}
+  &&0.199&1.831&1.632&& \\ \shline
+\end{tabular}
+\end{center}
+}
+\only<2>{
+\begin{center}
+\qihao
+物镜放大倍数$V$的测定数据(续)\\
+\begin{tabular}{Ic|c|c|c|c|c|cI}
+  \shline
+ \diagbox{物镜}{数据}{项目}&\multirow{2}{6em}{{标尺格数($n$)\\ $Z=0.01mm$}}&\multicolumn{4}{c|}{鼓轮读数($mm$)}& 物镜放大倍数($V$) \\ \cline{1-1} \cline{3-6}
+  &&初位置($N_s$)&末位置($N_e$)&差值($N_l$)&平均值($\bar{N}$)& \\ \cline{2-7}
+\multirow{5}{*}{$30\times$ N.A.0.40}&\multirow{5}{*}{15}& 0  & 2.641 &2.641 &\multirow{5}{*}{2.6232}&\multirow{5}{*}{
+\begin{minipage}{0.17\textwidth}
+\begin{equation*}
+\begin{aligned}
+V&=\frac{2.6232}{15 \times 0.01}\\
+&=17.488
+\end{aligned}
+\end{equation*}
+\end{minipage}
+} \\ \cline{3-5}
+  &&2.641&5.273&2.632&& \\ \cline{3-5}
+  &&5.273&7.896&2.623&&\\ \cline{3-5}
+  &&0.059&2.695&2.636&& \\ \cline{3-5}
+  &&2.695&5.299&2.604&& \\ \shline
+ \multirow{5}{*}{$60\times$ N.A.0.55}&\multirow{5}{*}{10}& 0.532 &4.105  &3.573&\multirow{5}{*}{3.543}&\multirow{5}{*}{
+\begin{minipage}{0.17\textwidth}
+\begin{equation*}
+\begin{aligned}
+V&=\frac{3.543}{10 \times 0.01}\\
+&=35.43
+\end{aligned}
+\end{equation*}
+\end{minipage}
+} \\ \cline{3-5}
+  &&0.250&3.775&3.525&& \\ \cline{3-5}
+  &&0.904&4.441&3.537&&\\ \cline{3-5}
+  &&0.246&3.777&3.531&& \\ \cline{3-5}
+  &&0.640&4.189&3.549&& \\ \shline
+\end{tabular}
+\end{center}
+}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%洋葱表皮观测
+\begin{frame}
+  \frametitle{洋葱表皮观测---实验前练习}
+  \setcounter{subfigure}{0}          %  将subfigure计数器重置,不然会接着前面的编号，如果前面已使用a b c ,不重置计数器则会从d开始编号
+  \only<1>{
+  \begin{figure}
+\centering
+\qihao
+\subfigure[洋葱鳞片]{
+\includegraphics[width=0.48\textwidth]{aaa-ExtraAdd-OnionFlake}}
+\subfigure[鳞片内表面观测($30\times$N.A.0.40)]{
+\includegraphics[width=0.48\textwidth]{aaa-ExtraAdd-OnionFlakeInnerUnderLightSectionMethodMicroscope}}
+\end{figure}
+}
+%%%%%%%%%%%%%%%数据
+\only<2>{
+\begin{table}
+\centering
+\qihao
+$30\times$N.A.0.40~~物镜组洋葱鳞片内表面观测数据\\
+\begin{tabular}{Ic|c|c|c|c|cI}%p{}表示固定表格宽度
+  \shline
+ \diagbox{对象}{数据}{项目}&\multicolumn{4}{c|}{鼓轮读数($mm$)}&表面粗糙度$R_z(um)$\\  \hline
+  &峰底($h_{min}$)&峰顶($h_{max}$)&差值($a$)&平均值($\bar{a}$)  &\multirow{6}{*}{
+\begin{minipage}{0.17\textwidth}               %小页环境 放公式，不然表格环境下无控制公式长度和换行
+ \begin{equation*}			    %无编号公式
+\begin{aligned}                             %公式对齐
+ R_z&=\frac{\bar{a}} {2V} \\&=\frac{0.354}{2\times17.488}\\ &=0.01012mm\\&\approx 10um
+ \end{aligned}
+\end{equation*}
+\end{minipage}}\\ \cline{2-5}
+\multirow{5}{4em}{洋葱鳞片\\ ~内表面~}& 0.943 & 1.312 &0.369&\multirow{5}{*}{0.354}&\\ \cline{2-4} %multirow 换行 http://bbs.ctex.org/forum.php?mod=viewthread&tid=44033 亦可以用\parbox{text \\ text}
+  &0.982&1.363&0.381&& \\ \cline{2-4}
+  &0.904&1.187&0.283&&\\ \cline{2-4}
+  &0.549&1.858&0.309&& \\ \cline{2-4}
+  &0.384&0.767&0.383&&\\ \shline
+\end{tabular}
+\end{table}
+}
+\end{frame}
+
+\subsection{实验观测}
+\begin{frame}
+  \frametitle{实验观测材料}
+  \liuhao
+  \begin{figure}
+\centering
+\subfigure[\liuhao 灌木叶]{
+\label{09-ExperimentalPlantsLeaves:Unknown}
+\includegraphics[width=0.4\textwidth]{09-ExperimentalPlantsLeaves-Unknown}
+}
+\subfigure[\liuhao 竹叶]{
+\label{09-ExperimentalPlantsLeaves:BambooLeaves}
+\includegraphics[width=0.4\textwidth]{09-ExperimentalPlantsLeaves-BambooLeaves}
+}
+\\
+\subfigure[\liuhao 芋头叶]{
+\label{09-ExperimentalPlantsLeaves:TaroLeaves}
+\includegraphics[width=0.4\textwidth]{09-ExperimentalPlantsLeaves-TaroLeaves}
+}
+\end{figure}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%灌木叶
+\begin{frame}
+  \frametitle{灌木叶观测($30\times$N.A.0.40~~物镜组)}
+  \qihao
+\only<1,3>{
+\begin{figure}
+\centering
+\includegraphics[width=0.7\textwidth]{10-PhotoOfExperimentalPlants-Unknown}
+\\  \liuhao  灌木叶观测图像
+\end{figure}
+}
+\only<2>{
+\centering
+\liuhao   灌木叶测量数据\\
+\qihao
+\begin{tabular}{Ic|c|c|c|c|cI}
+  \shline
+ \diagbox{对象}{数据}{项目}&\multicolumn{4}{c|}{鼓轮读数($mm$)}&$R_z(um)$\\  \hline
+  &峰底($h_{min}$)&峰顶($h_{max}$)&差值($a$)&平均值($\bar{a}$)  &\multirow{6}{*}{
+\begin{minipage}{0.17\textwidth}
+ \begin{equation*}			    %无编号公式
+\begin{aligned}                             %公式对齐
+ R_z&=\frac{\bar{a}} {2V} \\&=\frac{0.8992}{2\times17.488}\\ &=0.0257mm\\&=25.7um
+ \end{aligned}
+\end{equation*}
+\end{minipage}}\\ \cline{2-5}
+\multirow{5}{*}{灌木叶}& 0.623 & 1.516 &0.893&\multirow{5}{*}{0.8992}&\\ \cline{2-4}
+  &0.625&1.732&1.107&& \\ \cline{2-4}
+  &0.494&1.647&1.253&&\\ \cline{2-4}
+  &0.806&1.436&0.630&& \\ \cline{2-4}
+  &0.354&0.965&0.611&&\\ \shline
+\end{tabular}\\
+}
+\only<2,3>{
+\wuhao
+\textbf{分析:}起伏不均匀,视野中亮点(更低一级的凸起)形状亦不规则。
+}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%竹叶
+\begin{frame}
+  \frametitle{竹叶观测($30\times$N.A.0.40~~物镜组)}
+  \qihao
+\only<1,3>{
+\begin{figure}
+\centering
+\includegraphics[width=0.7\textwidth]{10-PhotoOfExperimentalPlants-BambooLeaves}
+\\  \liuhao  竹叶观测图像
+\end{figure}
+}
+\only<2>{
+\centering
+\liuhao   竹叶测量数据\\
+\qihao
+\begin{tabular}{Ic|c|c|c|c|cI}
+  \shline
+ \diagbox{对象}{数据}{项目}&\multicolumn{4}{c|}{鼓轮读数($mm$)}&$R_z(um)$\\  \hline
+   &峰底($h_{min}$)&峰顶($h_{max}$)&差值($a$)&平均值($\bar{a}$)&\multirow{6}{*}{
+\begin{minipage}{0.17\textwidth}
+ \begin{equation*}			    %无编号公式
+\begin{aligned}                             %公式对齐
+ R_z&=\frac{\bar{a}} {2V} \\&=\frac{0.4346}{2\times17.488}\\ &=0.01242mm\\&=12.42um
+ \end{aligned}
+\end{equation*}
+\end{minipage}} \\ \cline{2-5}
+\multirow{5}{*}{竹叶}& 0.518 &1.051  &0.435&\multirow{5}{*}{0.4346}& \\ \cline{2-4}
+  &0.913&1.313&0.400&& \\ \cline{2-4}
+  &0.404&0.802&0.398&&\\ \cline{2-4}
+  &0.555&0.997&0.442&& \\ \cline{2-4}
+  &0.602&1.082&0.480&&\\ \shline
+\end{tabular}\\
+}
+\only<2,3>{
+\wuhao
+\textbf{分析:}只有中间部分起伏均匀。
+}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%芋头叶
+\begin{frame}
+  \frametitle{芋头叶观测($30\times$N.A.0.40~~物镜组)}
+  \qihao
+\only<1,3>{
+\begin{figure}
+\centering
+\includegraphics[width=0.7\textwidth]{10-PhotoOfExperimentalPlants-TaroLeaves}
+\\  \liuhao  芋头叶观测图像
+\end{figure}
+}
+\only<2>{
+\centering
+\liuhao   芋头叶测量数据\\
+\qihao
+\begin{tabular}{Ic|c|c|c|c|cI}
+  \shline
+ \diagbox{对象}{数据}{项目}&\multicolumn{4}{c|}{鼓轮读数($mm$)}&$R_z(um)$\\  \hline
+   &峰底($h_{min}$)&峰顶($h_{max}$)&差值($a$)&平均值($\bar{a}$)&\multirow{6}{*}{
+\begin{minipage}{0.17\textwidth}
+ \begin{equation*}			    %无编号公式
+\begin{aligned}                             %公式对齐
+ R_z&=\frac{\bar{a}} {2V} \\&=\frac{0.3672}{2\times17.488}\\ &=0.01049mm\\&=10.49um
+ \end{aligned}
+\end{equation*}
+\end{minipage}} \\ \cline{2-5}
+\multirow{5}{*}{芋头叶}&0.248  &0.586  &0.338&\multirow{5}{*}{0.3672}& \\ \cline{2-4}
+  &0.181&0.505&0.324&& \\ \cline{2-4}
+  &0.218&0.607&0.389&&\\ \cline{2-4}
+  &0.516&0.981&0.465&& \\ \cline{2-4}
+  &0.601&0.921&0.320&&\\ \shline
+\end{tabular}\\
+}
+\only<2,3>{
+\wuhao
+\textbf{分析:}光带边缘为锯齿形,表明可能有更细微结构存在;表面是网状的凸起结构。
+}
+\end{frame}
+
+
+%%%---------------------------------------------------------------------------------------------------
+%%=================================================================================================
