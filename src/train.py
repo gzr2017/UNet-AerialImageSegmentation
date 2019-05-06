@@ -22,7 +22,7 @@ def get_a_optimizer(learning_rate, global_step, cost):
     return optimizer
 
 
-def train(unet, i_net, train_dataset, test_dataset=None):
+def train(unet, i_net, train_dataset):
     global_step = tf.Variable(0, name='global_step', trainable=False)
     learning_rate_node = tf.train.exponential_decay(learning_rate=LEARNING_RATE,
                                                     global_step=global_step,
@@ -71,4 +71,4 @@ if __name__ == '__main__':
     unet.predict('C:\\Users\\gzr19\\Documents\\Code\\UNet-AeroSeg\\fake_data\\test\\original\\data\\0.png',
                  i_net.dir_dict['model'], '.')
 
-    s='C:\/Users\gzr19\Documents\HashTable\synthwave84-noglow.css'
+    s = 'C:\/Users\gzr19\Documents\HashTable\synthwave84-noglow.css'
