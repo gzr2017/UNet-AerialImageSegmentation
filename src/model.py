@@ -6,15 +6,15 @@ from src.data import *
 def weight_variable(shape, stddev, name):
     # initial = tf.truncated_normal(shape, stddev=stddev)
     # return tf.Variable(initial, name=name)
-    return tf.Variable(name=name, shape=shape,
-                       initializer=tf.contrib.layers.xavier_initializer())
+    return tf.get_variable(name=name, shape=shape,
+                           initializer=tf.contrib.layers.xavier_initializer())
 
 # 生成偏差
 
 
 def bias_variable(shape, name):
-    initial = tf.random_normal(shape=shape, dtype=tf.float32)
-    return tf.Variable(initial, name=name)
+    # initial = tf.random_normal(shape=shape, dtype=tf.float32)
+    return tf.get_variable(name=name, shape=shape, initializer=tf.contrib.layers.xavier_initializer())
 
 
 # 下采样层
@@ -82,15 +82,18 @@ def build_unet(x, deconvoluting_trainable=False):
             if layer == 0:  # 如果是输入层
                 w1 = weight_variable(
                     [FILTER_SIZE, FILTER_SIZE, IMG_CHANNEL, features], stddev,
-                    name='w1')
+                    name='down_conv_{}_w1'.format(str(layer)))
             else:
                 w1 = weight_variable(
                     [FILTER_SIZE, FILTER_SIZE, features // 2, features], stddev,
-                    name='w1')
+                    name='down_conv_{}_w1'.format(str(layer)))
             w2 = weight_variable(
-                [FILTER_SIZE, FILTER_SIZE, features, features], stddev, name='w2')
-            b1 = bias_variable([features], name='b1')
-            b2 = bias_variable([features], name='b2')
+                [FILTER_SIZE, FILTER_SIZE, features,
+                    features], stddev, name='down_conv_{}_w2'.format(str(layer)))
+            b1 = bias_variable(
+                [features], name='down_conv_{}_b1'.format(str(layer)))
+            b2 = bias_variable(
+                [features], name='down_conv_{}_bq'.format(str(layer)))
             conv1 = convoluting(in_node, w1, b1)
             conv2 = convoluting(tf.nn.relu(conv1), w2, b2)
             dw_h_convs[layer] = tf.nn.relu(conv2)
@@ -106,21 +109,25 @@ def build_unet(x, deconvoluting_trainable=False):
             features = 2 ** layer * FEATURES_ROOT
             stddev = np.sqrt(2 / (POOL_SIZE ** 2 * features))
             wd = weight_variable(
-                [POOL_SIZE, POOL_SIZE, features // 2, features], stddev, name='wd')
-            bd = bias_variable([features // 2], name='bd')
+                [POOL_SIZE, POOL_SIZE, features // 2, features], stddev, name='up_conv_{}_wd'.format(str(layer)))
+            bd = bias_variable(
+                [features // 2], name='up_conv_{}_bd'.format(str(layer)))
             if deconvoluting_trainable:
                 weights.append((wd, bd))
             h_deconv = tf.nn.relu(
-                tf.add(deconvoluting(in_node, wd), bd, name='h_deconv'))
+                tf.add(deconvoluting(in_node, wd), bd,
+                       name='up_conv_{}_h_deconv'.format(str(layer))))
             deconvs[layer] = crop_and_concat(dw_h_convs[layer - 1], h_deconv)
             stddev = np.sqrt(2 / (FILTER_SIZE ** 2 * features//2))
             w1 = weight_variable(
-                [FILTER_SIZE, FILTER_SIZE, features, features // 2], stddev, name='w1')
+                [FILTER_SIZE, FILTER_SIZE, features, features // 2], stddev, name='up_conv_{}_w1'.format(str(layer)))
             w2 = weight_variable(
                 [FILTER_SIZE, FILTER_SIZE, features // 2, features // 2], stddev,
-                name='w2')
-            b1 = bias_variable([features // 2], name='b1')
-            b2 = bias_variable([features // 2], name='b2')
+                name='up_conv_{}_w2'.format(str(layer)))
+            b1 = bias_variable(
+                [features // 2], name='up_conv_{}_b1'.format(str(layer)))
+            b2 = bias_variable(
+                [features // 2], name='up_conv_{}_b2'.format(str(layer)))
             conv1 = convoluting(deconvs[layer], w1, b1)
             conv2 = convoluting(tf.nn.relu(conv1), w2, b2)
             up_h_convs[layer] = tf.nn.relu(conv2)

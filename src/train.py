@@ -70,5 +70,3 @@ if __name__ == '__main__':
     i_net = NetDir('../i_net', 'unet')
     unet.predict('C:\\Users\\gzr19\\Documents\\Code\\UNet-AeroSeg\\fake_data\\test\\original\\data\\0.png',
                  i_net.dir_dict['model'], '.')
-
-    s = 'C:\/Users\gzr19\Documents\HashTable\synthwave84-noglow.css'

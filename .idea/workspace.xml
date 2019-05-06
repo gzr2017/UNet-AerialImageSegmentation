@@ -220,7 +220,7 @@
       <workItem from="1557024424532" duration="783000" />
       <workItem from="1557061830913" duration="594000" />
       <workItem from="1557067232109" duration="663000" />
-      <workItem from="1557100769560" duration="271000" />
+      <workItem from="1557100769560" duration="618000" />
     </task>
     <task id="LOCAL-00001" summary="修改了损失函数">
       <created>1557061862186</created>
@@ -233,7 +233,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="7148000" />
+    <option name="totallyTimeSpent" value="7495000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
