@@ -96,8 +96,8 @@ def build_unet(x, deconvoluting_trainable=False):
             b2 = bias_variable([features],
                                name='down_conv_{}_bq'.format(str(layer)))
             conv1 = convoluting(in_node, w1, b1)
-            conv2 = convoluting(tf.nn.relu(conv1), w2, b2)
-            dw_h_convs[layer] = tf.nn.relu(conv2)
+            conv2 = convoluting(tf.math.sigmoid(conv1), w2, b2)
+            dw_h_convs[layer] = tf.math.sigmoid(conv2)
             weights.append((w1, w2))
             biases.append((b1, b2))
             convs.append((conv1, conv2))
@@ -115,7 +115,7 @@ def build_unet(x, deconvoluting_trainable=False):
                                name='up_conv_{}_bd'.format(str(layer)))
             if deconvoluting_trainable:
                 weights.append((wd, bd))
-            h_deconv = tf.nn.relu(
+            h_deconv = tf.math.sigmoid(
                 tf.add(deconvoluting(in_node, wd),
                        bd,
                        name='up_conv_{}_h_deconv'.format(str(layer))))
@@ -131,8 +131,8 @@ def build_unet(x, deconvoluting_trainable=False):
             b2 = bias_variable([features // 2],
                                name='up_conv_{}_b2'.format(str(layer)))
             conv1 = convoluting(deconvs[layer], w1, b1)
-            conv2 = convoluting(tf.nn.relu(conv1), w2, b2)
-            up_h_convs[layer] = tf.nn.relu(conv2)
+            conv2 = convoluting(tf.math.sigmoid(conv1), w2, b2)
+            up_h_convs[layer] = tf.math.sigmoid(conv2)
             in_node = up_h_convs[layer]
             weights.append((w1, w2))
             biases.append((b1, b2))
@@ -141,7 +141,7 @@ def build_unet(x, deconvoluting_trainable=False):
         w = weight_variable([1, 1, FEATURES_ROOT, N_CLASS], name='w')
         b = bias_variable([N_CLASS], name='b')
         conv = convoluting(in_node, w, b)
-        output_map = tf.nn.relu(conv)
+        output_map = tf.math.sigmoid(conv)
         up_h_convs['out'] = output_map
         weights.append((w, b))
     variables = []
