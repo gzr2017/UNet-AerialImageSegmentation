@@ -1,0 +1,52 @@
+This is BibTeX, Version 0.99d (TeX Live 2019)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: 基于 U-Net 网络的遥感图像语义分割.aux
+The style file: gbt7714-2005.bst
+A level-1 auxiliary file: chap1.aux
+A level-1 auxiliary file: chap2.aux
+A level-1 auxiliary file: chap3.aux
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Database file #1: Bibs/mybib.bib
+You've used 10 entries,
+            3050 wiz_defined-function locations,
+            756 strings with 7980 characters,
+and the built_in function-call counts, 21436 in all, are:
+= -- 2445
+> -- 38
+< -- 86
++ -- 1994
+- -- 133
+* -- 462
+:= -- 2458
+add.period$ -- 0
+call.type$ -- 10
+change.case$ -- 56
+chr.to.int$ -- 0
+cite$ -- 10
+duplicate$ -- 3067
+empty$ -- 760
+format.name$ -- 112
+if$ -- 5798
+int.to.chr$ -- 0
+int.to.str$ -- 10
+missing$ -- 0
+newline$ -- 57
+num.names$ -- 10
+pop$ -- 270
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 179
+stack$ -- 0
+substring$ -- 2631
+swap$ -- 438
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 0
+while$ -- 255
+width$ -- 12
+write$ -- 144

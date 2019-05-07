@@ -1,0 +1,21 @@
+\contentsline {paragraph}{\CJKfamily {song}\fontsize {12pt}{\baselineskip }\selectfont \bfseries 关键词：}{3}{paragraph*.1}% 
+\contentsline {paragraph}{\CJKfamily {song}\fontsize {12pt}{\baselineskip }\selectfont \bfseries Key Words: }{4}{paragraph*.2}% 
+\contentsline {section}{\numberline {第一章}先行研究}{1}{section.1}% 
+\contentsline {subsection}{\numberline {1.1}图像分割技术的历史}{1}{subsection.1.1}% 
+\contentsline {subsection}{\numberline {1.2}深度学习与图像分割}{2}{subsection.1.2}% 
+\contentsline {subsubsection}{\numberline {1.2.1}全卷积网络与语义分割网络设计准则}{2}{subsubsection.1.2.1}% 
+\contentsline {paragraph}{全连接层与全卷积层}{2}{paragraph*.3}% 
+\contentsline {paragraph}{池化层与上采样}{3}{paragraph*.4}% 
+\contentsline {paragraph}{跳跃连接与深监督}{4}{paragraph*.5}% 
+\contentsline {section}{\numberline {第二章}研究方法}{5}{section.2}% 
+\contentsline {subsection}{\numberline {2.1}数据集选择及处理}{5}{subsection.2.1}% 
+\contentsline {subsection}{\numberline {2.2}卷积网络结构设计}{6}{subsection.2.2}% 
+\contentsline {subsubsection}{\numberline {2.2.1}损失设计}{7}{subsubsection.2.2.1}% 
+\contentsline {subsection}{\numberline {2.3}实验后处理}{7}{subsection.2.3}% 
+\contentsline {section}{\numberline {第三章}实验}{8}{section.3}% 
+\contentsline {subsection}{\numberline {3.1}变量初始化}{8}{subsection.3.1}% 
+\contentsline {paragraph}{$stddev=0.1$}{8}{paragraph*.8}% 
+\contentsline {paragraph}{$stddev=\sqrt {me}$}{8}{paragraph*.9}% 
+\contentsline {paragraph}{xavier}{8}{paragraph*.10}% 
+\contentsline {section}{致谢}{9}{section*.11}% 
+\contentsline {section}{参考文献}{11}{section*.12}% 

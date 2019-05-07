@@ -1,0 +1,93 @@
+\begin{thebibliography}{10}
+\providecommand{\bibauthor}[1]{#1}
+\providecommand{\bibeditor}[1]{#1}
+\providecommand{\bibtranslator}[1]{#1}
+\providecommand{\bibtitle}[1]{#1}
+\providecommand{\bibbooktitle}[1]{#1}
+\providecommand{\bibjournal}[1]{#1}
+\providecommand{\bibmark}[1]{#1}
+\providecommand{\bibcountry}[1]{#1}
+\providecommand{\bibpatentid}[1]{#1}
+\providecommand{\bibedition}[1]{#1}
+\providecommand{\biborganization}[1]{#1}
+\providecommand{\bibaddress}[1]{#1}
+\providecommand{\bibpublisher}[1]{#1}
+\providecommand{\bibinstitution}[1]{#1}
+\providecommand{\bibschool}[1]{#1}
+\providecommand{\bibvolume}[1]{#1}
+\providecommand{\bibnumber}[1]{#1}
+\providecommand{\bibversion}[1]{#1}
+\providecommand{\bibpages}[1]{#1}
+\providecommand{\bibmodifydate}[1]{#1}
+\providecommand{\bibcitedate}[1]{#1}
+\providecommand{\bibyear}[1]{#1}
+\providecommand{\bibdate}[1]{#1}
+\providecommand{\biburl}[1]{\newline\url{#1}}
+
+\bibitem{long2015fully}
+\bibauthor{LONG J\@, SHELHAMER E\@, DARRELL T}\@. \bibtitle{Fully convolutional
+  networks for semantic segmentation}\bibmark{[C]} \@.
+  \bibbooktitle{Proceedings of the IEEE conference on computer vision and
+  pattern recognition}\@. \bibyear{2015}\thinspace{}\textnormal{:
+  }\bibpages{3431\thinspace{}\textnormal{--}\thinspace{}3440}\@.
+
+\bibitem{krizhevsky2012imagenet}
+\bibauthor{KRIZHEVSKY A\@, SUTSKEVER I\@, HINTON G~E}\@. \bibtitle{Imagenet
+  classification with deep convolutional neural networks}\bibmark{[C]} \@.
+  \bibbooktitle{Advances in neural information processing systems}\@.
+  \bibyear{2012}\thinspace{}\textnormal{:
+  }\bibpages{1097\thinspace{}\textnormal{--}\thinspace{}1105}\@.
+
+\bibitem{simonyan2014very}
+\bibauthor{SIMONYAN K\@, ZISSERMAN A}\@. \bibtitle{Very deep convolutional
+  networks for large-scale image recognition}\bibmark{[J]}\@. \bibjournal{arXiv
+  preprint arXiv:1409.1556}\@, \bibyear{2014}\@.
+
+\bibitem{zhao2017pyramid}
+\bibauthor{ZHAO H\@, SHI J\@, QI X, et~al}\@. \bibtitle{Pyramid scene parsing
+  network}\bibmark{[C]} \@. \bibbooktitle{Proceedings of the IEEE conference on
+  computer vision and pattern recognition}\@.
+  \bibyear{2017}\thinspace{}\textnormal{:
+  }\bibpages{2881\thinspace{}\textnormal{--}\thinspace{}2890}\@.
+
+\bibitem{badrinarayanan2017segnet}
+\bibauthor{BADRINARAYANAN V\@, KENDALL A\@, CIPOLLA R}\@. \bibtitle{Segnet: A
+  deep convolutional encoder-decoder architecture for image
+  segmentation}\bibmark{[J]}\@. \bibjournal{IEEE transactions on pattern
+  analysis and machine intelligence}\@, \bibyear{2017}\@,
+  \bibvolume{39}\bibnumber{(12)}\thinspace{}\textnormal{:
+  }\bibpages{2481\thinspace{}\textnormal{--}\thinspace{}2495}\@.
+
+\bibitem{ronneberger2015u}
+\bibauthor{RONNEBERGER O\@, FISCHER P\@, BROX T}\@. \bibtitle{U-net:
+  Convolutional networks for biomedical image segmentation}\bibmark{[C]} \@.
+  \bibbooktitle{International Conference on Medical image computing and
+  computer-assisted intervention}\@. \bibyear{2015}\thinspace{}\textnormal{:
+  }\bibpages{234\thinspace{}\textnormal{--}\thinspace{}241}\@.
+
+\bibitem{chen2014semantic}
+\bibauthor{CHEN L-C\@, PAPANDREOU G\@, KOKKINOS I, et~al}\@. \bibtitle{Semantic
+  image segmentation with deep convolutional nets and fully connected
+  crfs}\bibmark{[J]}\@. \bibjournal{arXiv preprint arXiv:1412.7062}\@,
+  \bibyear{2014}\@.
+
+\bibitem{lee2015deeply}
+\bibauthor{LEE C-Y\@, XIE S\@, GALLAGHER P, et~al}\@.
+  \bibtitle{Deeply-supervised nets}\bibmark{[C]} \@. \bibbooktitle{Artificial
+  Intelligence and Statistics}\@. \bibyear{2015}\thinspace{}\textnormal{:
+  }\bibpages{562\thinspace{}\textnormal{--}\thinspace{}570}\@.
+
+\bibitem{xie2015holistically}
+\bibauthor{XIE S\@, TU Z}\@. \bibtitle{Holistically-nested edge
+  detection}\bibmark{[C]} \@. \bibbooktitle{Proceedings of the IEEE
+  international conference on computer vision}\@.
+  \bibyear{2015}\thinspace{}\textnormal{:
+  }\bibpages{1395\thinspace{}\textnormal{--}\thinspace{}1403}\@.
+
+\bibitem{maggiori2017dataset}
+\bibauthor{MAGGIORI E\@, TARABALKA Y\@, CHARPIAT G, et~al}\@. \bibtitle{Can
+  Semantic Labeling Methods Generalize to Any City? The Inria Aerial Image
+  Labeling Benchmark}\bibmark{[C]} \@. \bibbooktitle{IEEE International
+  Geoscience and Remote Sensing Symposium (IGARSS)}\@. \bibyear{2017}\@.
+
+\end{thebibliography}
