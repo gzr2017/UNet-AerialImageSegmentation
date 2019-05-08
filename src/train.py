@@ -31,13 +31,7 @@ def summary_init(loss,
                  accuracy,
                  learning_rate,
                  norm_gradients_node=None):
-    tf.summary.scalar('loss', loss)
-    tf.summary.scalar('cross_entropy', cross_entropy)
-    tf.summary.scalar('accuracy', accuracy)
-    tf.summary.scalar('learning_rate', learning_rate)
-    if norm_gradients_node is not None:
-        tf.summary.histogram('norm_grads', norm_gradients_node)
-    summary_op = tf.summary.merge_all()
+
     return summary_op
 
 
@@ -53,14 +47,16 @@ def train(unet, i_net, train_dataset):
     norm_gradients_node = tf.Variable(tf.constant(
         0.0, shape=[len(unet.gradients_node)]),
         name='norm_gradients')
-    loss = 0
-    cross_entropy = 0
-    accuracy = 0
-    summary_op = summary_init(loss, cross_entropy, accuracy,
-                              learning_rate_node, norm_gradients_node)
+    tf.summary.scalar('loss', unet.loss)
+    tf.summary.scalar('cross_entropy', unet.cross_entropy)
+    tf.summary.scalar('accuracy', unet.accuracy)
+    tf.summary.scalar('learning_rate', learning_rate_node)
+    if norm_gradients_node is not None:
+        tf.summary.histogram('norm_grads', norm_gradients_node)
+    summary_op = tf.summary.merge_all()
     with tf.Session() as sess:
-        # sess.run(summary_op)
         sess.run(tf.global_variables_initializer())
+        summary_writer = tf.summary.FileWriter(i_net.dir_dict['output'], graph=sess.graph)
         if RESTORE is not None:
             unet.restore(sess, i_net.dir_dict['model'])
         logging.info('Start Optimization')
@@ -75,8 +71,8 @@ def train(unet, i_net, train_dataset):
                     logging.error('End of training dataset!')
                 train_x = train_data['aerial_image']
                 train_y = train_data['aerial_image_label']
-                _, loss, output_map, gradients = sess.run(
-                    (optimizer, unet.cost, unet.output_map,
+                _, summary_str, loss, output_map, gradients = sess.run(
+                    (optimizer, summary_op, unet.cost, unet.output_map,
                      unet.gradients_node),
                     feed_dict={
                         unet.x: train_x,
@@ -97,4 +93,6 @@ def train(unet, i_net, train_dataset):
                     prediction = output_class(output_map)
                     class_to_color(train_x, train_y, prediction, i_net.dir_dict['prediction'],
                                    str(step))
+                    summary_writer.add_summary(summary_str, step)
+                    summary_writer.flush()
         logging.info('Optimization Finished!')
