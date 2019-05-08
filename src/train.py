@@ -26,13 +26,6 @@ def get_a_optimizer(learning_rate, global_step, cost):
     return optimizer
 
 
-def summary_init(loss,
-                 cross_entropy,
-                 accuracy,
-                 learning_rate,
-                 norm_gradients_node=None):
-
-    return summary_op
 
 
 def train(unet, i_net, train_dataset):
@@ -47,7 +40,7 @@ def train(unet, i_net, train_dataset):
     norm_gradients_node = tf.Variable(tf.constant(
         0.0, shape=[len(unet.gradients_node)]),
         name='norm_gradients')
-    tf.summary.scalar('loss', unet.loss)
+    tf.summary.scalar('loss', unet.cost)
     tf.summary.scalar('cross_entropy', unet.cross_entropy)
     tf.summary.scalar('accuracy', unet.accuracy)
     tf.summary.scalar('learning_rate', learning_rate_node)

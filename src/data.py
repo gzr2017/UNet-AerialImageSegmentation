@@ -183,22 +183,13 @@ def class_to_color(data, label, classed_prediction, save_path, save_name):
         if recover_label.shape[2] == 1:
             recover_label = np.reshape(recover_label, [recover_label.shape[0], recover_label.shape[1]])
         match_data = Image.fromarray(match_data.astype('uint8'))
-        # 十分alien的操作，我要窒息了：https://github.com/matplotlib/matplotlib/issues/2305/
-        DPI = plt.gcf().get_dpi()
-        plt.figure()
-        plt.subplot(1, 3, 1, figsize=(IMG_SIZE / float(DPI), IMG_SIZE / float(DPI)))
-        plt.title('data')
-        plt.imshow(match_data), plt.axis('off')
-        plt.subplot(1, 3, 2, figsize=(IMG_SIZE / float(DPI), IMG_SIZE / float(DPI)))
-        plt.title('label')
-        plt.imshow(recover_label), plt.axis('off')
-        plt.subplot(1, 3, 3, figsize=(IMG_SIZE / float(DPI), IMG_SIZE / float(DPI)))
-        plt.title('prediction')
-        plt.imshow(color_value), plt.axis('off')
-        plt.savefig(path.join(save_path, save_name + '_' + str(h) + '.png'))
-
-
-
+        recover_label = Image.fromarray(recover_label)
+        color_value = Image.fromarray(color_value)
+        compare_result = Image.new('RGB', (IMG_SIZE * 3, IMG_SIZE))
+        compare_result.paste(match_data, (0, 0))
+        compare_result.paste(recover_label, (IMG_SIZE, 0))
+        compare_result.paste(color_value, (IMG_SIZE * 2, 0))
+        compare_result.save(path.join(save_path, save_name + '_' + str(h) + '.png'))
 
 
 class DatasetDir(object):
