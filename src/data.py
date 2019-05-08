@@ -173,9 +173,9 @@ def class_to_color(data, label, classed_prediction, save_path, save_name):
             for j in range(cols):
                 for k in range(N_CLASS):
                     if classed_prediction[h][i][j][k] == 1:
-                        color_value[i][j][0:1] = reverse_COLOR_CLASS_DICT[k]
+                        color_value[i][j] = reverse_COLOR_CLASS_DICT[k]
                     if label[h][i][j][k] == 1:
-                        recover_label[i][j][0:1] = reverse_COLOR_CLASS_DICT[k]
+                        recover_label[i][j] = reverse_COLOR_CLASS_DICT[k]
         if color_value.shape[2] == 1:
             color_value = np.reshape(color_value, [rows, cols])
         if match_data.shape[2] == 1:
@@ -183,18 +183,22 @@ def class_to_color(data, label, classed_prediction, save_path, save_name):
         if recover_label.shape[2] == 1:
             recover_label = np.reshape(recover_label, [recover_label.shape[0], recover_label.shape[1]])
         match_data = Image.fromarray(match_data.astype('uint8'))
+        # 十分alien的操作，我要窒息了：https://github.com/matplotlib/matplotlib/issues/2305/
+        DPI = plt.gcf().get_dpi()
         plt.figure()
-        plt.subplots_adjust(hspace=0.3, wspace=0.3)
-        plt.subplot(1, 3, 1)
+        plt.subplot(1, 3, 1, figsize=(IMG_SIZE / float(DPI), IMG_SIZE / float(DPI)))
         plt.title('data')
         plt.imshow(match_data), plt.axis('off')
-        plt.subplot(1, 3, 2)
+        plt.subplot(1, 3, 2, figsize=(IMG_SIZE / float(DPI), IMG_SIZE / float(DPI)))
         plt.title('label')
         plt.imshow(recover_label), plt.axis('off')
-        plt.subplot(1, 3, 3)
+        plt.subplot(1, 3, 3, figsize=(IMG_SIZE / float(DPI), IMG_SIZE / float(DPI)))
         plt.title('prediction')
         plt.imshow(color_value), plt.axis('off')
         plt.savefig(path.join(save_path, save_name + '_' + str(h) + '.png'))
+
+
+
 
 
 class DatasetDir(object):

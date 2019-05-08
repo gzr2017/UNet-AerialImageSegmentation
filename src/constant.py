@@ -13,8 +13,8 @@ IMG_CHANNEL = 3
 OUTPUT_IMG_SIZE = 256  # 手工计算……我也想不到什么可以自动计算的方法惹
 N_CLASS = 2
 COLOR_CLASS_DICT = {  # 注意！！！！！！！！！OpenCV是按照BGR顺序存储颜色的！！！！！！！！！！虽然这里并没有使用OpenCV……如果用了OpenCV还是注意一个比较好
-    (0,): 1,  # 背景：即使是单通道图片，也要打逗号！！！！！！！！！！
-    (255,): 0  # 房屋
+    (0,0,0): 1,  # 背景：即使是单通道图片，也要打逗号！！！！！！！！！！
+    (255,255,255): 0  # 房屋
 }
 # 训练参数
 BATCH_SIZE = 4
@@ -26,7 +26,7 @@ LEARNING_RATE = 1e-5
 DECAY_RATE = 0.95
 DISPLAY_STEP = 5  # number of steps till outputting stats
 NORM_GRADS = True
-DATASET_SLICE = 19  # 每个tfrecord中包含多少对数据
+DATASET_SLICE = 40  # 每个tfrecord中包含多少对数据
 # UNet网络参数
 LAYERS = 4
 FEATURES_ROOT = 64
