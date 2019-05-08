@@ -26,8 +26,6 @@ def get_a_optimizer(learning_rate, global_step, cost):
     return optimizer
 
 
-
-
 def train(unet, i_net, train_dataset):
     global_step = tf.Variable(0, name='global_step', trainable=False)
     learning_rate_node = tf.train.exponential_decay(
@@ -64,9 +62,9 @@ def train(unet, i_net, train_dataset):
                     logging.error('End of training dataset!')
                 train_x = train_data['aerial_image']
                 train_y = train_data['aerial_image_label']
-                _, summary_str, loss, output_map, gradients = sess.run(
+                _, summary_str, loss, output_map, gradients, _ = sess.run(
                     (optimizer, summary_op, unet.cost, unet.output_map,
-                     unet.gradients_node),
+                     unet.gradients_node, learning_rate_node),
                     feed_dict={
                         unet.x: train_x,
                         unet.y: train_y,
