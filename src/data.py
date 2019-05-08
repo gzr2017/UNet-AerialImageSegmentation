@@ -6,6 +6,7 @@ import tensorflow as tf
 from PIL import Image
 import logging
 from itertools import count
+import matplotlib.pyplot as plt
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
 
@@ -20,7 +21,7 @@ def file_name_generator(file_path=None, ex_name=None, file_name=None):
         except IndexError:
             logging.error('你的路径中未找到被dot分隔的文件名及拓展名')
         for i in count(0):
-            if ex_name is None:  # 如果文件拓展名缺省，那么就用原始的文件拓展名
+            if ex_name is None:  # 如果文件拓展名为None，那么就用原始的文件拓展名
                 yield true_file_name + '_' + str(i) + '.' + true_file_type
             elif not ex_name:  # 如果ex_name==False，不使用文件名
                 yield true_file_name + '_' + str(i)
@@ -129,11 +130,11 @@ def create_dataset(image_data_source, label_data_source, tfrecord_save_path):
 def parse_dataset(proto):
     dics = {
         'aerial_image_label':
-        tf.FixedLenFeature(shape=[OUTPUT_IMG_SIZE, OUTPUT_IMG_SIZE, N_CLASS],
-                           dtype=tf.float32),
+            tf.FixedLenFeature(shape=[OUTPUT_IMG_SIZE, OUTPUT_IMG_SIZE, N_CLASS],
+                               dtype=tf.float32),
         'aerial_image':
-        tf.FixedLenFeature(shape=[IMG_SIZE, IMG_SIZE, IMG_CHANNEL],
-                           dtype=tf.float32)
+            tf.FixedLenFeature(shape=[IMG_SIZE, IMG_SIZE, IMG_CHANNEL],
+                               dtype=tf.float32)
     }
     parsed_pair = tf.parse_single_example(proto, dics)
     return parsed_pair
@@ -151,6 +152,49 @@ def get_data_iterator(tfrecord_path):
     parsed_dataset = parsed_dataset.batch(BATCH_SIZE)
     iterator = parsed_dataset.make_one_shot_iterator()
     return iterator
+
+
+def class_to_color(data, label, classed_prediction, save_path, save_name):
+    # 把data和label展成四维
+    data = np.reshape(data, [label.shape[0], label.shape[1], label.shape[2], -1])
+    label = np.reshape(label, [label.shape[0], label.shape[1], label.shape[2], -1])
+    reverse_COLOR_CLASS_DICT = dict(
+        zip(COLOR_CLASS_DICT.values(), COLOR_CLASS_DICT.keys()))
+    [batch_size, rows, cols, _] = classed_prediction.shape
+    for h in range(batch_size):
+        color_value = np.zeros(
+            (rows, cols, len(list(COLOR_CLASS_DICT.keys())[0])),
+            dtype=np.uint8)
+        recover_label = np.zeros(
+            (rows, cols, len(list(COLOR_CLASS_DICT.keys())[0])),
+            dtype=np.uint8)
+        match_data = data[h]
+        for i in range(rows):
+            for j in range(cols):
+                for k in range(N_CLASS):
+                    if classed_prediction[h][i][j][k] == 1:
+                        color_value[i][j][0:1] = reverse_COLOR_CLASS_DICT[k]
+                    if label[h][i][j][k] == 1:
+                        recover_label[i][j][0:1] = reverse_COLOR_CLASS_DICT[k]
+        if color_value.shape[2] == 1:
+            color_value = np.reshape(color_value, [rows, cols])
+        if match_data.shape[2] == 1:
+            match_data = np.reshape(match_data, [match_data.shape[0], match_data.shape[1]])
+        if recover_label.shape[2] == 1:
+            recover_label = np.reshape(recover_label, [recover_label.shape[0], recover_label.shape[1]])
+        match_data = Image.fromarray(match_data.astype('uint8'))
+        plt.figure()
+        plt.subplots_adjust(hspace=0.3, wspace=0.3)
+        plt.subplot(1, 3, 1)
+        plt.title('data')
+        plt.imshow(match_data), plt.axis('off')
+        plt.subplot(1, 3, 2)
+        plt.title('label')
+        plt.imshow(recover_label), plt.axis('off')
+        plt.subplot(1, 3, 3)
+        plt.title('prediction')
+        plt.imshow(color_value), plt.axis('off')
+        plt.savefig(path.join(save_path, save_name + '_' + str(h) + '.png'))
 
 
 class DatasetDir(object):

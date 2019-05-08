@@ -2,10 +2,10 @@
 <project version="4">
   <component name="PublishConfigData">
     <serverData>
-      <paths name="gzr19@127.0.0.1:22">
+      <paths name="OMEN">
         <serverdata>
           <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/Users/gzr19/Documents/Code/UNet-AerialImageSegmentation" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

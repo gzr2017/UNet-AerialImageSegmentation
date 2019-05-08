@@ -1,5 +1,4 @@
 from src.model import *
-import matplotlib.pyplot as plt
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
 
@@ -14,41 +13,6 @@ def output_class(prediction):
                 classed_prediction[h, i, j,
                                    most_possible_position[h, i, j]] = 1
     return classed_prediction
-
-
-def class_to_color(data, label, classed_prediction, save_path, save_name):
-    if data.shape[3] == 1:
-        data = np.reshape(data, [data.shape[0], data.shape[1], data.shape[2]])
-    if label.shape[3] == 1:
-        label = np.reshape(label, [label.shape[0], label.shape[1], data.shape[2]])
-    reverse_COLOR_CLASS_DICT = dict(
-        zip(COLOR_CLASS_DICT.values(), COLOR_CLASS_DICT.keys()))
-    [batch_size, rows, cols, _] = classed_prediction.shape
-    for h in range(batch_size):
-        color_value = np.zeros(
-            (rows, cols, len(list(COLOR_CLASS_DICT.keys())[0])),
-            dtype=np.uint8)
-        for i in range(rows):
-            for j in range(cols):
-                for k in range(N_CLASS):
-                    if classed_prediction[h][i][j][k] == 1:
-                        color_value[i][j][0:1] = reverse_COLOR_CLASS_DICT[k]
-                        break
-        if color_value.shape[2] == 1:
-            color_value = np.reshape(color_value, [rows, cols])
-        real_out_predict_image = Image.fromarray(color_value.astype('uint8'))
-        match_data = Image.fromarray(data[h].astype('uint8'))
-        match_label = Image.fromarray(label[h].astype('uint8'))
-        plt.figure()
-        plt.subplot(1, 3, 1)
-        plt.title('data')
-        plt.imshow(match_data), plt.axis('off')
-        plt.subplot(1, 3, 2)
-        plt.title('label')
-        plt.imshow(match_label), plt.axis('off')
-        plt.title('prediction')
-        plt.imshow(real_out_predict_image), plt.axis('off')
-        plt.savefig(path.join(save_path, save_name + '_' + str(1) + '.png'))
 
 
 def pixel_wise_softmax(output_map):
@@ -107,11 +71,16 @@ class UNet(object):
                 logging.warning('使用二分类cross_entropy只可用于计算二分类问题！！！！')
                 loss = bin_cross_entropy(self.y, self.output_map, True)
             elif HOW_TO_CAL_COST == 'cross_entropy':
-                pass
-                # TODO: 补充多分类问题的cross_entropy函数
+                loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(tf.reshape(self.y, [-1, N_CLASS]),
+                                                                                 tf.reshape(self.output_map,
+                                                                                            [-1, N_CLASS])))
             elif HOW_TO_CAL_COST == 'dice_coefficient':
-                pass
-                # TODO: 补充多分类问题的cross_entropy函数
+                smooth = 0
+                weight = 1
+                prediction = pixel_wise_softmax(self.output_map)
+                intersection = tf.reduce_sum(prediction * self.y)
+                union = weight * tf.reduce_sum(prediction) + tf.reduce_sum(self.y)
+                loss = -(2 * intersection + smooth / (union + smooth))
             else:
                 raise ValueError('未知损失函数计算方法%s' % HOW_TO_CAL_COST)
             regularizer = None

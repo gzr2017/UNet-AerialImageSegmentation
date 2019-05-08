@@ -59,7 +59,7 @@ def train(unet, i_net, train_dataset):
     summary_op = summary_init(loss, cross_entropy, accuracy,
                               learning_rate_node, norm_gradients_node)
     with tf.Session() as sess:
-        sess.run(summary_op)
+        # sess.run(summary_op)
         sess.run(tf.global_variables_initializer())
         if RESTORE is not None:
             unet.restore(sess, i_net.dir_dict['model'])
@@ -69,7 +69,10 @@ def train(unet, i_net, train_dataset):
             total_loss = 0
             for step in range(epoch * train_dataset.iterations,
                               (epoch + 1) * train_dataset.iterations):
-                train_data = sess.run(train_dataset.iterator.get_next())
+                try:
+                    train_data = sess.run(train_dataset.iterator.get_next())
+                except tf.errors.OutOfRangeError:
+                    logging.error('End of training dataset!')
                 train_x = train_data['aerial_image']
                 train_y = train_data['aerial_image_label']
                 _, loss, output_map, gradients = sess.run(
@@ -89,10 +92,9 @@ def train(unet, i_net, train_dataset):
                 total_loss += loss
                 unet.save(sess, i_net.dir_dict['model'], 'unet.ckpt')
                 if step % DISPLAY_STEP == 0:
-                    logging.info('迭代到第{}轮；现在的loss为：{}'.format(step, loss))
+                    logging.info(
+                        '迭代到第{}轮；现在的平均loss为：{}'.format(step, total_loss / (step - epoch * train_dataset.iterations)))
                     prediction = output_class(output_map)
                     class_to_color(train_x, train_y, prediction, i_net.dir_dict['prediction'],
                                    str(step))
-
-            logging.info('一个epoch结束！total loss为：%.4f' % total_loss)
         logging.info('Optimization Finished!')
