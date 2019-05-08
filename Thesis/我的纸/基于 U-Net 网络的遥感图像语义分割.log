@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019) (preloaded format=xelatex 2019.5.6)  7 MAY 2019 17:10
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019) (preloaded format=xelatex 2019.5.6)  8 MAY 2019 08:09
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1594,25 +1594,20 @@ File: Figures/sample_dataset.png Graphic file (type bmp)
 ]
 File: Figures/unet_construction.png Graphic file (type bmp)
 <Figures/unet_construction.png>
-
-Overfull \hbox (1.07802pt too wide) in paragraph at lines 28--29
- [][] 
- []
-
-) [6] [7]
+ [6] [7] [8]) [9]
 \openout2 = `chap3.aux'.
 
- (./chap3.tex) [8
+ (./chap3.tex) [10
 
 
 
-] [9
+] [11
 
 
-] (./基于 U-Net 网络的遥感图像语义分割.bbl [10
+] (./基于 U-Net 网络的遥感图像语义分割.bbl [12
 
 
-]) [11]
+]) [13]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 64.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 64.
  (./基于 U-Net 网络的遥感图像语义分割.aux (./chap1.aux) (./chap2.aux) (./chap3.aux))
@@ -1627,12 +1622,12 @@ LaTeX Font Warning: Size substitutions with differences
 
  ) 
 Here is how much of TeX's memory you used:
- 40400 strings out of 492922
- 812699 string characters out of 6133408
- 876193 words of memory out of 5000000
- 43801 multiletter control sequences out of 15000+600000
+ 40394 strings out of 492922
+ 812121 string characters out of 6133408
+ 876283 words of memory out of 5000000
+ 43795 multiletter control sequences out of 15000+600000
  560144 words of font info for 192 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 62i,11n,92p,877b,542s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 62i,12n,92p,877b,542s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on 基于 U-Net 网络的遥感图像语义分割.pdf (16 pages).
+Output written on 基于 U-Net 网络的遥感图像语义分割.pdf (18 pages).
