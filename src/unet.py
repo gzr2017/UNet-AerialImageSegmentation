@@ -1,4 +1,5 @@
 from src.model import *
+import matplotlib.pyplot as plt
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
 
@@ -15,7 +16,11 @@ def output_class(prediction):
     return classed_prediction
 
 
-def class_to_color(classed_prediction, save_path, save_name):
+def class_to_color(data, label, classed_prediction, save_path, save_name):
+    if data.shape[3] == 1:
+        data = np.reshape(data, [data.shape[0], data.shape[1], data.shape[2]])
+    if label.shape[3] == 1:
+        label = np.reshape(label, [label.shape[0], label.shape[1], data.shape[2]])
     reverse_COLOR_CLASS_DICT = dict(
         zip(COLOR_CLASS_DICT.values(), COLOR_CLASS_DICT.keys()))
     [batch_size, rows, cols, _] = classed_prediction.shape
@@ -32,8 +37,18 @@ def class_to_color(classed_prediction, save_path, save_name):
         if color_value.shape[2] == 1:
             color_value = np.reshape(color_value, [rows, cols])
         real_out_predict_image = Image.fromarray(color_value.astype('uint8'))
-        real_out_predict_image.save(
-            path.join(save_path, save_name + '_' + str(h) + '.tif'))
+        match_data = Image.fromarray(data[h].astype('uint8'))
+        match_label = Image.fromarray(label[h].astype('uint8'))
+        plt.figure()
+        plt.subplot(1, 3, 1)
+        plt.title('data')
+        plt.imshow(match_data), plt.axis('off')
+        plt.subplot(1, 3, 2)
+        plt.title('label')
+        plt.imshow(match_label), plt.axis('off')
+        plt.title('prediction')
+        plt.imshow(real_out_predict_image), plt.axis('off')
+        plt.savefig(path.join(save_path, save_name + '_' + str(1) + '.png'))
 
 
 def pixel_wise_softmax(output_map):
@@ -93,10 +108,10 @@ class UNet(object):
                 loss = bin_cross_entropy(self.y, self.output_map, True)
             elif HOW_TO_CAL_COST == 'cross_entropy':
                 pass
-                #TODO: 补充多分类问题的cross_entropy函数
+                # TODO: 补充多分类问题的cross_entropy函数
             elif HOW_TO_CAL_COST == 'dice_coefficient':
                 pass
-                #TODO: 补充多分类问题的cross_entropy函数
+                # TODO: 补充多分类问题的cross_entropy函数
             else:
                 raise ValueError('未知损失函数计算方法%s' % HOW_TO_CAL_COST)
             regularizer = None

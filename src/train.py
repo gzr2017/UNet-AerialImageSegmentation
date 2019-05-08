@@ -15,8 +15,8 @@ def get_a_optimizer(learning_rate, global_step, cost):
     if OPTIMIZER == 'momentum':
         optimizer = tf.train.MomentumOptimizer(learning_rate=learning_rate,
                                                momentum=MOMENTUM).minimize(
-                                                   cost,
-                                                   global_step=global_step)
+            cost,
+            global_step=global_step)
     elif OPTIMIZER == 'adam':
         optimizer = tf.train.AdamOptimizer(
             learning_rate=learning_rate).minimize(cost,
@@ -52,7 +52,7 @@ def train(unet, i_net, train_dataset):
     optimizer = get_a_optimizer(learning_rate_node, global_step, unet.cost)
     norm_gradients_node = tf.Variable(tf.constant(
         0.0, shape=[len(unet.gradients_node)]),
-                                      name='norm_gradients')
+        name='norm_gradients')
     loss = 0
     cross_entropy = 0
     accuracy = 0
@@ -91,7 +91,8 @@ def train(unet, i_net, train_dataset):
                 if step % DISPLAY_STEP == 0:
                     logging.info('迭代到第{}轮；现在的loss为：{}'.format(step, loss))
                     prediction = output_class(output_map)
-                    class_to_color(prediction, i_net.dir_dict['prediction'],
+                    class_to_color(train_x, train_y, prediction, i_net.dir_dict['prediction'],
                                    str(step))
+
             logging.info('一个epoch结束！total loss为：%.4f' % total_loss)
         logging.info('Optimization Finished!')
