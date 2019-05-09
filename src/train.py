@@ -1,30 +1,16 @@
 from src.unet import *
 
 
-def get_a_optimizer(learning_rate_node, global_step, cost):
-    if OPTIMIZER == 'momentum':
-        optimizer = tf.train.MomentumOptimizer(learning_rate=learning_rate_node,
-                                               momentum=MOMENTUM).minimize(
-            cost,
-            global_step=global_step)
-    elif OPTIMIZER == 'adam':
-        optimizer = tf.train.AdamOptimizer(
-            learning_rate=learning_rate_node).minimize(cost,
-                                                       global_step=global_step)
-    else:
-        raise ValueError('未明的优化器%s' % OPTIMIZER)
-    return optimizer
-
 
 def train(unet, i_net, train_dataset):
-    global_step = tf.Variable(0, name='global_step')
+    global_step = tf.Variable(0,trainable=False)
     learning_rate_node = tf.train.exponential_decay(
         learning_rate=LEARNING_RATE,
         global_step=global_step,
         decay_steps=train_dataset.iterations,
         decay_rate=DECAY_RATE,
         staircase=True)
-    optimizer = get_a_optimizer(learning_rate_node, global_step, unet.cost)
+    optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate_node).minimize(unet.cost, global_step=global_step)
     tf.summary.scalar('loss', unet.cost)
     tf.summary.scalar('cross_entropy', unet.cross_entropy)
     tf.summary.scalar('accuracy', unet.accuracy)
@@ -45,9 +31,8 @@ def train(unet, i_net, train_dataset):
                     logging.error('End of training dataset!')
                 train_x = train_data['aerial_image']
                 train_y = train_data['aerial_image_label']
-                _, summary_str, loss, output_map, gradients, lr = sess.run(
-                    (optimizer, summary_op, unet.cost, unet.output_map,
-                     unet.gradients_node, learning_rate_node),
+                _, summary_str, loss, output_map, lr = sess.run(
+                    (optimizer, summary_op, unet.cost, unet.output_map, learning_rate_node),
                     feed_dict={
                         unet.x: train_x,
                         unet.y: train_y,

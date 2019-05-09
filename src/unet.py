@@ -14,14 +14,12 @@ class UNet(object):
         self.output_map = build_unet(self.x)
         self.cost = self._get_cost()
         with tf.name_scope('results'):
-            # 交叉熵
             self.cross_entropy = tf.reduce_mean(
                 tf.nn.softmax_cross_entropy_with_logits_v2(
                     logits=tf.reshape(self.output_map, [-1, N_CLASS]),
                     labels=tf.reshape(self.y, [-1, N_CLASS])))
             self.correct_pred = tf.equal(tf.argmax(self.output_map, 3),
                                          tf.argmax(self.y, 3))
-            # 准确率
             self.accuracy = tf.reduce_mean(tf.cast(self.correct_pred, tf.float32))
 
     def _get_cost(self):
@@ -29,15 +27,25 @@ class UNet(object):
             flat_y = tf.reshape(self.y, [-1, N_CLASS])
             flat_output_map = tf.reshape(self.output_map, [-1, N_CLASS])
             if HOW_TO_CAL_COST == 'cross_entropy':
-                return tf.nn.softmax_cross_entropy_with_logits_v2(labels=flat_y, logits=flat_output_map)
+                loss = tf.reduce_mean(
+                    tf.nn.softmax_cross_entropy_with_logits_v2(
+                        logits=flat_output_map, labels=flat_y))
+                return loss
             elif HOW_TO_CAL_COST == 'weighted_cross_entropy':  # 带权重的交叉熵
                 weight_map = tf.multiply(flat_y, CLASS_WEIGHT)
                 weight_map = tf.reduce_sum(weight_map, axis=1)
                 loss_map = tf.nn.softmax_cross_entropy_with_logits_v2(labels=flat_y, logits=flat_output_map)
                 weighted_loss = tf.multiply(loss_map, weight_map)
                 return tf.reduce_mean(weighted_loss)
-            elif HOW_TO_CAL_COST == 'dice_coefficient':
-                pass
+            elif HOW_TO_CAL_COST == 'sigmoid_cross_entropy_balanced':
+                count_neg = tf.reduce_sum(1. - self.y)
+                count_pos = tf.reduce_sum(self.y)
+                beta = count_neg / (count_neg + count_pos)
+                pos_weight = beta / (1 - beta)
+                cost = tf.nn.weighted_cross_entropy_with_logits(logits=flat_output_map, targets=flat_y,
+                                                                post_weight=pos_weight)
+                cost = tf.reduce_mean(cost * (1 - beta))
+                return cost
             else:
                 raise ValueError('未知损失函数计算方法%s' % HOW_TO_CAL_COST)
 

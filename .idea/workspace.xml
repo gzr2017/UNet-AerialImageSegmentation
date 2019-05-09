@@ -2,56 +2,25 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="28721cd0-fdfc-481f-95a4-3fe477222216" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/util.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/Cleaner.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/Config/CUGthesis-PresentationSlide.cfg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/Config/CUGthesis-PresentationSlide.cls" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/Config/Cleaner.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/Config/ConverGBK2UTF8" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/Config/GBK2Uni_Windows.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/Config/XcolorDefined.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/Make.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/Makefile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/PictureData/CUGLogo/CUGLogo.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/PictureData/CUGLogo/CUGLogoHome.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/PictureData/CUGLogo/WHULogoMetaPost.mps" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/PictureData/Picture/000-DropWaterOnLouts.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/PictureData/Picture/000-Principle.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/PictureData/Picture/001-SchematicDiagramOfLoutsEffect.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/PictureData/Picture/002-DropWaterOnTaroLeaf.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/PictureData/Picture/06-ContactAngleMathematica.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/PictureData/Picture/07-LotusSurfaceOfTheMastoid-1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/PictureData/Picture/08-PhotoOfObjectiveeAmplification-a.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/PictureData/Picture/08-PhotoOfObjectiveeAmplification-b.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/PictureData/Picture/08-PhotoOfObjectiveeAmplification-c.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/PictureData/Picture/08-PhotoOfObjectiveeAmplification-d.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/PictureData/Picture/09-ExperimentalPlantsLeaves-BambooLeaves.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/PictureData/Picture/09-ExperimentalPlantsLeaves-LotusLeaves.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/PictureData/Picture/09-ExperimentalPlantsLeaves-TaroLeaves.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/PictureData/Picture/09-ExperimentalPlantsLeaves-Unknown.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/PictureData/Picture/10-PhotoOfExperimentalPlants-BambooLeaves.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/PictureData/Picture/10-PhotoOfExperimentalPlants-LotusLeaves.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/PictureData/Picture/10-PhotoOfExperimentalPlants-TaroLeaves.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/PictureData/Picture/10-PhotoOfExperimentalPlants-Unknown.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/PictureData/Picture/Picture.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/PictureData/Picture/aaa-ExtraAdd-OnionFlake.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/PictureData/Picture/aaa-ExtraAdd-OnionFlakeInnerUnderLightSectionMethodMicroscope.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/ReadMe.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/Sections/PresentationSlide_DisplayTheFrameLayout.tex" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/Sections/PresentationSlide_Section_0_Contents.tex" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/Sections/PresentationSlide_Section_1_Background.tex" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/Sections/PresentationSlide_Section_2_Experimental.tex" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/Sections/PresentationSlide_Section_3_Summary.tex" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/Sections/PresentationSlide_Section_4_Process.tex" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/Sections/PresentationSlide_Section___TikZ_Example.tex" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/Sections/PresentationSlide_Section___Transitions.tex" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/Sections/PresentationSlide_TheDetails.tex" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/YangYuancong'sPresentationSlide.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/YangYuancong'sPresentationSlide.tex" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Thesis/我的slides/YangYuancong'sPresentationSlide_各文件间的主要关系.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Thesis/我的纸/chap1.aux" beforeDir="false" afterPath="$PROJECT_DIR$/Thesis/我的纸/chap1.aux" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Thesis/我的纸/chap1.tex" beforeDir="false" afterPath="$PROJECT_DIR$/Thesis/我的纸/chap1.tex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Thesis/我的纸/chap2.aux" beforeDir="false" afterPath="$PROJECT_DIR$/Thesis/我的纸/chap2.aux" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Thesis/我的纸/chap2.tex" beforeDir="false" afterPath="$PROJECT_DIR$/Thesis/我的纸/chap2.tex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Thesis/我的纸/chap3.aux" beforeDir="false" afterPath="$PROJECT_DIR$/Thesis/我的纸/chap3.aux" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Thesis/我的纸/chap3.tex" beforeDir="false" afterPath="$PROJECT_DIR$/Thesis/我的纸/chap3.tex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Thesis/我的纸/基于 U-Net 网络的遥感图像语义分割.aux" beforeDir="false" afterPath="$PROJECT_DIR$/Thesis/我的纸/基于 U-Net 网络的遥感图像语义分割.aux" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Thesis/我的纸/基于 U-Net 网络的遥感图像语义分割.bbl" beforeDir="false" afterPath="$PROJECT_DIR$/Thesis/我的纸/基于 U-Net 网络的遥感图像语义分割.bbl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Thesis/我的纸/基于 U-Net 网络的遥感图像语义分割.log" beforeDir="false" afterPath="$PROJECT_DIR$/Thesis/我的纸/基于 U-Net 网络的遥感图像语义分割.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Thesis/我的纸/基于 U-Net 网络的遥感图像语义分割.out" beforeDir="false" afterPath="$PROJECT_DIR$/Thesis/我的纸/基于 U-Net 网络的遥感图像语义分割.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Thesis/我的纸/基于 U-Net 网络的遥感图像语义分割.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/Thesis/我的纸/基于 U-Net 网络的遥感图像语义分割.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Thesis/我的纸/基于 U-Net 网络的遥感图像语义分割.synctex.gz" beforeDir="false" afterPath="$PROJECT_DIR$/Thesis/我的纸/基于 U-Net 网络的遥感图像语义分割.synctex.gz" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Thesis/我的纸/基于 U-Net 网络的遥感图像语义分割.toc" beforeDir="false" afterPath="$PROJECT_DIR$/Thesis/我的纸/基于 U-Net 网络的遥感图像语义分割.toc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/train.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/demo/train.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/计算output_map大小.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/demo/计算output_map大小.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/constant.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/constant.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/train.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/unet.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/unet.py" afterDir="false" />
     </list>
@@ -62,26 +31,30 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+    <leaf>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/constant.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="142">
-              <caret line="24" column="14" lean-forward="true" selection-start-line="24" selection-start-column="14" selection-end-line="24" selection-end-column="14" />
+            <state relative-caret-position="332">
+              <caret line="20" column="10" selection-start-line="20" selection-start-column="10" selection-end-line="20" selection-end-column="10" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/demo/train.ipynb">
-          <provider selected="true" editor-type-id="jupyter-editor" />
+        <entry file="file://$PROJECT_DIR$/src/train.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="198">
+              <caret line="11" column="23" selection-start-line="11" selection-start-column="23" selection-end-line="11" selection-end-column="23" />
+            </state>
+          </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/unet.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="20" column="50" selection-start-line="20" selection-start-column="50" selection-end-line="20" selection-end-column="50" />
+            <state relative-caret-position="114">
+              <caret line="46" column="56" selection-start-line="46" selection-start-column="56" selection-end-line="46" selection-end-column="56" />
             </state>
           </provider>
         </entry>
@@ -89,8 +62,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="126">
-              <caret line="7" column="16" lean-forward="true" selection-start-line="7" selection-start-column="16" selection-end-line="7" selection-end-column="16" />
+            <state relative-caret-position="478">
+              <caret line="131" column="21" selection-start-line="131" selection-start-column="21" selection-end-line="131" selection-end-column="21" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
               </folding>
@@ -101,8 +74,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2826">
-              <caret line="165" column="60" selection-start-line="165" selection-start-column="60" selection-end-line="165" selection-end-column="60" />
+            <state relative-caret-position="530">
+              <caret line="126" column="34" selection-start-line="126" selection-start-column="34" selection-end-line="126" selection-end-column="34" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/util.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2808">
+              <caret line="156" column="10" selection-start-line="156" selection-start-column="10" selection-end-line="156" selection-end-column="10" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -111,12 +93,8 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/train.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="9" column="8" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="8" />
-            </state>
-          </provider>
+        <entry file="file://$PROJECT_DIR$/demo/train.ipynb">
+          <provider selected="true" editor-type-id="jupyter-editor" />
         </entry>
       </file>
     </leaf>
@@ -151,27 +129,16 @@
       <list>
         <option value="$PROJECT_DIR$/src/model_keras.py" />
         <option value="$PROJECT_DIR$/start_jupyter.sh" />
-        <option value="$PROJECT_DIR$/src/data.py" />
-        <option value="$PROJECT_DIR$/src/train.py" />
-        <option value="$PROJECT_DIR$/src/unet.py" />
         <option value="$PROJECT_DIR$/src/model.py" />
+        <option value="$PROJECT_DIR$/src/train.py" />
+        <option value="$PROJECT_DIR$/src/util.py" />
+        <option value="$PROJECT_DIR$/src/data.py" />
         <option value="$PROJECT_DIR$/src/constant.py" />
-      </list>
-    </option>
-  </component>
-  <component name="ProjectConfigurationFiles">
-    <option name="files">
-      <list>
-        <option value="$PROJECT_DIR$/.idea/UNet-AerialImageSegmentation.iml" />
-        <option value="$PROJECT_DIR$/.idea/misc.xml" />
-        <option value="$PROJECT_DIR$/.idea/vcs.xml" />
-        <option value="$PROJECT_DIR$/.idea/modules.xml" />
-        <option value="$PROJECT_DIR$/.idea/deployment.xml" />
+        <option value="$PROJECT_DIR$/src/unet.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="720" />
     <option name="y" value="23" />
     <option name="width" value="720" />
     <option name="height" value="813" />
@@ -183,7 +150,30 @@
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes />
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="UNet-AerialImageSegmentation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="UNet-AerialImageSegmentation" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="UNet-AerialImageSegmentation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="UNet-AerialImageSegmentation" type="462c0819:PsiDirectoryNode" />
+              <item name="demo" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="UNet-AerialImageSegmentation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="UNet-AerialImageSegmentation" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
@@ -284,7 +274,8 @@
       <workItem from="1557325593953" duration="106000" />
       <workItem from="1557331807889" duration="5528000" />
       <workItem from="1557363000589" duration="6651000" />
-      <workItem from="1557376395332" duration="391000" />
+      <workItem from="1557376395332" duration="468000" />
+      <workItem from="1557381538598" duration="3065000" />
     </task>
     <task id="LOCAL-00001" summary="修改了损失函数">
       <created>1557061862186</created>
@@ -335,11 +326,18 @@
       <option name="project" value="LOCAL" />
       <updated>1557368543271</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="删掉slides">
+      <created>1557378205031</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1557378205031</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="34734000" />
+    <option name="totallyTimeSpent" value="37876000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -353,7 +351,7 @@
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="813" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.021459227" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.18884121" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -430,7 +428,8 @@
     <MESSAGE value="搞定了保存函数，去死吧plt" />
     <MESSAGE value="忘记run了" />
     <MESSAGE value="损失函数调整" />
-    <option name="LAST_COMMIT_MESSAGE" value="损失函数调整" />
+    <MESSAGE value="删掉slides" />
+    <option name="LAST_COMMIT_MESSAGE" value="删掉slides" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -469,44 +468,51 @@
     <entry file="file://$PROJECT_DIR$/demo/train.ipynb">
       <provider selected="true" editor-type-id="jupyter-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/unet.py">
+    <entry file="file://$PROJECT_DIR$/src/util.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="20" column="50" selection-start-line="20" selection-start-column="50" selection-end-line="20" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2826">
-          <caret line="165" column="60" selection-start-line="165" selection-start-column="60" selection-end-line="165" selection-end-column="60" />
+        <state relative-caret-position="2808">
+          <caret line="156" column="10" selection-start-line="156" selection-start-column="10" selection-end-line="156" selection-end-column="10" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/train.py">
+    <entry file="file://$PROJECT_DIR$/src/data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="9" column="8" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="8" />
+        <state relative-caret-position="530">
+          <caret line="126" column="34" selection-start-line="126" selection-start-column="34" selection-end-line="126" selection-end-column="34" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="7" column="16" lean-forward="true" selection-start-line="7" selection-start-column="16" selection-end-line="7" selection-end-column="16" />
+        <state relative-caret-position="478">
+          <caret line="131" column="21" selection-start-line="131" selection-start-column="21" selection-end-line="131" selection-end-column="21" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/train.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="11" column="23" selection-start-line="11" selection-start-column="23" selection-end-line="11" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/constant.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="142">
-          <caret line="24" column="14" lean-forward="true" selection-start-line="24" selection-start-column="14" selection-end-line="24" selection-end-column="14" />
+        <state relative-caret-position="332">
+          <caret line="20" column="10" selection-start-line="20" selection-start-column="10" selection-end-line="20" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/unet.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="114">
+          <caret line="46" column="56" selection-start-line="46" selection-start-column="56" selection-end-line="46" selection-end-column="56" />
         </state>
       </provider>
     </entry>
