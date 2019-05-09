@@ -41,7 +41,6 @@ def train(unet, i_net, train_dataset):
     tf.summary.scalar('loss', unet.cost)
     tf.summary.scalar('cross_entropy', unet.cross_entropy)
     tf.summary.scalar('accuracy', unet.accuracy)
-    tf.summary.scalar('learning_rate', learning_rate_node)
     if norm_gradients_node is not None:
         tf.summary.histogram('norm_grads', norm_gradients_node)
     summary_op = tf.summary.merge_all()
@@ -77,13 +76,13 @@ def train(unet, i_net, train_dataset):
                     ]
                     norm_gradients_node.assign(norm_gradients).eval()
                 total_loss += loss
-                unet.save(sess, i_net.dir_dict['model'], 'unet.ckpt')
+                unet.save(sess, i_net.dir_dict['model'], next(i_net.net_name_generator))
+                summary_writer.add_summary(summary_str, step)
+                summary_writer.flush()
                 if step % DISPLAY_STEP == 0:
                     logging.info(
                         '迭代到第{}轮；现在的平均loss为：{}'.format(step, total_loss / (step - epoch * train_dataset.iterations)))
                     prediction = output_class(output_map)
                     class_to_color(train_x, train_y, prediction, i_net.dir_dict['prediction'],
                                    str(step))
-                    summary_writer.add_summary(summary_str, step)
-                    summary_writer.flush()
         logging.info('Optimization Finished!')

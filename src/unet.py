@@ -3,45 +3,6 @@ from src.model import *
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
 
 
-def output_class(prediction):
-    most_possible_position = np.argmax(prediction, 3)
-    classed_prediction = np.zeros(shape=prediction.shape)
-    [batch_size, rows, cols] = most_possible_position.shape
-    for h in range(batch_size):
-        for i in range(rows):
-            for j in range(cols):
-                classed_prediction[h, i, j,
-                                   most_possible_position[h, i, j]] = 1
-    return classed_prediction
-
-
-def pixel_wise_softmax(output_map):
-    with tf.name_scope('pixel_wise_softmax'):
-        max_axis = tf.reduce_max(output_map, axis=3, keepdims=True)
-        exponential_map = tf.exp(output_map - max_axis)
-        normalize = tf.reduce_sum(exponential_map, axis=3, keepdims=True)
-        return exponential_map / normalize
-
-
-def bin_cross_entropy(y_, y, pos_weight=True):
-    y_ = tf.reshape(y_, [-1, N_CLASS])
-    y = tf.reshape(pixel_wise_softmax(y), [-1, N_CLASS])
-    if not pos_weight:
-        return -tf.reduce_mean(y_ * tf.log(tf.clip_by_value(y, 1e-10, 1.0),
-                                           name='bin_cross_entropy'))
-    else:
-        count_neg = tf.reduce_sum(1. - y_)
-        count_pos = tf.reduce_sum(y_)
-        beta = count_neg / (count_neg + count_pos)
-        pos_weight = beta / (1 - beta)
-        cost = tf.nn.weighted_cross_entropy_with_logits(logits=y,
-                                                        targets=y_,
-                                                        pos_weight=pos_weight)
-        cost = tf.reduce_mean(cost * (1 - beta))
-        zero = tf.equal(count_pos, 0.0)
-        return tf.where(zero, 0.0, cost, name='bin_cross_entropy')
-
-
 class UNet(object):
     def __init__(self):
         self.x = tf.placeholder(tf.float32,
@@ -62,33 +23,24 @@ class UNet(object):
             self.correct_pred = tf.equal(tf.argmax(self.output_map, 3),
                                          tf.argmax(self.y, 3))
             # 准确率
-            self.accuracy = tf.reduce_mean(
-                tf.cast(self.correct_pred, tf.float32))
+            self.accuracy = tf.reduce_mean(tf.cast(self.correct_pred, tf.float32))
 
     def _get_cost(self):
         with tf.name_scope('cost'):
-            if HOW_TO_CAL_COST == 'bin_cross_entropy':
-                logging.warning('使用二分类cross_entropy只可用于计算二分类问题！！！！')
-                loss = bin_cross_entropy(self.y, self.output_map, True)
-            elif HOW_TO_CAL_COST == 'cross_entropy':
-                loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(tf.reshape(self.y, [-1, N_CLASS]),
-                                                                                 tf.reshape(self.output_map,
-                                                                                            [-1, N_CLASS])))
+            flat_y = tf.reshape(self.y, [-1, N_CLASS])
+            flat_output_map = tf.reshape(self.output_map, [-1, N_CLASS])
+            if HOW_TO_CAL_COST == 'cross_entropy':
+                return tf.nn.softmax_cross_entropy_with_logits_v2(labels=flat_y, logits=flat_output_map)
+            elif HOW_TO_CAL_COST == 'weighted_cross_entropy':  # 带权重的交叉熵
+                weight_map = tf.multiply(flat_y, CLASS_WEIGHT)
+                weight_map = tf.reduce_sum(weight_map, axis=1)
+                loss_map = tf.nn.softmax_cross_entropy_with_logits_v2(labels=flat_y, logits=flat_output_map)
+                weighted_loss = tf.multiply(loss_map, weight_map)
+                return tf.reduce_mean(weighted_loss)
             elif HOW_TO_CAL_COST == 'dice_coefficient':
-                smooth = 0
-                weight = 1
-                prediction = pixel_wise_softmax(self.output_map)
-                intersection = tf.reduce_sum(prediction * self.y)
-                union = weight * tf.reduce_sum(prediction) + tf.reduce_sum(self.y)
-                loss = -(2 * intersection + smooth / (union + smooth))
+                pass
             else:
                 raise ValueError('未知损失函数计算方法%s' % HOW_TO_CAL_COST)
-            regularizer = None
-            if regularizer is not None:
-                regularizers = sum(
-                    [tf.nn.l2_loss(variable) for variable in self.variables])
-                loss += (regularizer * regularizers)
-            return loss
 
     def predict(self, image, model_path, save_path):
         test_x = np.array(Image.open(image))
@@ -101,8 +53,9 @@ class UNet(object):
                                       self.x: test_x,
                                   })
             save_name = path.basename(image).split('.')[-2]
+            fake_label = np.zeros(shape=output_map.shape, dtype=tf.uint8)
             prediction = output_class(output_map)
-            class_to_color(prediction, save_path, save_name)
+            class_to_color(test_x, fake_label, prediction, save_path, save_name)
 
     @staticmethod
     def save(sess, save_path, save_name):

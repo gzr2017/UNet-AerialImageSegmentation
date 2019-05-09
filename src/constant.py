@@ -5,6 +5,7 @@
 # https://www.chinaopen.ai/industryDynamic/competition-26.html
 # https://www.zhihu.com/question/49346370
 
+CLASS_WEIGHT = [0.2, 0.8]
 RESTORE = None  # 是否重新读取
 SUMMARIES = True
 # 输入像的大小和通道数
@@ -13,12 +14,12 @@ IMG_CHANNEL = 3
 OUTPUT_IMG_SIZE = 256  # 手工计算……我也想不到什么可以自动计算的方法惹
 N_CLASS = 2
 COLOR_CLASS_DICT = {  # 注意！！！！！！！！！OpenCV是按照BGR顺序存储颜色的！！！！！！！！！！虽然这里并没有使用OpenCV……如果用了OpenCV还是注意一个比较好
-    (0,0,0): 1,  # 背景：即使是单通道图片，也要打逗号！！！！！！！！！！
-    (255,255,255): 0  # 房屋
+    (0,): 1,  # 背景：即使是单通道图片，也要打逗号！！！！！！！！！！
+    (255,): 0  # 房屋
 }
 # 训练参数
 BATCH_SIZE = 4
-EPOCHS = 20
+EPOCHS = 1
 OPTIMIZER = 'adam'  # 选择
 HOW_TO_CAL_COST = 'cross_entropy'  # 选择损失函数计算方法
 MOMENTUM = 0.2
@@ -33,3 +34,4 @@ FEATURES_ROOT = 64
 FILTER_SIZE = 3
 POOL_SIZE = 2
 PADDING_WAY = 'SAME'
+NET_COOKIE = 5

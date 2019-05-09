@@ -5,14 +5,13 @@ from src.constant import *
 import tensorflow as tf
 from PIL import Image
 import logging
-from itertools import count
-import matplotlib.pyplot as plt
+from itertools import count, cycle
+import cv2
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
 
 
-def file_name_generator(file_path=None, ex_name=None, file_name=None):
-    # TODO: 受限的循环生成器
+def file_name_generator(file_path=None, ex_name=None, file_name=None, cycle_num=None):
     if file_path is not None:
         base_name = path.basename(file_path)
         try:
@@ -20,19 +19,35 @@ def file_name_generator(file_path=None, ex_name=None, file_name=None):
             true_file_type = base_name.split('.')[-1]
         except IndexError:
             logging.error('你的路径中未找到被dot分隔的文件名及拓展名')
-        for i in count(0):
-            if ex_name is None:  # 如果文件拓展名为None，那么就用原始的文件拓展名
-                yield true_file_name + '_' + str(i) + '.' + true_file_type
-            elif not ex_name:  # 如果ex_name==False，不使用文件名
-                yield true_file_name + '_' + str(i)
-            else:  # 如果文件拓展名不缺省，那么使用该文件拓展名
-                yield true_file_name + '_' + str(i) + '.' + ex_name
+        if cycle_num is not None:
+            for i in cycle(range(cycle_num)):
+                if ex_name is None:  # 如果文件拓展名为None，那么就用原始的文件拓展名
+                    yield true_file_name + '_' + str(i) + '.' + true_file_type
+                elif not ex_name:  # 如果ex_name==False，不使用文件名
+                    yield true_file_name + '_' + str(i)
+                else:  # 如果文件拓展名不缺省，那么使用该文件拓展名
+                    yield true_file_name + '_' + str(i) + '.' + ex_name
+        else:
+            for i in count(0):
+                if ex_name is None:  # 如果文件拓展名为None，那么就用原始的文件拓展名
+                    yield true_file_name + '_' + str(i) + '.' + true_file_type
+                elif not ex_name:  # 如果ex_name==False，不使用文件名
+                    yield true_file_name + '_' + str(i)
+                else:  # 如果文件拓展名不缺省，那么使用该文件拓展名
+                    yield true_file_name + '_' + str(i) + '.' + ex_name
     elif file_name is not None:
-        for i in count(0):
-            if ex_name is None:
-                yield file_name + '_' + str(i)
-            else:
-                yield file_name + '_' + str(i) + '.' + ex_name
+        if cycle_num is not None:
+            for i in cycle(range(cycle_num)):
+                if ex_name is None:
+                    yield file_name + '_' + str(i)
+                else:
+                    yield file_name + '_' + str(i) + '.' + ex_name
+        else:
+            for i in count(0):
+                if ex_name is None:
+                    yield file_name + '_' + str(i)
+                else:
+                    yield file_name + '_' + str(i) + '.' + ex_name
     else:
         raise ValueError('你既没指定目录也没指定文件名:(')
 
@@ -154,41 +169,58 @@ def get_data_iterator(tfrecord_path):
     return iterator
 
 
-def class_to_color(data, label, classed_prediction, save_path, save_name):
-    # 把data和label展成四维
-    data = np.reshape(data, [label.shape[0], label.shape[1], label.shape[2], -1])
-    label = np.reshape(label, [label.shape[0], label.shape[1], label.shape[2], -1])
+def output_class(output_map):
+    '''
+    将输出图变成label；
+    :param output_map: 输出图
+    :return: prediction: 标签化的图像
+    '''
+    if len(output_map.shape) != 4:
+        raise ValueError('输出图不是4维的图像！输出图形状应为[batch_size, rows, cols, channels]')
+    most_possible_label = np.argmax(output_map, 3)
+    prediction = np.zeros(shape=output_map.shape)
+    [batch_size, rows, cols] = most_possible_label.shape
+    for h in range(batch_size):
+        for i in range(rows):
+            for j in range(cols):
+                prediction[h, i, j,
+                           most_possible_label[h, i, j]] = 1
+    return prediction
+
+
+def class_to_color(data, label, prediction, save_path, save_name):
+    # TODO: 这里行列好像有点问题
     reverse_COLOR_CLASS_DICT = dict(
         zip(COLOR_CLASS_DICT.values(), COLOR_CLASS_DICT.keys()))
-    [batch_size, rows, cols, _] = classed_prediction.shape
+    [batch_size, rows, cols, _] = prediction.shape
     for h in range(batch_size):
-        color_value = np.zeros(
+        colored_prediction = np.zeros(
             (rows, cols, len(list(COLOR_CLASS_DICT.keys())[0])),
             dtype=np.uint8)
-        recover_label = np.zeros(
+        recovered_label = np.zeros(
             (rows, cols, len(list(COLOR_CLASS_DICT.keys())[0])),
             dtype=np.uint8)
-        match_data = data[h]
+        single_data = data[h]
         for i in range(rows):
             for j in range(cols):
                 for k in range(N_CLASS):
-                    if classed_prediction[h][i][j][k] == 1:
-                        color_value[i][j] = reverse_COLOR_CLASS_DICT[k]
+                    if prediction[h][i][j][k] == 1:
+                        colored_prediction[i][j] = reverse_COLOR_CLASS_DICT[k]
                     if label[h][i][j][k] == 1:
-                        recover_label[i][j] = reverse_COLOR_CLASS_DICT[k]
-        if color_value.shape[2] == 1:
-            color_value = np.reshape(color_value, [rows, cols])
-        if match_data.shape[2] == 1:
-            match_data = np.reshape(match_data, [match_data.shape[0], match_data.shape[1]])
-        if recover_label.shape[2] == 1:
-            recover_label = np.reshape(recover_label, [recover_label.shape[0], recover_label.shape[1]])
-        match_data = Image.fromarray(match_data.astype('uint8'))
-        recover_label = Image.fromarray(recover_label)
-        color_value = Image.fromarray(color_value)
-        compare_result = Image.new('RGB', (IMG_SIZE * 3, IMG_SIZE))
-        compare_result.paste(match_data, (0, 0))
-        compare_result.paste(recover_label, (IMG_SIZE, 0))
-        compare_result.paste(color_value, (IMG_SIZE * 2, 0))
+                        recovered_label[i][j] = reverse_COLOR_CLASS_DICT[k]
+        if single_data.shape[2] == 1:
+            single_data = np.reshape(single_data, [rows, cols])
+        if len(list(COLOR_CLASS_DICT.keys())[0]) == 1:
+            recovered_label = np.reshape(recovered_label, [rows, cols])
+            colored_prediction = np.reshape(colored_prediction, [rows, cols])
+        # 因为池化的舍入，输入图的大小和输出图的大小可能不一样，这里就无脑resize了
+        single_data = Image.fromarray(single_data.astype('uint8')).resize((rows, cols))
+        recovered_label = Image.fromarray(recovered_label)
+        colored_prediction = Image.fromarray(colored_prediction)
+        compare_result = Image.new('RGB', (cols * 3, rows))
+        compare_result.paste(single_data, (0, 0))
+        compare_result.paste(recovered_label, (cols, 0))
+        compare_result.paste(colored_prediction, (rows * 2, 0))
         compare_result.save(path.join(save_path, save_name + '_' + str(h) + '.png'))
 
 
@@ -255,4 +287,4 @@ class NetDir(object):
             if not path.exists(dir):
                 makedirs(dir)
         self.net_name_generator = file_name_generator(file_name=net_name,
-                                                      ex_name='ckpt')
+                                                      ex_name='ckpt', cycle_num=NET_COOKIE)
