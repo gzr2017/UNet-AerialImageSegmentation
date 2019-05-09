@@ -163,7 +163,7 @@ def get_data_iterator(tfrecord_path):
     dataset = tf.data.TFRecordDataset(filenames)
     parsed_dataset = dataset.map(parse_dataset)
     parsed_dataset = parsed_dataset.repeat(EPOCHS)
-    parsed_dataset = parsed_dataset.shuffle(buffer_size=10000)
+    parsed_dataset = parsed_dataset.shuffle(buffer_size=100000)
     parsed_dataset = parsed_dataset.batch(BATCH_SIZE)
     iterator = parsed_dataset.make_one_shot_iterator()
     return iterator

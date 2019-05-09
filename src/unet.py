@@ -11,9 +11,8 @@ class UNet(object):
         self.y = tf.placeholder(tf.float32,
                                 shape=[None, None, None, N_CLASS],
                                 name='y')
-        self.output_map, self.variables = build_unet(self.x)
+        self.output_map = build_unet(self.x)
         self.cost = self._get_cost()
-        self.gradients_node = tf.gradients(self.cost, self.variables)
         with tf.name_scope('results'):
             # 交叉熵
             self.cross_entropy = tf.reduce_mean(

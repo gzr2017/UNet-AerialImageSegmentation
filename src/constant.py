@@ -26,8 +26,7 @@ MOMENTUM = 0.2
 LEARNING_RATE = 1e-5
 DECAY_RATE = 0.95
 DISPLAY_STEP = 5  # number of steps till outputting stats
-NORM_GRADS = True
-DATASET_SLICE = 40  # 每个tfrecord中包含多少对数据
+DATASET_SLICE =76  # 每个tfrecord中包含多少对数据
 # UNet网络参数
 LAYERS = 4
 FEATURES_ROOT = 64
