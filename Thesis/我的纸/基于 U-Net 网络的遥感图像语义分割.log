@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019) (preloaded format=xelatex 2019.5.6)  9 MAY 2019 20:07
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019) (preloaded format=xelatex 2019.5.6)  10 MAY 2019 23:58
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1296,7 +1296,26 @@ Package: rerunfilecheck 2016/05/16 v1.8 Rerun checks for auxiliary files (HO)
 Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 282.
 )
 \Hy@SectionHShift=\skip125
-) (./基于 U-Net 网络的遥感图像语义分割.aux (./chap1.aux) (./chap2.aux) (./chap3.aux))
+) (./基于 U-Net 网络的遥感图像语义分割.aux (./chap1.aux) (./chap2.aux) (./chap3.aux
+
+LaTeX Warning: Label `Fig:loss_1' multiply defined.
+
+
+LaTeX Warning: Label `Fig:loss_1' multiply defined.
+
+
+LaTeX Warning: Label `Fig:loss_2' multiply defined.
+
+
+LaTeX Warning: Label `Fig:loss_2' multiply defined.
+
+
+LaTeX Warning: Label `Fig:loss_3' multiply defined.
+
+
+LaTeX Warning: Label `Fig:loss_3' multiply defined.
+
+))
 \openout1 = `"基于 U-Net 网络的遥感图像语义分割.aux"'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 22.
@@ -1597,17 +1616,51 @@ File: Figures/unet_construction.png Graphic file (type bmp)
  [6] [7]) [8]
 \openout2 = `chap3.aux'.
 
- (./chap3.tex) [9
+ (./chap3.tex
+File: Figures/group_1/loss.png Graphic file (type bmp)
+<Figures/group_1/loss.png>
+File: Figures/group_1/accuracy.png Graphic file (type bmp)
+<Figures/group_1/accuracy.png>
+File: Figures/group_1/结果.png Graphic file (type bmp)
+<Figures/group_1/结果.png>
+File: Figures/group_2/loss.png Graphic file (type bmp)
+<Figures/group_2/loss.png>
+File: Figures/group_2/accuracy.png Graphic file (type bmp)
+<Figures/group_2/accuracy.png>
+File: Figures/group_2/结果.png Graphic file (type bmp)
+<Figures/group_2/结果.png>
+ [9
 
 
 
-] [10
+]
+File: Figures/group_3/loss.png Graphic file (type bmp)
+<Figures/group_3/loss.png>
+File: Figures/group_3/accuracy.png Graphic file (type bmp)
+<Figures/group_3/accuracy.png>
+File: Figures/group_3/结果.png Graphic file (type bmp)
+<Figures/group_3/结果.png>
+ [10] [11]
+File: Figures/错误/建筑过大.png Graphic file (type bmp)
+<Figures/错误/建筑过大.png>
+File: Figures/错误/中等建筑.png Graphic file (type bmp)
+<Figures/错误/中等建筑.png>
+ [12]
+File: Figures/错误/道路错认.png Graphic file (type bmp)
+<Figures/错误/道路错认.png>
+File: Figures/错误/汽车错认.png Graphic file (type bmp)
+<Figures/错误/汽车错认.png>
+File: Figures/错误/树木遮挡.png Graphic file (type bmp)
+<Figures/错误/树木遮挡.png>
+File: Figures/错误/建筑过暗.png Graphic file (type bmp)
+<Figures/错误/建筑过暗.png>
+ [13]) [14] [15] [16
 
 
-] (./基于 U-Net 网络的遥感图像语义分割.bbl [11
+] (./基于 U-Net 网络的遥感图像语义分割.bbl [17
 
 
-]) [12]
+]) [18]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 64.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 64.
  (./基于 U-Net 网络的遥感图像语义分割.aux (./chap1.aux) (./chap2.aux) (./chap3.aux))
@@ -1620,14 +1673,17 @@ Package rerunfilecheck Info: File `"基于 U-Net 网络的遥感图像语义分�
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.35pt have occurred.
 
+
+LaTeX Warning: There were multiply-defined labels.
+
  ) 
 Here is how much of TeX's memory you used:
- 40394 strings out of 492922
- 812116 string characters out of 6133408
- 876297 words of memory out of 5000000
- 43795 multiletter control sequences out of 15000+600000
+ 40484 strings out of 492922
+ 814961 string characters out of 6133408
+ 876743 words of memory out of 5000000
+ 43872 multiletter control sequences out of 15000+600000
  560144 words of font info for 192 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  62i,12n,92p,877b,542s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on 基于 U-Net 网络的遥感图像语义分割.pdf (17 pages).
+Output written on 基于 U-Net 网络的遥感图像语义分割.pdf (23 pages).

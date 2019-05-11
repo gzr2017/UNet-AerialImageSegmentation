@@ -6,7 +6,7 @@
 # https://www.zhihu.com/question/49346370
 
 CLASS_WEIGHT = [1.2, 0.8]
-RESTORE = None  # 是否重新读取
+RESTORE = 'unet_weighted_0.ckpt'  # 是否重新读取
 # 输入像的大小和通道数
 IMG_SIZE = 256  # 图像尺寸不能设置得太小了，要不然池化池化池化得没有了……
 IMG_CHANNEL = 3
@@ -19,8 +19,8 @@ COLOR_CLASS_DICT = {  # 注意！！！！！！！！！OpenCV是按照BGR顺�
 # 训练参数
 BATCH_SIZE = 4
 EPOCHS = 1
-HOW_TO_CAL_COST = 'weighted_cross_entropy'  # 选择损失函数计算方法
-LEARNING_RATE = 1e-5
+HOW_TO_CAL_COST = 'sigmoid_cross_entropy_balanced'  # 选择损失函数计算方法
+LEARNING_RATE = 7e-6
 DECAY_RATE = 0.5
 DISPLAY_STEP = 5  # number of steps till outputting stats
 DATASET_SLICE =76  # 每个tfrecord中包含多少对数据

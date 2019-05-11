@@ -64,7 +64,7 @@ def batch_resize(img_path, resize, save_path=None):
             image.save(image_path)
 
 
-def split_img(img_path, save_path, size=None):
+def split_img(img_path, save_path, size=IMG_SIZE, resize=None):
     # TODO: 增加对非2的次方倍的切割工具
     image_paths = glob(path.join(img_path, '*.*'))
     if len(image_paths) == 0:
@@ -73,15 +73,15 @@ def split_img(img_path, save_path, size=None):
     for image_path in image_paths:
         image = Image.open(image_path)
         image_width, image_height = image.size
-        if image_width % IMG_SIZE or image_height % IMG_SIZE:
+        if image_width % size or image_height % size:
             raise ValueError('该图片不能等分为大小%i的图片！！' % IMG_SIZE)
         new_name = file_name_generator(file_path=image_path)
-        for i in range(0, image_height, IMG_SIZE):
-            for j in range(0, image_width, IMG_SIZE):
-                cutting_box = (j, i, j + IMG_SIZE, i + IMG_SIZE)
+        for i in range(0, image_height, size):
+            for j in range(0, image_width, size):
+                cutting_box = (j, i, j + size, i + size)
                 slice_of_image = image.crop(cutting_box)
-                if size is not None:
-                    slice_of_image = slice_of_image.resize((size, size))
+                if resize is not None:
+                    slice_of_image = slice_of_image.resize((resize, resize))
                 slice_of_image.save(path.join(save_path, next(new_name)))
 
 
@@ -127,37 +127,45 @@ def output_class(output_map):
     return prediction
 
 
-def class_to_color(data, label, prediction, save_path, save_name):
-    # TODO: 这里行列好像有点问题
+def class_to_color(prediction):
     reverse_COLOR_CLASS_DICT = dict(
-        zip(COLOR_CLASS_DICT.values(), COLOR_CLASS_DICT.keys()))
+        zip(COLOR_CLASS_DICT.values(), COLOR_CLASS_DICT.keys())
+    )
     [batch_size, rows, cols, _] = prediction.shape
+    colored_prediction = np.zeros(batch_size, rows, cols, len(list(COLOR_CLASS_DICT.keys())[0]))
     for h in range(batch_size):
-        colored_prediction = np.zeros(
-            (rows, cols, len(list(COLOR_CLASS_DICT.keys())[0])),
-            dtype=np.uint8)
-        recovered_label = np.zeros(
-            (rows, cols, len(list(COLOR_CLASS_DICT.keys())[0])),
-            dtype=np.uint8)
-        single_data = data[h]
         for i in range(rows):
             for j in range(cols):
                 for k in range(N_CLASS):
                     if prediction[h][i][j][k] == 1:
-                        colored_prediction[i][j] = reverse_COLOR_CLASS_DICT[k]
-                    if label[h][i][j][k] == 1:
-                        recovered_label[i][j] = reverse_COLOR_CLASS_DICT[k]
-        if single_data.shape[2] == 1:
-            single_data = np.reshape(single_data, [rows, cols])
-        if len(list(COLOR_CLASS_DICT.keys())[0]) == 1:
-            recovered_label = np.reshape(recovered_label, [rows, cols])
-            colored_prediction = np.reshape(colored_prediction, [rows, cols])
-        # 因为池化的舍入，输入图的大小和输出图的大小可能不一样，这里就无脑resize了
-        single_data = Image.fromarray(single_data.astype('uint8')).resize((rows, cols))
-        recovered_label = Image.fromarray(recovered_label)
-        colored_prediction = Image.fromarray(colored_prediction)
-        compare_result = Image.new('RGB', (cols * 3, rows))
-        compare_result.paste(single_data, (0, 0))
-        compare_result.paste(recovered_label, (cols, 0))
-        compare_result.paste(colored_prediction, (rows * 2, 0))
-        compare_result.save(path.join(save_path, save_name + '_' + str(h) + '.png'))
+                        colored_prediction[h][i][j] = reverse_COLOR_CLASS_DICT[k]
+    return colored_prediction
+
+
+def output_result(data, recovered_label, colored_prediction, save_path, save_name):
+    if data.shape != recovered_label.shape:
+        raise ValueError('图像大小不一致')
+    if recovered_label.shape != colored_prediction.shape:
+        raise ValueError('图像大小不一致')
+    batch_size, cols, rows, _ = data.shape
+    if len(list(COLOR_CLASS_DICT.keys())[0]) == 1:
+        recovered_label = np.reshape(recovered_label, [batch_size, cols, rows])
+        colored_prediction = np.reshape(colored_prediction, [batch_size, cols, rows])
+    for h in range(batch_size):
+        single_data = Image.fromarray(data[h])
+        single_recovered_label = Image.fromarray(recovered_label[h])
+        single_colored_prediction = Image.fromarray(colored_prediction[h])
+        img_list = [single_data, single_recovered_label, single_colored_prediction]
+        glut_together(img_list, 3, 1, cols, path.join(save_path, save_name + '_' + str(h) + '.png'))
+
+
+def glut_together(img_list, glut_cols, glut_rows, image_size, save_path):
+    # 假设所有图片大小一致
+    glutted_image = Image.new('RGB', image_size * glut_cols, image_size * glut_rows)
+    k = 0
+    for i in range(glut_rows):
+        for j in range(glut_cols):
+            image = Image.open(img_list[k])
+            glutted_image.paste(image, (j * image_size, i * image_size))
+            k += 1
+    glutted_image.save(save_path)

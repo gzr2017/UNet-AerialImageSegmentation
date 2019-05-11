@@ -43,14 +43,16 @@ class UNet(object):
                 beta = count_neg / (count_neg + count_pos)
                 pos_weight = beta / (1 - beta)
                 cost = tf.nn.weighted_cross_entropy_with_logits(logits=flat_output_map, targets=flat_y,
-                                                                post_weight=pos_weight)
+                                                                pos_weight=pos_weight)
                 cost = tf.reduce_mean(cost * (1 - beta))
                 return cost
             else:
                 raise ValueError('未知损失函数计算方法%s' % HOW_TO_CAL_COST)
 
-    def predict(self, image, model_path, save_path):
+    def predict(self, image, model_path, save_path, size=None):
         test_x = np.array(Image.open(image))
+        if size is not None:
+            split_img(image, image, size)
         test_x = np.reshape(test_x,
                             newshape=[1, test_x.shape[0], test_x.shape[1], -1])
         with tf.Session() as sess:
@@ -60,9 +62,8 @@ class UNet(object):
                                       self.x: test_x,
                                   })
             save_name = path.basename(image).split('.')[-2]
-            fake_label = np.zeros(shape=output_map.shape, dtype=tf.uint8)
             prediction = output_class(output_map)
-            class_to_color(test_x, fake_label, prediction, save_path, save_name)
+            class_to_color(prediction, save_path, save_name)
 
     @staticmethod
     def save(sess, save_path, save_name):

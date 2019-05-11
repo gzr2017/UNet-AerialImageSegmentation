@@ -18,5 +18,14 @@
 \contentsline {subsubsection}{\numberline {2.3.2}类别平衡交叉熵}{8}{subsubsection.2.3.2}% 
 \contentsline {section}{\numberline {第三章}实验}{9}{section.3}% 
 \contentsline {subsection}{\numberline {3.1}网络初始化设计}{9}{subsection.3.1}% 
-\contentsline {section}{致谢}{10}{section*.7}% 
-\contentsline {section}{参考文献}{12}{section*.8}% 
+\contentsline {subsection}{\numberline {3.2}实验结果}{9}{subsection.3.2}% 
+\contentsline {subsubsection}{\numberline {3.2.1}第一组}{9}{subsubsection.3.2.1}% 
+\contentsline {subsubsection}{\numberline {3.2.2}第二组}{10}{subsubsection.3.2.2}% 
+\contentsline {subsubsection}{\numberline {3.2.3}第三组}{11}{subsubsection.3.2.3}% 
+\contentsline {subsection}{\numberline {3.3}分析及改进}{12}{subsection.3.3}% 
+\contentsline {paragraph}{建筑过大}{12}{paragraph*.17}% 
+\contentsline {paragraph}{错认}{13}{paragraph*.20}% 
+\contentsline {paragraph}{树木和光影}{14}{paragraph*.23}% 
+\contentsline {subsection}{\numberline {3.4}最终结果}{14}{subsection.3.4}% 
+\contentsline {section}{致谢}{16}{section*.26}% 
+\contentsline {section}{参考文献}{18}{section*.27}% 
