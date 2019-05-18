@@ -1,128 +1,92 @@
-from src.util import *
+from src.utils import *
+import tensorflow as tf
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
 
-
-def create_dataset(image_data_source, label_data_source, tfrecord_save_path):
-    raw_aerial_images = glob(path.join(image_data_source, '*.*'))
-    raw_aerial_image_labels = glob(path.join(label_data_source, '*.*'))
-    if len(raw_aerial_image_labels) != len(raw_aerial_images):
+def ceate_dataset(data_list, label_list, dataset_slice, tfrecord_save_path):
+    if len(data_list) != len(label_list):
         raise ValueError('图片数量与标签数量不相等！！！！')
-    if len(raw_aerial_images) % DATASET_SLICE:
+    if len(data_list) % dataset_slice:
         raise ValueError('分片数不能整除！！！！！！')
-    tfrecord_name_generator = file_name_generator(ex_name='tfrecord',
-                                                  file_name='aerial_pair')
+    tfrecord_name_generator = name_generator('data_pair', 'tfrecord')
     logging.info('>>>开始生成数据集，数据集保存至%s<<<' % tfrecord_save_path)
-    for i in range(0, len(raw_aerial_images), DATASET_SLICE):
-        aerial_images = raw_aerial_images[i:i + DATASET_SLICE]
-        aerial_image_labels = raw_aerial_image_labels[i:i + DATASET_SLICE]
+    for i in range(0, len(data_list), dataset_slice):
+        batch_data = data_list[i:i + dataset_slice]
+        batch_label = label_list[i:i + dataset_slice]
         writer = tf.python_io.TFRecordWriter(
             path.join(tfrecord_save_path, next(tfrecord_name_generator)))
-        for aerial_image, aerial_image_label in zip(aerial_images,
-                                                    aerial_image_labels):
-            aerial_image_raw = np.array(Image.open(aerial_image))
-            aerial_image_label_raw = np.load(aerial_image_label)
+        for data, label in zip(batch_data, batch_label):
+            data_raw = np.load(data)
+            label_raw = np.load(label)
             feature = {}
-            feature['aerial_image'] = tf.train.Feature(
-                float_list=tf.train.FloatList(
-                    value=aerial_image_raw.flatten()))
-            feature['aerial_image_label'] = tf.train.Feature(
-                float_list=tf.train.FloatList(
-                    value=aerial_image_label_raw.flatten()))
-            aerial_pair = tf.train.Example(features=tf.train.Features(
-                feature=feature))
-            writer.write(aerial_pair.SerializeToString())
+            feature['data'] = tf.train.Feature(float_list=tf.train.FloatList(
+                value=data_raw.flatten()))
+            feature['data_shape'] = tf.train.Feature(
+                int64_list=tf.train.Int64List(value=data_raw.shape))
+            feature['label'] = tf.train.Feature(float_list=tf.train.FloatList(
+                value=label_raw.flatten()))
+            feature['label_shape'] = tf.train.Feature(
+                int64_list=tf.train.Int64List(value=label_raw.shape))
+            data_pair = tf.train.Features(feature=feature)
+            tf_example = tf.train.Example(features=data_pair)
+            tf_serialized = tf_example.SerializeToString()
+            writer.write(tf_serialized)
+        logging.info('>>>一个数据集生成完毕~')
         writer.close()
 
 
 def parse_dataset(proto):
     dics = {
-        'aerial_image_label':
-            tf.FixedLenFeature(shape=[OUTPUT_IMG_SIZE, OUTPUT_IMG_SIZE, N_CLASS],
-                               dtype=tf.float32),
-        'aerial_image':
-            tf.FixedLenFeature(shape=[IMG_SIZE, IMG_SIZE, IMG_CHANNEL],
-                               dtype=tf.float32)
+        'data': tf.VarLenFeature(dtype=tf.float32),
+        'data_shape': tf.FixedLenFeature(shape=(3, ), dtype=tf.int64),
+        'label': tf.VarLenFeature(dtype=tf.float32),
+        'label_shape': tf.FixedLenFeature(shape=(3, ), dtype=tf.int64),
     }
     parsed_pair = tf.parse_single_example(proto, dics)
+    parsed_pair['data'] = tf.sparse_tensor_to_dense(parsed_pair['data'])
+    parsed_pair['data'] = tf.reshape(parsed_pair['data'],
+                                     parsed_pair['data_shape'])
+    parsed_pair['label'] = tf.sparse_tensor_to_dense(parsed_pair['label'])
+    parsed_pair['label'] = tf.reshape(parsed_pair['label'],
+                                      parsed_pair['label_shape'])
     return parsed_pair
 
 
-def get_data_iterator(tfrecord_path):
-    filenames = glob(path.join(tfrecord_path, '*.tfrecord'))
+def get_data_iterator(tfrecord_save_dir, epochs, batch_size, buffer_size):
+    filenames = glob(path.join(tfrecord_save_dir, '*.tfrecord'))
     if len(filenames) == 0:
         raise ValueError('指定目录下未找到tfrecord文件！！！')
-    logging.info('>>>从%s取得数据集<<<' % tfrecord_path)
+    logging.info('>>>从{}取得{}个数据集<<<'.format(tfrecord_save_dir, len(filenames)))
     dataset = tf.data.TFRecordDataset(filenames)
     parsed_dataset = dataset.map(parse_dataset)
-    parsed_dataset = parsed_dataset.repeat(EPOCHS)
-    parsed_dataset = parsed_dataset.shuffle(buffer_size=10000)
-    parsed_dataset = parsed_dataset.batch(BATCH_SIZE)
+    parsed_dataset = parsed_dataset.repeat(epochs)
+    parsed_dataset = parsed_dataset.shuffle(buffer_size)
+    parsed_dataset = parsed_dataset.batch(batch_size)
     iterator = parsed_dataset.make_one_shot_iterator()
     return iterator
 
 
-class DatasetDir(object):
-    def __init__(self, base_dir):
-        self.dir_dict = {
-            'original_data': path.join(base_dir, 'original/data'),  # 原始data
-            'original_label': path.join(base_dir, 'original/label'),  # 原始label
-            'split_data': path.join(base_dir, 'split/data'),  # 分割后data
-            'split_label': path.join(base_dir, 'split/label'),  # 分割后label
-            # 将color转为class之后的label
-            'split_label_classed': path.join(base_dir, 'split/label_classed'),
-            'tfrecord': path.join(base_dir, 'tfrecord'),  # tfrecord存储位置
-        }
-        if len(glob(path.join(self.dir_dict['original_data'], '*.*'))) == 0:
-            raise ValueError('文件夹%s中未找到任何文件！')
-        if len(glob(path.join(self.dir_dict['original_label'], '*.*'))) == 0:
-            raise ValueError('文件夹%s中未找到任何文件！')
-        for dir in self.dir_dict.values():
-            if not path.exists(dir):
-                makedirs(dir)
-
-    def data_nagare(self,
-                    is_split=True,
-                    is_tran_class=True,
-                    is_create_dataset=True):
-        if is_split and len(glob(path.join(self.dir_dict['split_data'],
-                                           '*.*'))) == 0:
-            split_img(self.dir_dict['original_data'],
-                      self.dir_dict['split_data'])
-        if is_split and len(
-                glob(path.join(self.dir_dict['split_label'], '*.*'))) == 0:
-            split_img(self.dir_dict['original_label'],
-                      self.dir_dict['split_label'], OUTPUT_IMG_SIZE)
-        if is_tran_class and len(
-                glob(path.join(self.dir_dict['split_label_classed'],
-                               '*.*'))) == 0:
-            color_to_class(self.dir_dict['split_label'],
-                           self.dir_dict['split_label_classed'])
-        if is_create_dataset and len(
-                glob(path.join(self.dir_dict['tfrecord'], '*.*'))) == 0:
-            create_dataset(self.dir_dict['split_data'],
-                           self.dir_dict['split_label_classed'],
-                           self.dir_dict['tfrecord'])
-
-    def get_a_iterator(self):
-        label_num = len(
-            glob(path.join(self.dir_dict['split_label_classed'], '*.*')))
-        data_num = len(glob(path.join(self.dir_dict['split_data'], '*.*')))
-        if data_num == 0 or label_num == 0:
-            logging.info('你似乎未完成文件分割工作惹')
-        self.iterations = data_num * EPOCHS // BATCH_SIZE
-        self.iterator = get_data_iterator(self.dir_dict['tfrecord'])
+def get_dataset_dirs(base_dir):
+    dir_dict = {
+        'original_data': path.join(base_dir, 'original/data'),  # 原始data
+        'original_label': path.join(base_dir, 'original/label'),  # 原始label
+        'split_data': path.join(base_dir, 'split/data'),  # 分割后data
+        'split_label': path.join(base_dir, 'split/label'),  # 分割后label
+        'split_label_classed': path.join(base_dir, 'split/label_classed'),
+        'tfrecord': path.join(base_dir, 'tfrecord'),  # tfrecord存储位置
+    }
+    for dir in dir_dict.values():
+        if not path.exists(dir):
+            makedirs(dir)
+    return dir_dict
 
 
-class NetDir(object):
-    def __init__(self, base_dir, net_name):
-        self.dir_dict = {
-            'model': path.join(base_dir, 'model'),
-            'output': path.join(base_dir, 'output'),
-            'prediction': path.join(base_dir, 'prediction'),
-        }
-        for dir in self.dir_dict.values():
-            if not path.exists(dir):
-                makedirs(dir)
-        self.net_name_generator = file_name_generator(file_name=net_name,
-                                                      ex_name='ckpt', cycle_num=NET_COOKIE)
+def get_net_dirs(base_dir):
+    dir_dict = {
+        'model': path.join(base_dir, 'model'),  # 存放model的地方
+        'log': path.join(base_dir, 'log'),  # 存放日志的地方
+        'prediction': path.join(base_dir, 'prediction'),  # 存放预测的地方
+    }
+    for dir in dir_dict.values():
+        if not path.exists(dir):
+            makedirs(dir)
+    return dir_dict
