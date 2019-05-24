@@ -19,31 +19,26 @@ class NeuralNet(object):
                                 shape=[None, None, None, None],
                                 name='y')
         self.output_map = build_net(self.x)
-        self.cost = self._get_cost('softmax_cross_entropy', n_class)
+        self.cost, self.cross_entropy = self._get_cost('softmax_cross_entropy', n_class)
         with tf.name_scope('results'):
-            flat_y = tf.reshape(self.y, [-1, n_class])
-            flat_output_map = tf.reshape(self.output_map, [-1, n_class])
-            self.cross_entropy = tf.reduce_mean(
-                tf.nn.softmax_cross_entropy_with_logits_v2(
-                    logits=flat_output_map, labels=flat_y))
-            prediction = pixel_wise_softmax(self.output_map)
-            self.correct_pred = tf.equal(tf.argmax(prediction, 3),
-                                         tf.argmax(self.y, 3))
-            self.accuracy = tf.reduce_mean(
-                tf.cast(self.correct_pred, tf.float32))
+            pass
+            # prediction = pixel_wise_softmax(self.output_map)
+            # self.correct_pred = tf.equal(tf.argmax(prediction, 3),
+            #                              tf.argmax(self.y, 3))
+            # self.accuracy = tf.reduce_mean(
+            #     tf.cast(self.correct_pred, tf.float32))
 
     def _get_cost(self, entropy_weight, n_class):
         flat_y = tf.reshape(self.y, [-1, n_class])
         flat_output_map = tf.reshape(self.output_map, [-1, n_class])
+        cross_entropy = tf.reduce_mean(
+            tf.nn.softmax_cross_entropy_with_logits_v2(
+                logits=flat_output_map, labels=flat_y))
         if entropy_weight == 'softmax_cross_entropy':
-            cost = tf.reduce_mean(
-                tf.nn.softmax_cross_entropy_with_logits_v2(
-                    logits=flat_output_map, labels=flat_y))
-            return cost
+            return cross_entropy, cross_entropy
         elif entropy_weight == 'class_balanced_sigmoid_cross_entropy':
             if n_class != 2:
                 raise ValueError('该损失函数只能计算二分类问题')
-
             count_neg = tf.reduce_sum(1. - flat_y)
             count_pos = tf.reduce_sum(flat_y)
             beta = count_neg / (count_neg + count_pos)
@@ -51,7 +46,7 @@ class NeuralNet(object):
             cost = tf.nn.weighted_cross_entropy_with_logits(
                 logits=flat_output_map, targets=flat_y, pos_weight=pos_weight)
             cost = tf.reduce_mean(cost * (1 - beta))
-            return cost
+            return cost, cross_entropy
         else:
             raise ValueError('未明的损失函数')
 
