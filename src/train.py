@@ -1,4 +1,5 @@
 from src.cnn import *
+import matplotlib.pyplot as plt
 
 
 def train(
@@ -7,9 +8,10 @@ def train(
         dataset_iterator,  # 数据集
         iterations,
         learning_rate=1e-5,  # 学习率
+        # decay_rate=0.95,
         epochs=1,
         restore=None,
-        display_step=5):
+        display_step=10):
     global_step = tf.Variable(0, trainable=False)
     # learning_rate_node = tf.train.exponential_decay(
     #     learning_rate=learning_rate,
@@ -17,14 +19,14 @@ def train(
     #     decay_steps=iterations,
     #     decay_rate=decay_rate,
     #     staircase=False)
-    learning_rate_node = tf.Variable(learning_rate)
-    net_name_generator = name_generator('cnn', '.ckpt', display_step)
+    net_name_generator = name_generator('cnn', 'ckpt', display_step)
     optimizer = tf.train.AdamOptimizer(
-        learning_rate=learning_rate_node).minimize(cnn.cost,
-                                                   global_step=global_step)
+        learning_rate=learning_rate).minimize(cnn.cost,
+                                              global_step=global_step)
     tf.summary.scalar('cost', cnn.cost)
     tf.summary.scalar('cross_entropy', cnn.cross_entropy)
     tf.summary.scalar('accuracy', cnn.accuracy)
+    tf.summary.scalar('f1_score', cnn.f1_score)
     summary_op = tf.summary.merge_all()
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
@@ -41,8 +43,8 @@ def train(
                     logging.error('End of training dataset!')
                 x = train_dataset['data']
                 y = train_dataset['label']
-                _, cost, accuracy, cross_entropy, summary_str, output_map = sess.run(
-                    (optimizer, cnn.cost, cnn.accuracy, cnn.cross_entropy,
+                _, cost, accuracy, f1_score, cross_entropy, summary_str, output_map = sess.run(
+                    (optimizer, cnn.cost, cnn.accuracy, cnn.f1_score, cnn.cross_entropy,
                      summary_op, cnn.output_map),
                     feed_dict={
                         cnn.x: x,
@@ -51,8 +53,8 @@ def train(
                 summary_writer.add_summary(summary_str, step)
                 summary_writer.flush()
                 if step % display_step == 0:
-                    logging.info('迭代到第{}轮；现在的cost为：{}；正确率为：{}；交叉熵为：{}'.format(
-                        step, cost, accuracy, cross_entropy))
+                    logging.info('迭代到第{}轮；现在的cost为：{}；accuracy为：{}；F1 Score为：{}；交叉熵为：{}'.format(
+                        step, cost, accuracy, f1_score, cross_entropy))
                     cnn.save(
                         sess,
                         path.join(net_dir['model'], next(net_name_generator)))

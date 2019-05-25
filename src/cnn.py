@@ -11,7 +11,6 @@ def pixel_wise_softmax(output_map):
 
 class NeuralNet(object):
     def __init__(self):
-        n_class = len(list(color_class_dict.keys()))
         self.x = tf.placeholder(tf.float32,
                                 shape=[None, None, None, None],
                                 name='x')
@@ -19,16 +18,23 @@ class NeuralNet(object):
                                 shape=[None, None, None, None],
                                 name='y')
         self.output_map = build_net(self.x)
-        self.cost, self.cross_entropy = self._get_cost('softmax_cross_entropy', n_class)
+        self.cost, self.cross_entropy = self._get_cost('softmax_cross_entropy')
         with tf.name_scope('results'):
-            pass
-            # prediction = pixel_wise_softmax(self.output_map)
-            # self.correct_pred = tf.equal(tf.argmax(prediction, 3),
-            #                              tf.argmax(self.y, 3))
-            # self.accuracy = tf.reduce_mean(
-            #     tf.cast(self.correct_pred, tf.float32))
+            max_pos_y = tf.argmax(self.y, axis=3)
+            max_pos_output = tf.argmax(self.output_map, axis=3)
+            flat_max_pos_y = tf.reshape(max_pos_y, shape=[-1])
+            flat_max_pos_output = tf.reshape(max_pos_output, shape=[-1])
+            confusion_matrix = tf.confusion_matrix(labels=flat_max_pos_y, predictions=flat_max_pos_output)
+            TP = confusion_matrix[0, 0]
+            FN = confusion_matrix[0, 1]
+            FP = confusion_matrix[1, 0]
+            TN = confusion_matrix[1, 1]
+            self.accuracy = (TP + TN) / (TP + TN + FP + FN)
+            self.precision = TP / (TP + FP)
+            self.recall = TP / (TP + FN)
+            self.f1_score = (2 * self.precision * self.recall) / (self.precision + self.recall)
 
-    def _get_cost(self, entropy_weight, n_class):
+    def _get_cost(self, entropy_weight):
         flat_y = tf.reshape(self.y, [-1, n_class])
         flat_output_map = tf.reshape(self.output_map, [-1, n_class])
         cross_entropy = tf.reduce_mean(

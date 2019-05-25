@@ -7,7 +7,8 @@ import logging
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
 
-color_class_dict = {(0, ): 1, (255, ): 0}
+color_class_dict = {(0,): 1, (255,): 0}
+n_class = len(list(color_class_dict.keys()))
 
 
 def name_generator(file_path, ex_name=None, cycle_num=None):
@@ -79,14 +80,15 @@ def glut_image(image_list, glut_cols, glut_rows, image_width, image_height,
     k = 0
     for i in range(glut_rows):
         for j in range(glut_cols):
-            paste_it = Image.open(image_list[k])
+            # 判断image_list是不是字符串
+            # paste_it = Image.open(image_list[k])
+            paste_it = image_list[k]
             glutted_image.paste(paste_it, (j * image_width, i * image_height))
             k += 1
     glutted_image.save(save_path)
 
 
 def color_to_class(image_path, save_path=None):
-    n_class = len(list(color_class_dict.keys()))
     raw_image = np.load(image_path)
     raw_image = np.reshape(raw_image,
                            (raw_image.shape[0], raw_image.shape[1], -1))
@@ -114,7 +116,6 @@ def output_map_to_class(output_map):
 
 
 def class_to_color(classed_image):
-    n_class = len(list(color_class_dict.keys()))
     reverse_color_class_dict = dict(
         zip(color_class_dict.values(), color_class_dict.keys()))
     colored_image = np.zeros(shape=(classed_image.shape[0],

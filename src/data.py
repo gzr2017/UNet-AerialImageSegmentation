@@ -2,7 +2,7 @@ from src.utils import *
 import tensorflow as tf
 
 
-def ceate_dataset(data_list, label_list, dataset_slice, tfrecord_save_path):
+def create_dataset(data_list, label_list, dataset_slice, tfrecord_save_path):
     if len(data_list) != len(label_list):
         raise ValueError('图片数量与标签数量不相等！！！！')
     if len(data_list) % dataset_slice:
@@ -35,13 +35,13 @@ def ceate_dataset(data_list, label_list, dataset_slice, tfrecord_save_path):
 
 
 def parse_dataset(proto):
-    dics = {
+    dataset_dict = {
         'data': tf.VarLenFeature(dtype=tf.float32),
-        'data_shape': tf.FixedLenFeature(shape=(3, ), dtype=tf.int64),
+        'data_shape': tf.FixedLenFeature(shape=(3,), dtype=tf.int64),
         'label': tf.VarLenFeature(dtype=tf.float32),
-        'label_shape': tf.FixedLenFeature(shape=(3, ), dtype=tf.int64),
+        'label_shape': tf.FixedLenFeature(shape=(3,), dtype=tf.int64),
     }
-    parsed_pair = tf.parse_single_example(proto, dics)
+    parsed_pair = tf.parse_single_example(proto, dataset_dict)
     parsed_pair['data'] = tf.sparse_tensor_to_dense(parsed_pair['data'])
     parsed_pair['data'] = tf.reshape(parsed_pair['data'],
                                      parsed_pair['data_shape'])
@@ -74,9 +74,9 @@ def get_dataset_dirs(base_dir):
         'split_label_classed': path.join(base_dir, 'split/label_classed'),
         'tfrecord': path.join(base_dir, 'tfrecord'),  # tfrecord存储位置
     }
-    for dir in dir_dict.values():
-        if not path.exists(dir):
-            makedirs(dir)
+    for dir_item in dir_dict.values():
+        if not path.exists(dir_item):
+            makedirs(dir_item)
     return dir_dict
 
 
@@ -86,7 +86,7 @@ def get_net_dirs(base_dir):
         'log': path.join(base_dir, 'log'),  # 存放日志的地方
         'prediction': path.join(base_dir, 'prediction'),  # 存放预测的地方
     }
-    for dir in dir_dict.values():
-        if not path.exists(dir):
-            makedirs(dir)
+    for dir_item in dir_dict.values():
+        if not path.exists(dir_item):
+            makedirs(dir_item)
     return dir_dict
