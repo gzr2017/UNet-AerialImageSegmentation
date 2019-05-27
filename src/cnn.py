@@ -18,7 +18,7 @@ class NeuralNet(object):
                                 shape=[None, None, None, None],
                                 name='y')
         self.output_map = build_net(self.x)
-        self.cost, self.cross_entropy = self._get_cost('softmax_cross_entropy')
+        self.cost, self.cross_entropy = self._get_cost('class_balanced_sigmoid_cross_entropy')
         with tf.name_scope('results'):
             max_pos_y = tf.argmax(self.y, axis=3)
             max_pos_output = tf.argmax(self.output_map, axis=3)

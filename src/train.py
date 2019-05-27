@@ -1,5 +1,4 @@
 from src.cnn import *
-import matplotlib.pyplot as plt
 
 
 def train(
@@ -8,7 +7,6 @@ def train(
         dataset_iterator,  # 数据集
         iterations,
         learning_rate=1e-5,  # 学习率
-        # decay_rate=0.95,
         epochs=1,
         restore=None,
         display_step=10):
@@ -27,6 +25,8 @@ def train(
     tf.summary.scalar('cross_entropy', cnn.cross_entropy)
     tf.summary.scalar('accuracy', cnn.accuracy)
     tf.summary.scalar('f1_score', cnn.f1_score)
+    tf.summary.scalar('recall', cnn.recall)
+    tf.summary.scalar('precision', cnn.precision)
     summary_op = tf.summary.merge_all()
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
@@ -36,15 +36,15 @@ def train(
             cnn.restore(sess, restore)
         logging.info('>>>Start Optimization!<<<')
         for epoch in range(epochs):
-            for step in range(epoch * iterations, (epoch + 1) * iterations):
+            for step in range(epoch*iterations, (epoch + 1) * iterations):
                 try:
                     train_dataset = sess.run(dataset_iterator.get_next())
                 except tf.errors.OutOfRangeError:
                     logging.error('End of training dataset!')
                 x = train_dataset['data']
                 y = train_dataset['label']
-                _, cost, accuracy, f1_score, cross_entropy, summary_str, output_map = sess.run(
-                    (optimizer, cnn.cost, cnn.accuracy, cnn.f1_score, cnn.cross_entropy,
+                _, cost, accuracy, f1_score, recall, precision, cross_entropy, summary_str, output_map = sess.run(
+                    (optimizer, cnn.cost, cnn.accuracy, cnn.f1_score, cnn.recall, cnn.precision, cnn.cross_entropy,
                      summary_op, cnn.output_map),
                     feed_dict={
                         cnn.x: x,

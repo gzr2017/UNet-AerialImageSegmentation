@@ -1,0 +1,2 @@
+cd ./demo;
+jupyter notebook
